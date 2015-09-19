@@ -1,0 +1,21 @@
+{
+  "name": "map",
+  "version": "0.0.0",
+  "homepage": "https://github.com/sarah-maris/FEND-Neighborhood-Map",
+  "authors": [
+    "Sarah Maris <sarah.87.maris@gmail.com>"
+  ],
+  "description": "FEND Project 5A - Interactive Neighborhood Map",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockout": "knockoutjs#~3.3.0",
+    "jquery": "~2.1.4"
+  }
+}
