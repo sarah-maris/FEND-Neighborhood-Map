@@ -19,7 +19,8 @@ var model =  {
 		this.long = bizObj.location.coordinate.longitude;
 	},
 	
-	getPlaces: function(cb) {
+	//Send API Query to Yelp
+	getYelpData: function(cb) {
 		
 		var auth = {
 		  consumerKey: "fCSqFxVC56k7RxD-CXhtFg",
@@ -63,11 +64,13 @@ var model =  {
 			  dataType: 'jsonp',
 			  jsonpCallback: 'cb'
 		})
+		//When sucessful send to getLocations
 		.done( function( data ) {
 			model.getLocations(data.businesses);
 			console.log(data.businesses);
 		})
-	   
+	    //When fail show error message
+		//TOD0: Make response more robust 
 		.fail ( function(){
 			alert( "fail" );
 			console.log("Could not get data");
@@ -82,6 +85,7 @@ var ViewModel =  function() {
 
 	this.locations = model.locations();
 	
+	//Initialize Google Map
 	this.initialize = function() {
 
 		var mapCanvas = document.getElementById('map');
@@ -91,11 +95,13 @@ var ViewModel =  function() {
 		  mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 		var map = new google.maps.Map(mapCanvas, mapOptions);
-
+		
+		//Add markers to map
 		self.setMarkers(map);
 	
 	};
 
+	//Set locations for markers
 	this.setMarkers = function(map) {
 		places = this.locations;
 		  for (var i = 0; i < places.length; i++) {
@@ -107,7 +113,7 @@ var ViewModel =  function() {
 			});
 	}
 }
-	model.getPlaces();
+	model.getYelpData();
 	google.maps.event.addDomListener(window, 'load', self.initialize);
 }
 
