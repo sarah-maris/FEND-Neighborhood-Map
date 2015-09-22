@@ -1,14 +1,43 @@
-function initialize() {
-var mapCanvas = document.getElementById('map');
-var mapOptions = {
-  center: new google.maps.LatLng(40.34653, -74.07409),
-  zoom: 15,
-  mapTypeId: google.maps.MapTypeId.ROADMAP
-};
-var map = new google.maps.Map(mapCanvas, mapOptions);
-}
-google.maps.event.addDomListener(window, 'load', initialize);
+var ViewModel =  function() {
 
+    var self = this;
+
+    this.places = ko.observableArray( [] );
+
+	this.initialize = function() {
+		var mapCanvas = document.getElementById('map');
+		var mapOptions = {
+		  center: new google.maps.LatLng(40.34653, -74.07409),
+		  zoom: 15,
+		  mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+		var map = new google.maps.Map(mapCanvas, mapOptions);
+
+	//setMarkers(map);
+	}
+	
+	google.maps.event.addDomListener(window, 'load', self.initialize);
+
+}
+
+ko.applyBindings( new ViewModel() );
+
+/*
+
+
+function setMarkers(map) {
+
+  for (var i = 0; i < beaches.length; i++) {
+    var place = places[i];
+    var marker = new google.maps.Marker({
+      position: {lat: place.lat, lng: place.lng },
+      map: map,
+      title: place.title
+    });
+  }
+}
+
+*/
 
 var auth = {
   consumerKey: "fCSqFxVC56k7RxD-CXhtFg",
@@ -27,7 +56,6 @@ var accessor = {
   tokenSecret: auth.accessTokenSecret
 };
 parameters = [];
-//parameters.push(['term', terms]);
 parameters.push(['location', near]);
 parameters.push(['callback', 'cb']);
 parameters.push(['oauth_consumer_key', auth.consumerKey]);
@@ -43,21 +71,39 @@ var message = {
 OAuth.setTimestampAndNonce(message);
 OAuth.SignatureMethod.sign(message, accessor);
 var parameterMap = OAuth.getParameterMap(message.parameters);
-//parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature);
-//console.log(parameterMap);
-$.ajax({
-  url: message.action,
-  data: parameterMap,
-  cache: true,
-  dataType: 'jsonp',
-  jsonpCallback: 'cb' })
+parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature);
 
-  .done(function(data) {
-    console.log(data);
-	alert( "success" );
-  })
+function getPlaces(cb) {
+	var self= this;
+	self.results = ko.observableArray([]);
+	 $.ajax({
+	  url: message.action,
+	  data: parameterMap,
+	  cache: true,
+	  dataType: 'jsonp',
+	  jsonpCallback: 'cb',
+      success:function(data) {
+		  console.log(data.businesses);
+ for (var i = 0; i < data.businesses.length; i++) {
+	 results.push(data.businesses[i]);
+	 
+ }
+		   console.log("resu;t", results);
+   return this.results; 		  
+      }
+   });
 
-  .fail ( function(){
+
+//	  })
+
+//
+	//.done(cb)
+	};
+
+/*  .fail ( function(){
 	alert( "fail" );
 	console.log("Could not get data");
   });
+}
+
+*/
