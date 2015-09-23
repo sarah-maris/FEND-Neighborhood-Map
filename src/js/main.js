@@ -12,11 +12,19 @@ var model =  {
 
 	//Get information about each business from Yelp query data
 	bizInfo: function(bizObj) {
-		this.name = bizObj.name;
+		this.lat =  bizObj.location.coordinate.latitude;
+		this.lng = bizObj.location.coordinate.longitude;
+		this.name =  bizObj.name;
 		this.phone = bizObj.phone;
 		this.imgUrl = bizObj.image_url;
-		this.lat = bizObj.location.coordinate.latitude;
-		this.long = bizObj.location.coordinate.longitude;
+		this.address = bizObj.location.address[0];
+		this.phone = bizObj.phone;
+		this.dphone = bizObj.display_phone;
+		this.rating = bizObj.rating;
+		this.stars = bizObj.rating_img_url_small;
+		this.snippet = bizObj.snippet_text;
+		this.reviewer = bizObj.snippet_image_url;
+		this.url = bizObj.url;
 	},
 
 	//Send API Query to Yelp
@@ -107,14 +115,18 @@ var ViewModel =  function() {
 		for (var i = 0; i < places.length; i++) {
 			var place = places[i];
 			var marker = new google.maps.Marker({
-				position: {lat: place.lat, lng: place.long },
+				position: {lat: place.lat, lng: place.lng },
 				map: map,
 				title: place.title
 			});
 
 			//define content for info window
-			var contentString = '<div id="content">'+ place.name + '<p> Latitude: ' + place.lat + '<br>' + 'Longitude:  ' + place.long + '</div>';
-
+			var contentString = '<div class="place-name"><a href="' + place.url + '">'+ place.name + '</a></div>';
+				contentString += '<img class="place-image"src="' + place.imgUrl + '" alt="image of '+ place.name + '">';
+				contentString += '<div class="place-info">' + place.address + '<br>' + '<a href="tel:' + place.phone + '">' + place.dphone + '</a>';
+				contentString += '<img class="rating-image" src="' + place.stars + '" alt="star ratung: '+ place.rating + '"></div>';
+				contentString += '<div class="review"><strong>Yelp Review Snippet</strong><br><span class="place-snippet">'+ place.snippet + '</span>';
+				contentString += '<img class="reviewer-image" src="' + place.reviewer + '" alt="reviewer image"></div>';
 			//add info window
 			var infoWindow = new google.maps.InfoWindow();
 
