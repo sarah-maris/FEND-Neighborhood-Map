@@ -29,3 +29,49 @@ h3 {
 	font-family: 'Architects Daughter', cursive;
 	margin: 0 20px 20px 20px;
 }
+
+.place-name {
+	display: block;
+	font: bold 18px 'Ubuntu', sans-serif;
+}
+
+.place-image {
+	display: block;
+	float: left;
+	padding: 5px;
+	width: 100px;
+}
+
+.place-info{
+	display: block;
+	padding: 5px;
+	width: 250px;
+
+}
+
+.place-snippet {
+	display: inline-block;
+	padding: 5px;
+	width: 170px;
+}
+
+.rating-image {
+	display: inline-block;
+	padding: 5px;
+	width: 50px;
+}
+
+.review {
+	display: block;
+	padding: 5px;
+	width: 250px;
+	font: italic 11px Roboto, Arial, sans-serif;
+		clear: both;
+}
+
+.reviewer-image {
+	float: right;
+	padding: 5px;
+	width: 50px;
+}
+
