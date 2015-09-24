@@ -45,7 +45,7 @@ h3 {
 .place-info{
 	display: block;
 	padding: 5px;
-	width: 250px;
+	max-width: 250px;
 
 }
 
@@ -64,7 +64,7 @@ h3 {
 	padding: 5px;
 	font: italic 11px Roboto, Arial, sans-serif;
 	clear: both;
-    width: 250px;
+	max-width: 250px;
 }
 
 .yelp img {
