@@ -10,6 +10,9 @@ var model =  {
 		}
 	},
 
+    //Get Yelp image
+    pwdByYelp: "img/Powered_By_Yelp_Black.png",
+
 	//Get information about each business from Yelp query data
 	bizInfo: function(bizObj) {
 		this.lat =  bizObj.location.coordinate.latitude;
@@ -21,9 +24,10 @@ var model =  {
 		this.phone = bizObj.phone;
 		this.dphone = bizObj.display_phone;
 		this.rating = bizObj.rating;
-		this.stars = bizObj.rating_img_url_small;
+		this.stars = bizObj.rating_img_url;
 		this.snippet = bizObj.snippet_text;
-		this.reviewer = bizObj.snippet_image_url;
+		this.city = bizObj.location.city;
+        this.state = bizObj.location.state_code;
 		this.url = bizObj.url;
 	},
 
@@ -121,12 +125,13 @@ var ViewModel =  function() {
 			});
 
 			//define content for info window
-			var contentString = '<div class="place-name"><a href="' + place.url + '">'+ place.name + '</a></div>';
+			var contentString = '<div class="place-name">' + place.name + '</div>';
 				contentString += '<img class="place-image"src="' + place.imgUrl + '" alt="image of '+ place.name + '">';
-				contentString += '<div class="place-info">' + place.address + '<br>' + '<a href="tel:' + place.phone + '">' + place.dphone + '</a>';
+				contentString += '<div class="place-info">' + place.address + '<br>' + place.city + ',' + place.state + '<br>';
+				contentString += '<a href="tel:' + place.phone + '">' + place.dphone + '</a><br>';
 				contentString += '<img class="rating-image" src="' + place.stars + '" alt="star ratung: '+ place.rating + '"></div>';
-				contentString += '<div class="review"><strong>Yelp Review Snippet</strong><br><span class="place-snippet">'+ place.snippet + '</span>';
-				contentString += '<img class="reviewer-image" src="' + place.reviewer + '" alt="reviewer image"></div>';
+				contentString += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ place.snippet + '</span>';
+				contentString += '<a href="' + place.url + '" class="yelp"><img src="' + model.pwdByYelp + '" alt="Powered by Yelp"></a></div>';
 			//add info window
 			var infoWindow = new google.maps.InfoWindow();
 
