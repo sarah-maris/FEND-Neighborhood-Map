@@ -52,26 +52,29 @@ h3 {
 .place-snippet {
 	display: inline-block;
 	padding: 5px;
-	width: 170px;
 }
 
 .rating-image {
 	display: inline-block;
 	padding: 5px;
-	width: 50px;
 }
 
 .review {
 	display: block;
 	padding: 5px;
-	width: 250px;
 	font: italic 11px Roboto, Arial, sans-serif;
-		clear: both;
+	clear: both;
+    width: 250px;
 }
 
-.reviewer-image {
-	float: right;
-	padding: 5px;
-	width: 50px;
+.yelp img {
+    width: 90px;
+    display:block;
 }
 
+.yelp img:hover, .yelp img:focus, .yelp img:active {
+    width: 115px;
+    -webkit-transition-timing-function: linear;
+    transition-timing-function: linear;
+    transition-duration: 0.2s;
+}
