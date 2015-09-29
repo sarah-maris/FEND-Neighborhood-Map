@@ -18,11 +18,11 @@ var model =  {
 		this.lat =  bizObj.location.coordinate.latitude;
 		this.lng = bizObj.location.coordinate.longitude;
 		this.name =  bizObj.name;
-		this.phone = bizObj.phone;
 		this.imgUrl = bizObj.image_url;
 		this.address = bizObj.location.address[0];
 		this.phone = bizObj.phone;
-		this.dphone = bizObj.display_phone;
+		//format phone number for display
+		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
 		this.rating = bizObj.rating;
 		this.stars = bizObj.rating_img_url;
 		this.snippet = bizObj.snippet_text;
