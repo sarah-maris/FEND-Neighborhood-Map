@@ -1,38 +1,41 @@
-var model =  {
+function Model() {
+	var self = this;
 
 	//Set up locations
-	locations: ko.observableArray(),
+	self.locations =  ko.observableArray();
 
 	//Push locations from Yelp query into array
-	getLocations: function(businesses) {
+	self.getLocations = function(businesses) {
 		for (var i=0; i < businesses.length; i++ ){
 			this.locations.push( new this.bizInfo( businesses[i]));
 		}
-	},
+	};
 
     //Get Yelp image
-    pwdByYelp: "img/Powered_By_Yelp_Black.png",
+    self.pwdByYelp = "img/Powered_By_Yelp_Black.png",
 
 	//Get information about each business from Yelp query data
-	bizInfo: function(bizObj) {
+	self.bizInfo = function(bizObj) {
+		//get coordinates for map placement
 		this.lat =  bizObj.location.coordinate.latitude;
 		this.lng = bizObj.location.coordinate.longitude;
+		//get info for infoWindow
 		this.name =  bizObj.name;
 		this.imgUrl = bizObj.image_url;
 		this.address = bizObj.location.address[0];
-		this.phone = bizObj.phone;
-		//format phone number for display
-		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
 		this.rating = bizObj.rating;
 		this.stars = bizObj.rating_img_url;
 		this.snippet = bizObj.snippet_text;
 		this.city = bizObj.location.city;
         this.state = bizObj.location.state_code;
 		this.url = bizObj.url;
-	},
+		this.phone = bizObj.phone;
+		//format phone number for display
+		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
+	};
 
 	//Send API Query to Yelp
-	getYelpData: function(cb) {
+	self.getYelpData = function(cb) {
 
 		var auth = {
 		  consumerKey: "fCSqFxVC56k7RxD-CXhtFg",
@@ -91,7 +94,9 @@ var model =  {
 	}
 }
 
-var ViewModel =  function() {
+var model = new Model();
+
+function ViewModel() {
 
     var self = this;
 
@@ -129,7 +134,7 @@ var ViewModel =  function() {
 				contentString += '<img class="place-image"src="' + place.imgUrl + '" alt="image of '+ place.name + '">';
 				contentString += '<div class="place-info">' + place.address + '<br>' + place.city + ',' + place.state + '<br>';
 				contentString += '<a href="tel:' + place.phone + '">' + place.dphone + '</a><br>';
-				contentString += '<img class="rating-image" src="' + place.stars + '" alt="star ratung: '+ place.rating + '"></div>';
+				contentString += '<img class="rating-image" src="' + place.stars + '" alt="Yelp star ratung: '+ place.rating + '"></div>';
 				contentString += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ place.snippet + '</span>';
 				contentString += '<a href="' + place.url + '" class="yelp"><img src="' + model.pwdByYelp + '" alt="Powered by Yelp"></a></div>';
 			//add info window
