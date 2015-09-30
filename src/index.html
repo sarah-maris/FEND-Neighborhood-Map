@@ -17,10 +17,14 @@
   </head>
   <body>
     <header>
-		<h1>Red Bank</h1><h3>Trip Planner</h3>
-		<nav>
-		</nav>
+		<h1>Red Bank</h1>
+		<h3>Trip Planner</h3>
     </header>
+	<section id="place-list" >
+		<ul data-bind="foreach: model.locations">
+			<li class="place" data-bind="text: $data.name"></li>
+		</ul>
+	</section>
 	<section id="map">
 	</section>
 	<footer>
