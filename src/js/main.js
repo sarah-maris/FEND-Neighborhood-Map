@@ -100,10 +100,14 @@ function ViewModel() {
 
     var self = this;
 
-	this.locations = model.locations();
+    self.locations = ko.computed(function(){
+        return model.locations();
+    });
+
+	self.mapLocations = model.locations();
 
 	//Initialize Google Map
-	this.initialize = function() {
+	self.initialize = function() {
 
 		var mapCanvas = document.getElementById('map');
 		var mapOptions = {
@@ -119,8 +123,8 @@ function ViewModel() {
 	};
 
 	//Set locations for markers
-	this.setMarkers = function(map) {
-		places = this.locations;
+	self.setMarkers = function(map) {
+		places = this.mapLocations;
 		for (var i = 0; i < places.length; i++) {
 			var place = places[i];
 			var marker = new google.maps.Marker({
@@ -149,6 +153,10 @@ function ViewModel() {
 			})(marker,contentString,infoWindow));
 		}
 	}
+
+	self.filter = ko.observable();
+
+
 	model.getYelpData();
 	google.maps.event.addDomListener(window, 'load', self.initialize);
 }
