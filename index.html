@@ -24,8 +24,11 @@
 		<ul data-bind="foreach: locations">
 			<li class="place" data-bind="text: $data.name"></li>
 		</ul>
-<p>Searching for: <input data-bind="value: ViewModel.filter" /></p>
-<p>Yep, I'm looking for: <span data-bind="text: ViewModel.filter"></span></p>
+<p>Searching for: <input data-bind="value: filter, valueUpdate: 'afterkeydown'" />
+<p>Yep, I'm looking for:
+		<ul data-bind="foreach: filteredLocations">
+			<li class="place" data-bind="text: $data.name"></li>
+		</ul>
 	</section>
 	<section id="map">
 	</section>

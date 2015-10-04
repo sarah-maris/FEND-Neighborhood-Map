@@ -154,7 +154,14 @@ function ViewModel() {
 		}
 	}
 
-	self.filter = ko.observable();
+	self.filter = ko.observable('');
+
+    self.filteredLocations = ko.computed(function(){
+        var filter = self.filter().toLowerCase();
+        return ko.utils.arrayFilter(self.locations(), function(point){
+            return point.name.toLowerCase().indexOf(filter) >= 0;
+        });
+    });
 
 
 	model.getYelpData();
