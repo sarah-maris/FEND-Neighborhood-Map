@@ -32,6 +32,14 @@ function Model() {
 		this.phone = bizObj.phone;
 		//format phone number for display
 		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
+		//create a single array of categories from Yelp data
+		var categories = [];
+		bizObj.categories.forEach(function(catType){
+			catType.forEach(function(cat){
+				categories.push(cat);
+			})
+		})
+		this.categories = categories;
 	};
 
 	//Send API Query to Yelp
@@ -158,11 +166,10 @@ function ViewModel() {
 
     self.filteredLocations = ko.computed(function(){
         var filter = self.filter().toLowerCase();
-        return ko.utils.arrayFilter(self.locations(), function(point){
-            return point.name.toLowerCase().indexOf(filter) >= 0;
+        return ko.utils.arrayFilter(self.locations(), function(location){
+            return location.name.toLowerCase().indexOf(filter) >= 0;
         });
     });
-
 
 	model.getYelpData();
 	google.maps.event.addDomListener(window, 'load', self.initialize);
