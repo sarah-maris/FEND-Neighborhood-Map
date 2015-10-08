@@ -32,14 +32,15 @@ function Model() {
 		this.phone = bizObj.phone;
 		//format phone number for display
 		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
-		//create a single array of categories from Yelp data
-		var categories = [];
+		//create a single array of items for search function: categories and business name
+		var keywords = [];
 		bizObj.categories.forEach(function(catType){
 			catType.forEach(function(cat){
-				categories.push(cat);
+				keywords.push(cat);
 			})
 		})
-		this.categories = categories;
+		keywords.push(this.name);
+		this.keywords = keywords;
 	};
 
 	//Send API Query to Yelp
@@ -164,12 +165,26 @@ function ViewModel() {
 
 	self.filter = ko.observable('');
 
-    self.filteredLocations = ko.computed(function(){
-        var filter = self.filter().toLowerCase();
-        return ko.utils.arrayFilter(self.locations(), function(location){
-            return location.name.toLowerCase().indexOf(filter) >= 0;
-        });
-    });
+	self.filteredLocations = ko.computed(function() {
+		var filter = self.filter().toLowerCase();
+		var output = null;
+
+		output = ko.utils.arrayFilter(self.locations(), filterer);
+
+		return output;
+
+		function filterer(location) {
+			var pass = false;
+
+			location.keywords.forEach(function(keyword) {
+				if (keyword.toLowerCase().indexOf(filter) >= 0) {
+				  pass = true;
+				}
+			});
+
+			return pass;
+		}
+	});
 
 	model.getYelpData();
 	google.maps.event.addDomListener(window, 'load', self.initialize);
