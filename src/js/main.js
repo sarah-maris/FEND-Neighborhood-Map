@@ -103,15 +103,8 @@ function Model() {
 	}
 }
 
-var model = new Model();
-
-function ViewModel() {
-
-    var self = this;
-
-    self.locations = ko.computed(function(){
-        return model.locations();
-    });
+function GoogleMap() {
+	var self = this;
 
 	self.mapLocations = model.locations();
 
@@ -163,6 +156,18 @@ function ViewModel() {
 		}
 	}
 
+	google.maps.event.addDomListener(window, 'load', this.initialize);
+}
+
+function ViewModel() {
+
+    var self = this;
+
+    self.locations = ko.computed(function(){
+        return model.locations();
+    });
+
+
 	self.filter = ko.observable('');
 
 	self.filteredLocations = ko.computed(function() {
@@ -184,10 +189,14 @@ function ViewModel() {
 
 			return pass;
 		}
+
 	});
 
 	model.getYelpData();
-	google.maps.event.addDomListener(window, 'load', self.initialize);
+	var map = new GoogleMap();
+
 }
+
+var model = new Model();
 
 ko.applyBindings( new ViewModel() );
