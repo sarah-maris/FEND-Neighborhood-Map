@@ -1,3 +1,9 @@
+//****************** MODEL **************************//
+//	* Gets data from Yelp API
+//	* Builds array of locations
+//	* Handles errors in data retrieval
+//***************************************************//
+
 function Model() {
 	var self = this;
 
@@ -103,10 +109,17 @@ function Model() {
 	}
 }
 
+//****************** VIEW **************************//
+//	* Uses Google Map to display locations
+//**************************************************//
+
 function GoogleMap() {
 	var self = this;
 
 	self.mapLocations = model.locations();
+	//self.mapLocations = ko.observableArray();
+	//self.mapLocations = ViewModel.filteredLocations;
+
 
 	//Initialize Google Map
 	self.initialize = function() {
@@ -135,7 +148,7 @@ function GoogleMap() {
 				title: place.title
 			});
 
-			//define content for info window
+			//Define content for info window
 			var contentString = '<div class="place-name">' + place.name + '</div>';
 				contentString += '<img class="place-image"src="' + place.imgUrl + '" alt="image of '+ place.name + '">';
 				contentString += '<div class="place-info">' + place.address + '<br>' + place.city + ',' + place.state + '<br>';
@@ -143,12 +156,14 @@ function GoogleMap() {
 				contentString += '<img class="rating-image" src="' + place.stars + '" alt="Yelp star ratung: '+ place.rating + '"></div>';
 				contentString += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ place.snippet + '</span>';
 				contentString += '<a href="' + place.url + '" class="yelp"><img src="' + model.pwdByYelp + '" alt="Powered by Yelp"></a></div>';
-			//add info window
+
+			//Add info window
 			var infoWindow = new google.maps.InfoWindow();
 
-			//add click function to info window
+			//Add click function to info window
 			google.maps.event.addListener(marker,'click', (function(marker,contentString,infoWindow){
 				return function() {
+					//Show infoWindow content on click
 					infoWindow.setContent(contentString);
 					infoWindow.open(map,marker);
 				};
@@ -159,44 +174,58 @@ function GoogleMap() {
 	google.maps.event.addDomListener(window, 'load', this.initialize);
 }
 
+//********************** VIEW MODEL *************************//
+//	* Use Knockoutjs to bind observable data to page
+//  * Filter locations by user input (name and/or category)
+//**********************************************************//
+
 function ViewModel() {
 
     var self = this;
 
+	//Get data from model
     self.locations = ko.computed(function(){
         return model.locations();
     });
 
-
+	//Set filter as an observable
 	self.filter = ko.observable('');
 
+	//Filter locations using computed function
 	self.filteredLocations = ko.computed(function() {
+
+		//Convert filter to lower case (simplifies comparison)
 		var filter = self.filter().toLowerCase();
+		//set output to empty variable
 		var output = null;
 
-		output = ko.utils.arrayFilter(self.locations(), filterer);
+		//Call filter function to pull out locations that match keyword
+		output = ko.utils.arrayFilter(self.locations(), keyWordfilter);
 
+		//Return array matching locations
 		return output;
 
-		function filterer(location) {
-			var pass = false;
+		//Keyword filter function
+		function keyWordfilter(location) {
+			//Set match to false so location is not returned by default
+			var match = false;
 
+			//Check each item in keywords array for match
 			location.keywords.forEach(function(keyword) {
+				//If keyword matches filter, change match to true
 				if (keyword.toLowerCase().indexOf(filter) >= 0) {
-				  pass = true;
+				  match = true;
 				}
 			});
-
-			return pass;
+			//return location if any match is found
+			return match;
 		}
-
 	});
 
+	//Get Yelp data from API
 	model.getYelpData();
-	var map = new GoogleMap();
-
 }
 
 var model = new Model();
-
+var map = new GoogleMap();
 ko.applyBindings( new ViewModel() );

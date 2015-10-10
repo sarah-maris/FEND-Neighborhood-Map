@@ -21,11 +21,12 @@
 		<h3>Trip Planner</h3>
     </header>
 	<section id="place-list" >
+		<h2>All data points:</h2>
 		<ul data-bind="foreach: locations">
 			<li class="place" data-bind="text: $data.name"></li>
 		</ul>
-<p>Searching for: <input data-bind="value: filter, valueUpdate: 'afterkeydown'" />
-<p>Yep, I'm looking for:
+		<p>Searching for: <input data-bind="value: filter, valueUpdate: 'afterkeydown'" />
+		<h2>Filtered List:</h2>
 		<ul data-bind="foreach: filteredLocations">
 			<li class="place" data-bind="text: $data.name"></li>
 		</ul>
