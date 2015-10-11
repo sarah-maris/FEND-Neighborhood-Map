@@ -1,7 +1,7 @@
 //****************** MODEL **************************//
-//	* Gets data from Yelp API
-//	* Builds array of locations
-//	* Handles errors in data retrieval
+//	* Get data from Yelp API
+//	* Build array of locations
+//	* Handle errors in data retrieval
 //***************************************************//
 
 function Model() {
@@ -22,10 +22,12 @@ function Model() {
 
 	//Get information about each business from Yelp query data
 	self.bizInfo = function(bizObj) {
-		//get coordinates for map placement
+
+		//Get coordinates for map placement
 		this.lat =  bizObj.location.coordinate.latitude;
 		this.lng = bizObj.location.coordinate.longitude;
-		//get info for infoWindow
+
+		//Get info for infoWindow
 		this.name =  bizObj.name;
 		this.imgUrl = bizObj.image_url;
 		this.address = bizObj.location.address[0];
@@ -35,10 +37,12 @@ function Model() {
 		this.city = bizObj.location.city;
         this.state = bizObj.location.state_code;
 		this.url = bizObj.url;
+
+		//Format phone number for display
 		this.phone = bizObj.phone;
-		//format phone number for display
 		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
-		//create a single array of items for search function: categories and business name
+
+		//Create a single array of items for search function: categories and business name
 		var keywords = [];
 		bizObj.categories.forEach(function(catType){
 			catType.forEach(function(cat){
@@ -47,6 +51,7 @@ function Model() {
 		})
 		keywords.push(this.name);
 		this.keywords = keywords;
+
 	};
 
 	//Send API Query to Yelp
@@ -62,15 +67,21 @@ function Model() {
 		  }
 		};
 
-		//var terms = 'food';
+		//var category = 'movietheaters,musicvenues';
+		var category = 'restaurants';
+		//var category = 'hotels';
 		var near = 'Red+Bank+NJ';
+		var radius = 5000;
+		var sort = 1;
 		var accessor = {
 		  consumerSecret: auth.consumerSecret,
 		  tokenSecret: auth.accessTokenSecret
 		};
 		parameters = [];
 		parameters.push(['location', near]);
-		//parameters.push(['term', terms]);
+		parameters.push(['category_filter', category]);
+		parameters.push(['radius_filter', radius]);
+		parameters.push(['sort', sort]);
 		parameters.push(['callback', 'cb']);
 		parameters.push(['oauth_consumer_key', auth.consumerKey]);
 		parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
@@ -110,17 +121,11 @@ function Model() {
 }
 
 //****************** VIEW **************************//
-//	* Uses Google Map to display locations
+//	* Use Google Map to display locations
 //**************************************************//
 
 function GoogleMap() {
 	var self = this;
-
-	self.mapLocations = model.locations();
-	//self.mapLocations = ko.observableArray();
-	//self.mapLocations = ViewModel.filteredLocations;
-
-
 	//Initialize Google Map
 	self.initialize = function() {
 
@@ -130,21 +135,23 @@ function GoogleMap() {
 		  zoom: 15,
 		  mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
-		var map = new google.maps.Map(mapCanvas, mapOptions);
+		self.map = new google.maps.Map(mapCanvas, mapOptions);
 
 		//Add markers to map
-		self.setMarkers(map);
+		self.setMarkers();
 
 	};
 
 	//Set locations for markers
-	self.setMarkers = function(map) {
-		places = this.mapLocations;
+//	self.setMarkers = ko.computed(function() {
+	self.setMarkers = function() {
+	var places = viewModel.filteredLocations();
+
 		for (var i = 0; i < places.length; i++) {
 			var place = places[i];
 			var marker = new google.maps.Marker({
 				position: {lat: place.lat, lng: place.lng },
-				map: map,
+				map: self.map,
 				title: place.title
 			});
 
@@ -165,11 +172,11 @@ function GoogleMap() {
 				return function() {
 					//Show infoWindow content on click
 					infoWindow.setContent(contentString);
-					infoWindow.open(map,marker);
+					infoWindow.open(self.map,marker);
 				};
 			})(marker,contentString,infoWindow));
 		}
-	}
+	} //)
 
 	google.maps.event.addDomListener(window, 'load', this.initialize);
 }
@@ -196,29 +203,39 @@ function ViewModel() {
 
 		//Convert filter to lower case (simplifies comparison)
 		var filter = self.filter().toLowerCase();
-		//set output to empty variable
-		var output = null;
 
-		//Call filter function to pull out locations that match keyword
-		output = ko.utils.arrayFilter(self.locations(), keyWordfilter);
+		if (!filter){
+			console.log("no filter");
+			return self.locations();
 
-		//Return array matching locations
-		return output;
+		} else {
+			console.log("Filtering for: ", filter);
 
-		//Keyword filter function
-		function keyWordfilter(location) {
-			//Set match to false so location is not returned by default
-			var match = false;
+			//set output to empty variable
+			var output = null;
 
-			//Check each item in keywords array for match
-			location.keywords.forEach(function(keyword) {
-				//If keyword matches filter, change match to true
-				if (keyword.toLowerCase().indexOf(filter) >= 0) {
-				  match = true;
-				}
-			});
-			//return location if any match is found
-			return match;
+			//Call filter function to pull out locations that match keyword
+			output = ko.utils.arrayFilter(self.locations(), keyWordfilter);
+
+			//Return array matching locations
+
+			return output;
+
+			//Keyword filter function
+			function keyWordfilter(location) {
+				//Set match to false so location is not returned by default
+				var match = false;
+
+				//Check each item in keywords array for match
+				location.keywords.forEach(function(keyword) {
+					//If keyword matches filter, change match to true
+					if (keyword.toLowerCase().indexOf(filter) >= 0) {
+					  match = true;
+					}
+				});
+				//return location if any match is found
+				return match;
+			}
 		}
 	});
 
@@ -227,5 +244,6 @@ function ViewModel() {
 }
 
 var model = new Model();
+var viewModel =  new ViewModel();
 var map = new GoogleMap();
-ko.applyBindings( new ViewModel() );
+ko.applyBindings(viewModel);
