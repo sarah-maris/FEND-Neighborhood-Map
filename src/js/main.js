@@ -160,13 +160,14 @@ function GoogleMap() {
 
 		for (var i = 0; i < places.length; i++) {
 			var place = places[i];
-			var marker = new google.maps.Marker({
+			place.marker = new google.maps.Marker({
 				position: {lat: place.lat, lng: place.lng },
 				map: self.map,
 				title: place.title,
 				icon: place.icon,
 				animation: google.maps.Animation.DROP
 			});
+			var marker = place.marker;
 
 			//Define content for info window
 			var contentString = place.contentString;
