@@ -51,6 +51,7 @@ function Model() {
 		})
 		keywords.push(this.name);
 		this.keywords = keywords;
+		this.icon = "img/restaurant.png";
 
 	};
 
@@ -153,6 +154,7 @@ function GoogleMap() {
 				position: {lat: place.lat, lng: place.lng },
 				map: self.map,
 				title: place.title,
+				icon: place.icon,
 				animation: google.maps.Animation.DROP
 			});
 
