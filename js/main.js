@@ -143,8 +143,8 @@ function GoogleMap() {
 	};
 
 	//Set locations for markers
-//	self.setMarkers = ko.computed(function() {
-	self.setMarkers = function() {
+	self.setMarkers = ko.computed(function() {
+
 	var places = viewModel.filteredLocations();
 
 		for (var i = 0; i < places.length; i++) {
@@ -152,7 +152,8 @@ function GoogleMap() {
 			var marker = new google.maps.Marker({
 				position: {lat: place.lat, lng: place.lng },
 				map: self.map,
-				title: place.title
+				title: place.title,
+				animation: google.maps.Animation.DROP
 			});
 
 			//Define content for info window
@@ -176,7 +177,7 @@ function GoogleMap() {
 				};
 			})(marker,contentString,infoWindow));
 		}
-	} //)
+	})
 
 	google.maps.event.addDomListener(window, 'load', this.initialize);
 }
