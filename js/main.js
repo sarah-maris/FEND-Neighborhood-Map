@@ -47,8 +47,8 @@ function Model() {
 		bizObj.categories.forEach(function(catType){
 			catType.forEach(function(cat){
 				keywords.push(cat);
-			})
-		})
+			});
+		});
 		keywords.push(this.name);
 		this.keywords = keywords;
 		this.icon = "img/restaurant.png";
@@ -69,13 +69,13 @@ function Model() {
 	self.getYelpData = function(cb) {
 
 		var auth = {
-		  consumerKey: "fCSqFxVC56k7RxD-CXhtFg",
-		  consumerSecret: "_phQk4XXGzIsVRJ8ZfarixIURVw",
-		  accessToken: "Ar-g_-LjgtRcBcXgKbTZ9zahrH2kdNNH",
-		  accessTokenSecret: "NX2X5wtTxbjKn4Q04N0FWQoH-88",
-		  serviceProvider: {
-			signatureMethod: "HMAC-SHA1"
-		  }
+			consumerKey: "fCSqFxVC56k7RxD-CXhtFg",
+			consumerSecret: "_phQk4XXGzIsVRJ8ZfarixIURVw",
+			accessToken: "Ar-g_-LjgtRcBcXgKbTZ9zahrH2kdNNH",
+			accessTokenSecret: "NX2X5wtTxbjKn4Q04N0FWQoH-88",
+			serviceProvider: {
+				signatureMethod: "HMAC-SHA1"
+			}
 		};
 
 		//var category = 'movietheaters,musicvenues';
@@ -85,8 +85,8 @@ function Model() {
 		var radius = 5000;
 		var sort = 1;
 		var accessor = {
-		  consumerSecret: auth.consumerSecret,
-		  tokenSecret: auth.accessTokenSecret
+			consumerSecret: auth.consumerSecret,
+			tokenSecret: auth.accessTokenSecret
 		};
 		parameters = [];
 		parameters.push(['location', near]);
@@ -100,9 +100,9 @@ function Model() {
 		parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
 
 		var message = {
-		  'action': 'http://api.yelp.com/v2/search',
-		  'method': 'GET',
-		  'parameters': parameters
+			'action': 'http://api.yelp.com/v2/search',
+			'method': 'GET',
+			'parameters': parameters
 		};
 		OAuth.setTimestampAndNonce(message);
 		OAuth.SignatureMethod.sign(message, accessor);
@@ -110,41 +110,43 @@ function Model() {
 		parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature);
 
 		$.ajax({
-			  url: message.action,
-			  data: parameterMap,
-			  cache: true,
-			  dataType: 'jsonp',
-			  jsonpCallback: 'cb'
+			url: message.action,
+			data: parameterMap,
+			cache: true,
+			dataType: 'jsonp',
+			jsonpCallback: 'cb'
 		})
 		//When sucessful send to getLocations
 		.done( function( data ) {
 			model.getLocations(data.businesses);
 			console.log(data.businesses);
 		})
-	    //When fail show error message
+		//When fail show error message
 		//TOD0: Make response more robust
 		.fail ( function(){
 			alert( "fail" );
 			console.log("Could not get data");
 		});
 
-	}
+	};
 }
 
 //****************** VIEW **************************//
 //	* Use Google Map to display locations
+//  * Show markers and infoWindows
 //**************************************************//
 
 function GoogleMap() {
 	var self = this;
+
 	//Initialize Google Map
 	self.initialize = function() {
 
 		var mapCanvas = document.getElementById('map');
 		var mapOptions = {
-		  center: new google.maps.LatLng(40.34653, -74.07409),
-		  zoom: 15,
-		  mapTypeId: google.maps.MapTypeId.ROADMAP
+			center: new google.maps.LatLng(40.34653, -74.07409),
+			zoom: 15,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 		self.map = new google.maps.Map(mapCanvas, mapOptions);
 
@@ -154,26 +156,29 @@ function GoogleMap() {
 	};
 
 	//Set locations for markers
-	self.setMarkers = ko.computed(function() {
+	self.setMarkers = function() {
 
-	var places = viewModel.filteredLocations();
+		//Get locations from viewModel;
+		var locations = viewModel.locations();
 
-		for (var i = 0; i < places.length; i++) {
-			var place = places[i];
-			place.marker = new google.maps.Marker({
-				position: {lat: place.lat, lng: place.lng },
+		//Set up marker for each location
+		for (var i = 0; i < locations.length; i++) {
+			var location = locations[i];
+			location.marker = new google.maps.Marker({
+				position: {lat: location.lat, lng: location.lng },
 				map: self.map,
-				title: place.title,
-				icon: place.icon,
+				title: location.title,
+				icon: location.icon,
 				animation: google.maps.Animation.DROP
 			});
-			var marker = place.marker;
+			var marker = location.marker;
 
 			//Define content for info window
-			var contentString = place.contentString;
+			var contentString = location.contentString;
 
 			//Add info window
-			var infoWindow = new google.maps.InfoWindow();
+			location.infoWindow = new google.maps.InfoWindow();
+			var infoWindow = location.infoWindow;
 
 			//Add click function to info window
 			google.maps.event.addListener(marker,'click', (function(marker,contentString,infoWindow){
@@ -184,19 +189,24 @@ function GoogleMap() {
 				};
 			})(marker,contentString,infoWindow));
 		}
-	})
+	};
 
 	google.maps.event.addDomListener(window, 'load', this.initialize);
 }
 
-//********************** VIEW MODEL *************************//
+//************************** VIEW MODEL *****************************//
 //	* Use Knockoutjs to bind observable data to page
 //  * Filter locations by user input (name and/or category)
-//**********************************************************//
+//  * Set marker visibilty to show only filtered locations on map
+//******************************************************************//
 
 function ViewModel() {
 
     var self = this;
+
+
+	//Get Yelp data from API
+	model.getYelpData();
 
 	//Get data from model
     self.locations = ko.computed(function(){
@@ -213,11 +223,9 @@ function ViewModel() {
 		var filter = self.filter().toLowerCase();
 
 		if (!filter){
-			console.log("no filter");
 			return self.locations();
 
 		} else {
-			console.log("Filtering for: ", filter);
 
 			//set output to empty variable
 			var output = null;
@@ -226,29 +234,34 @@ function ViewModel() {
 			output = ko.utils.arrayFilter(self.locations(), keyWordfilter);
 
 			//Return array matching locations
-
 			return output;
+		}
+		//Keyword filter function
+		function keyWordfilter(location) {
 
-			//Keyword filter function
-			function keyWordfilter(location) {
-				//Set match to false so location is not returned by default
-				var match = false;
+			//Set match to false so location is not returned by default
+			var match = false;
 
-				//Check each item in keywords array for match
-				location.keywords.forEach(function(keyword) {
-					//If keyword matches filter, change match to true
-					if (keyword.toLowerCase().indexOf(filter) >= 0) {
-					  match = true;
-					}
-				});
-				//return location if any match is found
-				return match;
-			}
+			//Set marker visibility to false
+			location.marker.setVisible(false);
+
+			//Close infoWindow if open
+			location.infoWindow.close();
+
+			//Check each item in keywords array for match
+			location.keywords.forEach(function(keyword) {
+
+				//If keyword matches filter, change match to true and make marker visible
+				if (keyword.toLowerCase().indexOf(filter) >= 0) {
+					match = true;
+					location.marker.setVisible(true);
+				}
+			});
+
+			//return location if any match is found
+			return match;
 		}
 	});
-
-	//Get Yelp data from API
-	model.getYelpData();
 }
 
 var model = new Model();
