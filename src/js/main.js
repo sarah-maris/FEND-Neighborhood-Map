@@ -191,6 +191,19 @@ function GoogleMap() {
 		}
 	};
 
+	//When filtered item is clicked, map marker bounces and infoWindow opens
+	self.showDetails = function(location) {
+		location.infoWindow.close();
+		var marker = location.marker;
+		var infoWindow = location.infoWindow;
+
+		marker.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){ marker.setAnimation(null); }, 900);
+		infoWindow.setContent(location.contentString);
+		infoWindow.open(self.map,marker);
+
+	};
+
 	google.maps.event.addDomListener(window, 'load', this.initialize);
 }
 
@@ -268,3 +281,8 @@ var model = new Model();
 var viewModel =  new ViewModel();
 var map = new GoogleMap();
 ko.applyBindings(viewModel);
+//TODO: Add other business types (hotels, theaters/music venues, coffee shops)
+//TODO: Add localstorage so filter persists
+//TODO: Add another API -- NJ Transit, weather channel, sunrise and sunset times
+//TODO: Customize map and icon colors
+//TODO: Upgrade search capacity to include autocomplete or filter by multiple items

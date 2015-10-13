@@ -27,7 +27,7 @@
 		<p>Searching for: <input data-bind="value: filter, valueUpdate: 'afterkeydown'" />
 		<h2>Filtered List:</h2>
 		<ul data-bind="foreach: filteredLocations">
-			<li class="place" data-bind="text: $data.name"></li>
+			<li class="place" data-bind="text: $data.name,  click: map.showDetails"></li>
 		</ul>
 	</section>
 	<section id="map">
