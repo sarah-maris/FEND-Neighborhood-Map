@@ -54,13 +54,15 @@ function Model() {
 		this.icon = "img/restaurant.png";
 
 		//Define content for info window
-		var windowContent = '<div class="place-name">' + this.name + '</div>';
-				windowContent += '<img class="place-image"src="' + this.imgUrl + '" alt="image of '+ this.name + '">';
-				windowContent += '<div class="place-info">' + this.address + '<br>' + this.city + ',' + this.state + '<br>';
-				windowContent += '<a href="tel:' + this.phone + '">' + this.dphone + '</a><br>';
-				windowContent += '<img class="rating-image" src="' + this.stars + '" alt="Yelp star ratung: '+ this.rating + '"></div>';
-				windowContent += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span>';
-				windowContent += '<a href="' + this.url + '" class="yelp"><img src="' + model.pwdByYelp + '" alt="Powered by Yelp"></a></div>';
+		var windowContent = '<div class="iw"><div class="place-name">' + this.name + '</div>';
+			windowContent += '<img class="place-image"src="' + this.imgUrl + '" alt="image of '+ this.name + '">';
+			windowContent += '<div class="place-info">' + this.address + '<br>' + this.city + ',' + this.state + '<br>';
+			windowContent += '<a href="tel:' + this.phone + '">' + this.dphone + '</a><br>';
+			windowContent += '<img class="rating-image" src="' + this.stars + '" alt="Yelp star ratung: '+ this.rating + '">';
+			windowContent += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
+			windowContent += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
+			windowContent += '<div><a href="' + this.url + '" class="button" target="_blank">Read Full Review</a>';
+			windowContent += '<a href="' + this.url + '" class="button">Add to Favorites</a></div></div>';
 		this.contentString = windowContent;
 
 	};
@@ -286,3 +288,4 @@ ko.applyBindings(viewModel);
 //TODO: Add another API -- NJ Transit, weather channel, sunrise and sunset times
 //TODO: Customize map and icon colors
 //TODO: Upgrade search capacity to include autocomplete or filter by multiple items
+//TODO: Make error handling more robust
