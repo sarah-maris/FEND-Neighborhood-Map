@@ -1,8 +1,8 @@
+/***** Basic colors, fonts etc. *****/
+
 * {
   box-sizing: border-box;
 }
-
-
 
 header {
 	background-color:#97282C;
@@ -14,12 +14,17 @@ body {
 	font-family: 'Ubuntu', sans-serif;
 }
 
-#place-list {
-	width: 20%;
-	padding: 0;
-	display: block;
-	float: left;
+h1 {
+	font: bold 40px 'Ubuntu', sans-serif;
+	margin: 20px 20px 0 20px;
 }
+h3 {
+	font-family: 'Architects Daughter', cursive;
+	margin: 0 20px 20px 20px;
+}
+
+
+/***** Map *****/
 
 #map {
 	width: 80%;
@@ -30,18 +35,23 @@ body {
 	float: left;
 }
 
+/***** List of locations *****/
+#place-list {
+	width: 20%;
+	padding: 0;
+	display: block;
+	float: left;
+}
+
 #place-list ul {
 	list-style-type: none;
 	padding: 10px;
 	margin: 0;
 }
-h1 {
-	font: bold 40px 'Ubuntu', sans-serif;
-	margin: 20px 20px 0 20px;
-}
-h3 {
-	font-family: 'Architects Daughter', cursive;
-	margin: 0 20px 20px 20px;
+
+/***** InfoWindows *****/
+.iw {
+	height: 250px;
 }
 
 .place-name {
@@ -74,21 +84,33 @@ h3 {
 }
 
 .review {
-	display: block;
-	padding: 5px;
-	font: italic 11px Roboto, Arial, sans-serif;
 	clear: both;
+	display: block;
+	font: italic 11px Roboto, Arial, sans-serif;
 	max-width: 250px;
+	padding: 5px;
 }
 
 .yelp img {
-    width: 90px;
     display:block;
+	max-width: 90px;
 }
 
-.yelp img:hover, .yelp img:focus, .yelp img:active {
-    width: 115px;
-    -webkit-transition-timing-function: linear;
-    transition-timing-function: linear;
-    transition-duration: 0.2s;
+.button:hover, .button:focus, .button:active {
+	background: #000;
+	text-decoration: none;
+}
+
+.button {
+	background: #97282C;
+	border-radius: 5px;
+	color: #ffffff;
+	display:inline;
+	-webkit-border-radius: 5;
+	-moz-border-radius: 5;
+	font-size: 12px;
+	margin: 5px;
+	padding: 5px;
+	text-decoration: none;
+	width: 50%;
 }
