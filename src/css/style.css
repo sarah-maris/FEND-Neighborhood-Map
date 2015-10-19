@@ -101,7 +101,7 @@ h3 {
 	text-decoration: none;
 }
 
-.button {
+input, .button {
 	background: #97282C;
 	border-radius: 5px;
 	color: #ffffff;
