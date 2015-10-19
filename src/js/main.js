@@ -13,74 +13,12 @@ function Model() {
 	//Push locations from Yelp query into array
 	self.getLocations = function(businesses) {
 		for (var i=0; i < businesses.length; i++ ){
-			this.locations.push( new this.bizInfo( businesses[i], i ));
+			this.locations.push( new viewModel.bizInfo( businesses[i], i ));
 		}
 	};
 
-    //Get Yelp image
+	//Get Yelp image
     self.pwdByYelp = "img/Powered_By_Yelp_Black.png",
-
-	//Get information about each business from Yelp query data
-	self.bizInfo = function(bizObj) {
-
-		//Get coordinates for map placement
-		this.lat =  bizObj.location.coordinate.latitude;
-		this.lng = bizObj.location.coordinate.longitude;
-
-		//Get info for infoWindow
-		this.name =  bizObj.name;
-		this.imgUrl = bizObj.image_url;
-		this.address = bizObj.location.address[0];
-		this.rating = bizObj.rating;
-		this.stars = bizObj.rating_img_url;
-		this.snippet = bizObj.snippet_text;
-		this.city = bizObj.location.city;
-        this.state = bizObj.location.state_code;
-		this.url = bizObj.url;
-
-		//Format phone number for display
-		this.phone = bizObj.phone;
-		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
-
-		//Create a single array of items for search function: categories and business name
-		var keywords = [];
-		bizObj.categories.forEach(function(catType){
-			catType.forEach(function(cat){
-				keywords.push(cat);
-			});
-		});
-		keywords.push(this.name);
-		this.keywords = keywords;
-		this.icon = ko.observable("img/restaurant.png");
-		console.log("icon", this.icon());
-//		this.fav = ko.observable;
-
-		//Define content for info window
-		var windowContent = document.createElement('div'), button;
-
-		windowHTML = '<div class="iw"><div class="place-name">' + this.name + '</div>';
-		windowHTML += '<img class="place-image"src="' + this.imgUrl + '" alt="image of '+ this.name + '">';
-		windowHTML += '<div class="place-info">' + this.address + '<br>' + this.city + ',' + this.state + '<br>';
-		windowHTML += '<a href="tel:' + this.phone + '">' + this.dphone + '</a><br>';
-		windowHTML += '<img class="rating-image" src="' + this.stars + '" alt="Yelp star ratung: '+ this.rating + '">';
-		windowHTML += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
-		windowHTML += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
-		windowHTML += '<div><a href="' + this.url + '" class="button" target="_blank">Read Full Review</a>';
-		windowHTML += '<div class="button">Add to Favorites</div></div></div>';
-		windowContent.innerHTML = windowHTML;
-				button = windowContent.appendChild(document.createElement('input'));
-        button.type = 'button';
-        button.value = 'Add to Favorites';
-		var that = this;
-		google.maps.event.addDomListener(button, 'click', function () {
-            that.icon("img/hotel.png");
-			console.log("icon", that.icon());
-											//	  map.setMarkers();
-					  });
-
-		this.contentString = windowContent;
-
-	};
 
 	//Send API Query to Yelp
 	self.getYelpData = function(cb) {
@@ -238,7 +176,6 @@ function ViewModel() {
 
     var self = this;
 
-
 	//Get Yelp data from API
 	model.getYelpData();
 
@@ -246,6 +183,68 @@ function ViewModel() {
     self.locations = ko.computed(function(){
         return model.locations();
     });
+
+	//Get information about each business from Yelp query data
+	self.bizInfo = function(bizObj) {
+
+		//Get coordinates for map placement
+		this.lat =  bizObj.location.coordinate.latitude;
+		this.lng = bizObj.location.coordinate.longitude;
+
+		//Get info for infoWindow
+		this.name =  bizObj.name;
+		this.imgUrl = bizObj.image_url;
+		this.address = bizObj.location.address[0];
+		this.rating = bizObj.rating;
+		this.stars = bizObj.rating_img_url;
+		this.snippet = bizObj.snippet_text;
+		this.city = bizObj.location.city;
+        this.state = bizObj.location.state_code;
+		this.url = bizObj.url;
+
+		//Format phone number for display
+		this.phone = bizObj.phone;
+		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
+
+		//Create a single array of items for search function: categories and business name
+		var keywords = [];
+		bizObj.categories.forEach(function(catType){
+			catType.forEach(function(cat){
+				keywords.push(cat);
+			});
+		});
+		keywords.push(this.name);
+		this.keywords = keywords;
+		this.icon = ko.observable("img/restaurant.png");
+		console.log("icon", this.icon());
+//		this.fav = ko.observable;
+
+		//Define content for info window
+		var windowContent = document.createElement('div'), button;
+
+		windowHTML = '<div class="iw"><div class="place-name">' + this.name + '</div>';
+		windowHTML += '<img class="place-image"src="' + this.imgUrl + '" alt="image of '+ this.name + '">';
+		windowHTML += '<div class="place-info">' + this.address + '<br>' + this.city + ',' + this.state + '<br>';
+		windowHTML += '<a href="tel:' + this.phone + '">' + this.dphone + '</a><br>';
+		windowHTML += '<img class="rating-image" src="' + this.stars + '" alt="Yelp star ratung: '+ this.rating + '">';
+		windowHTML += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
+		windowHTML += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
+		windowHTML += '<div><a href="' + this.url + '" class="button" target="_blank">Read Full Review</a>';
+		windowHTML += '<div class="button">Add to Favorites</div></div></div>';
+		windowContent.innerHTML = windowHTML;
+				button = windowContent.appendChild(document.createElement('input'));
+        button.type = 'button';
+        button.value = 'Add to Favorites';
+		var that = this;
+		google.maps.event.addDomListener(button, 'click', function () {
+            that.icon("img/hotel.png");
+			console.log("icon", that.icon());
+											//	  map.setMarkers();
+					  });
+
+		this.contentString = windowContent;
+
+	};
 
 	//Set filter as an observable
 	self.filter = ko.observable('');
