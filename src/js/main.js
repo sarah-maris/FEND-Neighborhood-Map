@@ -123,7 +123,8 @@ function GoogleMap() {
 				position: {lat: location.lat, lng: location.lng },
 				map: self.map,
 				title: location.title,
-				icon: location.icon(),
+				icon: location.icon,
+			//	icon: location.icon(),
 				animation: google.maps.Animation.DROP
 			});
 			var marker = location.marker;
@@ -215,8 +216,7 @@ function ViewModel() {
 		});
 		keywords.push(this.name);
 		this.keywords = keywords;
-		this.icon = ko.observable("img/restaurant.png");
-		console.log("icon", this.icon());
+		this.icon = "img/restaurant.png";
 //		this.fav = ko.observable;
 
 		//Define content for info window
@@ -237,10 +237,8 @@ function ViewModel() {
         button.value = 'Add to Favorites';
 		var that = this;
 		google.maps.event.addDomListener(button, 'click', function () {
-            that.icon("img/hotel.png");
-			console.log("icon", that.icon());
-											//	  map.setMarkers();
-					  });
+			self.makeFav(that);
+		});
 
 		this.contentString = windowContent;
 
@@ -297,9 +295,17 @@ function ViewModel() {
 	});
 
 
-	self.addFav = function(){
-		console.log("test");
-	}
+
+	//When item is favorited icon bounces and info window closes
+	self.makeFav = function(location) {
+		location.infoWindow.close();
+		location.marker.icon = "img/hotel.png";
+
+		//Set marker animation to about one bounce
+		location.marker.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){ location.marker.setAnimation(null); }, 750);
+	};
+
 }
 
 var model = new Model();
