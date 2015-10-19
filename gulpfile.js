@@ -160,12 +160,14 @@ gulp.task('build', function(callback) {
     //Clean out build directory
  //   'clean-build', <-- causing hang.  Update later
     //Run synchronous tasks
-    ['min-html','min-scripts', 'min-styles', 'lint', 'png-images', 'jpg-images'],
+    //['min-html',
+	['min-scripts', 'min-styles', 'lint', 'png-images', 'jpg-images'],
     //Inline css
-    'inline-css',
+   // 'inline-css',
     //Watch for changes
     'watch',
     callback);
 });
 //TODO:  Add image resize when image sizes are determined
 //TODO:  Fix hang in sequence with clean
+//TODO:  Add back inline-css
