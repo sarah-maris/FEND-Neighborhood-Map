@@ -7,21 +7,32 @@
 function Model() {
 	var self = this;
 
-	//Set up locations
-	self.locations =  ko.observableArray();
+	//Set up observable array to hold locations
+	self.locations = ko.observableArray();
 
-	//Push locations from Yelp query into array
-	self.getLocations = function(businesses) {
-		for (var i=0; i < businesses.length; i++ ){
-			this.locations.push( new viewModel.bizInfo( businesses[i], i ));
-		}
-	};
+	//Add categories that we want to include
+	self.categories = [
+		{ 'name':'movietheaters,musicvenues', 'cat': 'entertainment' },
+		{ 'name':'restaurants', 'cat': 'restaurant' },
+		{ 'name':'hotels', 'cat': 'hotel' },
+		{ 'name':'shopping', 'cat': 'shopping' }
+	]
 
-	//Get Yelp image
-    self.pwdByYelp = "img/Powered_By_Yelp_Black.png",
+
+	//Iterate through categories to get data from Yelp
+	self.getAllData = function(){
+
+		//Set variables for counter and number of categories
+		self.counter = 0;
+		self.numCats = self.categories.length;
+
+		//Start with the first category -- next is called after successful data retrieval
+		self.getYelpData(self.categories[0])
+	}
+
 
 	//Send API Query to Yelp
-	self.getYelpData = function(cb) {
+	self.getYelpData = function(category, cb) {
 
 		var auth = {
 			consumerKey: "fCSqFxVC56k7RxD-CXhtFg",
@@ -33,11 +44,8 @@ function Model() {
 			}
 		};
 
-		//var category = 'movietheaters,musicvenues';
-		var category = 'restaurants';
-		//var category = 'hotels';
 		var near = 'Red+Bank+NJ';
-		var radius = 5000;
+		var radius = 3000;
 		var sort = 1;
 		var accessor = {
 			consumerSecret: auth.consumerSecret,
@@ -45,7 +53,7 @@ function Model() {
 		};
 		parameters = [];
 		parameters.push(['location', near]);
-		parameters.push(['category_filter', category]);
+		parameters.push(['category_filter', category.name]);
 		parameters.push(['radius_filter', radius]);
 		parameters.push(['sort', sort]);
 		parameters.push(['callback', 'cb']);
@@ -66,6 +74,7 @@ function Model() {
 
 		$.ajax({
 			url: message.action,
+			async: true,
 			data: parameterMap,
 			cache: true,
 			dataType: 'jsonp',
@@ -73,17 +82,31 @@ function Model() {
 		})
 		//When sucessful send to getLocations
 		.done( function( data ) {
-			model.getLocations(data.businesses);
-			console.log(data.businesses);
+			model.getLocations(data.businesses, category);
+			self.counter ++;
+			if (self.counter < self.numCats ) {
+				self.getYelpData( self.categories[self.counter] );
+			}
 		})
 		//When fail show error message
 		//TOD0: Make response more robust
-		.fail ( function(){
-			alert( "fail" );
-			console.log("Could not get data");
+		.fail ( function( data ){
+			alert( "fail");
+			console.log("Could not get data", data);
 		});
 
 	};
+
+	//Push locations from Yelp query into array
+	self.getLocations = function(businesses, category) {
+		for (var i=0; i < businesses.length; i++ ){
+			this.locations.push( new viewModel.bizInfo( businesses[i], category ));
+		}
+	};
+
+	//Get Yelp image
+    self.pwdByYelp = "img/Powered_By_Yelp_Black.png";
+
 }
 
 //****************** VIEW **************************//
@@ -99,8 +122,8 @@ function GoogleMap() {
 
 		var mapCanvas = document.getElementById('map');
 		var mapOptions = {
-			center: new google.maps.LatLng(40.34653, -74.07409),
-			zoom: 15,
+			center: new google.maps.LatLng(40.349628, -74.067073),
+			zoom: 17,
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 		self.map = new google.maps.Map(mapCanvas, mapOptions);
@@ -124,7 +147,6 @@ function GoogleMap() {
 				map: self.map,
 				title: location.title,
 				icon: location.icon,
-			//	icon: location.icon(),
 				animation: google.maps.Animation.DROP
 			});
 			var marker = location.marker;
@@ -178,7 +200,7 @@ function ViewModel() {
     var self = this;
 
 	//Get Yelp data from API
-	model.getYelpData();
+	model.getAllData(model.categories[0]);
 
 	//Get data from model
     self.locations = ko.computed(function(){
@@ -186,7 +208,7 @@ function ViewModel() {
     });
 
 	//Get information about each business from Yelp query data
-	self.bizInfo = function(bizObj) {
+	self.bizInfo = function(bizObj, category) {
 
 		//Get coordinates for map placement
 		this.lat =  bizObj.location.coordinate.latitude;
@@ -216,7 +238,11 @@ function ViewModel() {
 		});
 		keywords.push(this.name);
 		this.keywords = keywords;
-		this.icon = "img/restaurant.png";
+
+		//Get category and icon images for map
+		this.cat = category.cat;
+		this.icon = 'img/' + this.cat + '.png';
+		this.favIcon = 'img/fav-' + this.cat + '.png';
 		this.fav = false;
 
 		//Define content for info window
@@ -227,13 +253,13 @@ function ViewModel() {
 		windowHTML += '<img class="place-image"src="' + this.imgUrl + '" alt="image of '+ this.name + '">';
 		windowHTML += '<div class="place-info">' + this.address + '<br>' + this.city + ',' + this.state + '<br>';
 		windowHTML += '<a href="tel:' + this.phone + '">' + this.dphone + '</a><br>';
-		windowHTML += '<img class="rating-image" src="' + this.stars + '" alt="Yelp star ratung: '+ this.rating + '">';
+		windowHTML += '<img class="rating-image" src="' + this.stars + '" alt="Yelp star rating: '+ this.rating + '">';
 		windowHTML += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
 		windowHTML += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
 		windowContent.innerHTML = windowHTML;
 
-		//Give window content 'iw' class
-		windowContent.setAttribute("class", "iw");
+		//Give window content 'info-window' class
+		windowContent.setAttribute('class', 'info-window');
 
 		//Create button for Yelp link
 		var yelpButton = windowContent.appendChild(document.createElement('div'));
@@ -243,7 +269,7 @@ function ViewModel() {
 		//Create button for Add to Favorites
 		var favButton = windowContent.appendChild(document.createElement('div'));
 		favButton.innerHTML = 'Add to Favorites';
-		favButton.setAttribute("class", "button");
+		favButton.setAttribute('class', 'button');
 
 		//Needed to bring locations into function
 		var that = this;
@@ -318,7 +344,7 @@ function ViewModel() {
 		location.infoWindow.close();
 
 		//Change to 'fav' icon
-		location.marker.icon = "img/fav-restaurant.png";
+		location.marker.icon = location.favIcon;
 
 		//Bounce icon
 		location.marker.setAnimation(google.maps.Animation.BOUNCE);
