@@ -217,7 +217,7 @@ function ViewModel() {
 		keywords.push(this.name);
 		this.keywords = keywords;
 		this.icon = "img/restaurant.png";
-//		this.fav = ko.observable;
+		this.fav = false;
 
 		//Define content for info window
 		var windowContent = document.createElement('div'), button;
@@ -232,7 +232,8 @@ function ViewModel() {
 		windowHTML += '<div><a href="' + this.url + '" class="button" target="_blank">Read Full Review</a>';
 		windowHTML += '<div class="button">Add to Favorites</div></div></div>';
 		windowContent.innerHTML = windowHTML;
-				button = windowContent.appendChild(document.createElement('input'));
+
+		button = windowContent.appendChild(document.createElement('input'));
         button.type = 'button';
         button.value = 'Add to Favorites';
 		var that = this;
@@ -268,7 +269,7 @@ function ViewModel() {
 			return output;
 		}
 		//Keyword filter function
-		function keyWordfilter(location) {
+		function keyWordfilter(location){
 
 			//Set match to false so location is not returned by default
 			var match = false;
@@ -296,12 +297,18 @@ function ViewModel() {
 
 
 
-	//When item is favorited icon bounces and info window closes
+	//When item is favorited iicon changes to star bounces and info window closes
 	self.makeFav = function(location) {
-		location.infoWindow.close();
-		location.marker.icon = "img/hotel.png";
+		//Change fav attribute to 'true'
+		location.fav = true;
 
-		//Set marker animation to about one bounce
+		//Close info window
+		location.infoWindow.close();
+
+		//Change to 'fav' icon
+		location.marker.icon = "img/fav-restaurant.png";
+
+		//Bounce icon
 		location.marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ location.marker.setAnimation(null); }, 750);
 	};
@@ -312,6 +319,7 @@ var model = new Model();
 var viewModel =  new ViewModel();
 var map = new GoogleMap();
 ko.applyBindings(viewModel);
+
 //TODO: Add other business types (hotels, theaters/music venues, coffee shops)
 //TODO: Add localstorage so filter persists
 //TODO: Add another API -- NJ Transit, weather channel, sunrise and sunset times
