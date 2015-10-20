@@ -28,7 +28,7 @@ h3 {
 
 #map {
 	width: 80%;
-	height: 400px;
+	height: 800px;
 	background-color: #CCC;
 	padding: 10px;
 	display: block;
@@ -50,7 +50,7 @@ h3 {
 }
 
 /***** InfoWindows *****/
-.iw {
+.info-window {
 	height: 250px;
 }
 
