@@ -216,7 +216,7 @@ function ViewModel() {
 
 		//Get info for infoWindow
 		this.name =  bizObj.name;
-		this.imgUrl = bizObj.image_url;
+
 		this.address = bizObj.location.address[0];
 		this.rating = bizObj.rating;
 		this.stars = bizObj.rating_img_url;
@@ -225,6 +225,9 @@ function ViewModel() {
         this.state = bizObj.location.state_code;
 		this.url = bizObj.url;
 
+		//If no image use placeholder
+		this.imgUrl = bizObj.image_url ? bizObj.image_url : 'img/no-image.png';
+		
 		//Format phone number for display
 		this.phone = bizObj.phone;
 		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
