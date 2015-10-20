@@ -220,24 +220,36 @@ function ViewModel() {
 		this.fav = false;
 
 		//Define content for info window
-		var windowContent = document.createElement('div'), button;
+		var windowContent = document.createElement('div');
 
-		windowHTML = '<div class="iw"><div class="place-name">' + this.name + '</div>';
+		//Build info window HTML
+		windowHTML = '<div class="place-name">' + this.name + '</div>';
 		windowHTML += '<img class="place-image"src="' + this.imgUrl + '" alt="image of '+ this.name + '">';
 		windowHTML += '<div class="place-info">' + this.address + '<br>' + this.city + ',' + this.state + '<br>';
 		windowHTML += '<a href="tel:' + this.phone + '">' + this.dphone + '</a><br>';
 		windowHTML += '<img class="rating-image" src="' + this.stars + '" alt="Yelp star ratung: '+ this.rating + '">';
 		windowHTML += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
 		windowHTML += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
-		windowHTML += '<div><a href="' + this.url + '" class="button" target="_blank">Read Full Review</a>';
-		windowHTML += '<div class="button">Add to Favorites</div></div></div>';
 		windowContent.innerHTML = windowHTML;
 
-		button = windowContent.appendChild(document.createElement('input'));
-        button.type = 'button';
-        button.value = 'Add to Favorites';
+		//Give window content 'iw' class
+		windowContent.setAttribute("class", "iw");
+
+		//Create button for Yelp link
+		var yelpButton = windowContent.appendChild(document.createElement('div'));
+		yelpButton.innerHTML = '<a href="' + this.url + '" target="_blank">Read Full Review</a>';
+		yelpButton.setAttribute("class", "button");
+
+		//Create button for Add to Favorites
+		var favButton = windowContent.appendChild(document.createElement('div'));
+		favButton.innerHTML = 'Add to Favorites';
+		favButton.setAttribute("class", "button");
+
+		//Needed to bring locations into function
 		var that = this;
-		google.maps.event.addDomListener(button, 'click', function () {
+
+		//Add click event for Add to Favorites button
+		google.maps.event.addDomListener(favButton, 'click', function () {
 			self.makeFav(that);
 		});
 

@@ -101,10 +101,9 @@ h3 {
 	text-decoration: none;
 }
 
-input, .button {
+.button {
 	background: #97282C;
 	border-radius: 5px;
-	color: #ffffff;
 	display:inline;
 	-webkit-border-radius: 5;
 	-moz-border-radius: 5;
@@ -113,4 +112,10 @@ input, .button {
 	padding: 5px;
 	text-decoration: none;
 	width: 50%;
+}
+.button,
+.button a {
+	color: #ffffff;
+	font-weight: bold;
+	text-decoration: none;
 }
