@@ -20,7 +20,7 @@ function Model() {
 
 
 	//Iterate through categories to get data from Yelp
-	self.getAllData = function(){
+	self.getData = function(){
 
 		//Set variables for counter and number of categories
 		self.counter = 0;
@@ -28,6 +28,7 @@ function Model() {
 
 		//Start with the first category -- next is called after successful data retrieval
 		self.getYelpData(self.categories[0])
+
 	}
 
 
@@ -100,93 +101,13 @@ function Model() {
 	//Push locations from Yelp query into array
 	self.getLocations = function(businesses, category) {
 		for (var i=0; i < businesses.length; i++ ){
-			this.locations.push( new viewModel.bizInfo( businesses[i], category ));
+			self.locations.push( new viewModel.bizInfo( businesses[i], category ));
 		}
 	};
 
 	//Get Yelp image
     self.pwdByYelp = "img/Powered_By_Yelp_Black.png";
 
-}
-
-//****************** VIEW **************************//
-//	* Use Google Map to display locations
-//  * Show markers and infoWindows
-//**************************************************//
-
-function GoogleMap() {
-	var self = this;
-
-	//Initialize Google Map
-	self.initialize = function() {
-
-		var mapCanvas = document.getElementById('map');
-		var mapOptions = {
-			center: new google.maps.LatLng(40.349628, -74.067073),
-			zoom: 17,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-		};
-		self.map = new google.maps.Map(mapCanvas, mapOptions);
-
-		//Add markers to map
-		self.setMarkers();
-
-	};
-
-	//Set locations for markers
-	self.setMarkers = function() {
-
-		//Get locations from viewModel;
-		var locations = viewModel.locations();
-
-		//Set up marker for each location
-		for (var i = 0; i < locations.length; i++) {
-			var location = locations[i];
-			location.marker = new google.maps.Marker({
-				position: {lat: location.lat, lng: location.lng },
-				map: self.map,
-				title: location.title,
-				icon: location.icon,
-				animation: google.maps.Animation.DROP
-			});
-			var marker = location.marker;
-
-			//Define content for info window
-			var contentString = location.contentString;
-
-			//Add info window
-			location.infoWindow = new google.maps.InfoWindow();
-			var infoWindow = location.infoWindow;
-
-			//Add click function to info window
-			google.maps.event.addListener(marker,'click', (function(marker,contentString,infoWindow){
-				return function() {
-					//Show infoWindow content on click
-					infoWindow.setContent(contentString);
-					infoWindow.open(self.map,marker);
-				};
-			})(marker,contentString,infoWindow));
-
-		}
-	};
-
-	//When filtered item is clicked, map marker bounces and infoWindow opens
-	self.showDetails = function(location) {
-		location.infoWindow.close();
-		var marker = location.marker;
-		var infoWindow = location.infoWindow;
-
-		//Set marker animation to about one bounce
-		marker.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){ marker.setAnimation(null); }, 900);
-
-		//Show contentString when infoWindow is opened
-		infoWindow.setContent(location.contentString);
-		infoWindow.open(self.map,marker);
-
-	};
-
-	google.maps.event.addDomListener(window, 'load', this.initialize);
 }
 
 //************************** VIEW MODEL *****************************//
@@ -200,7 +121,7 @@ function ViewModel() {
     var self = this;
 
 	//Get Yelp data from API
-	model.getAllData(model.categories[0]);
+	model.getData();
 
 	//Get data from model
     self.locations = ko.computed(function(){
@@ -227,7 +148,7 @@ function ViewModel() {
 
 		//If no image use placeholder
 		this.imgUrl = bizObj.image_url ? bizObj.image_url : 'img/no-image.png';
-		
+
 		//Format phone number for display
 		this.phone = bizObj.phone;
 		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
@@ -352,8 +273,89 @@ function ViewModel() {
 		//Bounce icon
 		location.marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ location.marker.setAnimation(null); }, 750);
+
 	};
 
+}
+
+//****************** VIEW **************************//
+//	* Use Google Map to display locations
+//  * Show markers and infoWindows
+//**************************************************//
+
+function GoogleMap() {
+	var self = this;
+
+	//Initialize Google Map
+	self.initialize = function() {
+
+		var mapCanvas = document.getElementById('map');
+		var mapOptions = {
+			center: new google.maps.LatLng(40.349628, -74.067073),
+			zoom: 17,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+		self.map = new google.maps.Map(mapCanvas, mapOptions);
+
+		//Add markers to map
+		self.setMarkers();
+
+	};
+
+	//Set locations for markers
+	self.setMarkers = function() {
+
+		//Get locations from viewModel;
+		var locations = viewModel.locations();
+
+		//Set up marker for each location
+		for (var i = 0; i < locations.length; i++) {
+			var location = locations[i];
+			location.marker = new google.maps.Marker({
+				position: {lat: location.lat, lng: location.lng },
+				map: self.map,
+				title: location.title,
+				icon: location.icon,
+				animation: google.maps.Animation.DROP
+			});
+			var marker = location.marker;
+
+			//Define content for info window
+			var contentString = location.contentString;
+
+			//Add info window
+			location.infoWindow = new google.maps.InfoWindow();
+			var infoWindow = location.infoWindow;
+
+			//Add click function to info window
+			google.maps.event.addListener(marker,'click', (function(marker,contentString,infoWindow){
+				return function() {
+					//Show infoWindow content on click
+					infoWindow.setContent(contentString);
+					infoWindow.open(self.map,marker);
+				};
+			})(marker,contentString,infoWindow));
+
+		}
+	};
+
+	//When filtered item is clicked, map marker bounces and infoWindow opens
+	self.showDetails = function(location) {
+		location.infoWindow.close();
+		var marker = location.marker;
+		var infoWindow = location.infoWindow;
+
+		//Set marker animation to about one bounce
+		marker.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){ marker.setAnimation(null); }, 900);
+
+		//Show contentString when infoWindow is opened
+		infoWindow.setContent(location.contentString);
+		infoWindow.open(self.map,marker);
+
+	};
+
+	google.maps.event.addDomListener(window, 'load', this.initialize);
 }
 
 var model = new Model();
@@ -361,9 +363,8 @@ var viewModel =  new ViewModel();
 var map = new GoogleMap();
 ko.applyBindings(viewModel);
 
-//TODO: Add other business types (hotels, theaters/music venues, coffee shops)
-//TODO: Add localstorage so filter persists
+//TODO: Add firebase so favorites persist
 //TODO: Add another API -- NJ Transit, weather channel, sunrise and sunset times
-//TODO: Customize map and icon colors
+//TODO: Customize map colors
 //TODO: Upgrade search capacity to include autocomplete or filter by multiple items
 //TODO: Make error handling more robust
