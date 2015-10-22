@@ -28,7 +28,9 @@ function Model() {
 		self.numCats = self.categories.length;
 
 		//Start with the first category -- next is called after successful data retrieval
-		self.getYelpData(self.categories[0])
+		self.getYelpData(self.categories[0]);
+
+
 
 	}
 
@@ -89,6 +91,9 @@ function Model() {
 			if (self.counter < self.numCats ) {
 				self.getYelpData( self.categories[self.counter] );
 			}
+			//Push JSON content to firebase
+			storedLocations.set(self.locations())
+
 		})
 		//When fail show error message
 		//TOD0: Make response more robust
@@ -105,7 +110,6 @@ function Model() {
 			self.locations.push( new viewModel.bizInfo( businesses[i], category ));
 
 		}
-
 	};
 
 	//Get Yelp image
@@ -183,11 +187,6 @@ function ViewModel() {
 		this.windowHTML += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
 		this.windowHTML += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
 
-		//Push JSON content to firebase
-		storedLocations.push(this);
-
-		//Add infoWindow content to locations
-		self.infoWindowContent(this);
 	}
 
 	//Set content and event listener in infoWindow
@@ -335,6 +334,10 @@ function GoogleMap() {
 			});
 			var marker = location.marker;
 
+		//Add infoWindow content to locations
+		viewModel.infoWindowContent(location);
+
+
 			//Get content for infoWindow
 			var infoWindowContent = location.infoWindowContent;
 
@@ -380,7 +383,15 @@ var map = new GoogleMap();
 ko.applyBindings(viewModel);
 console.log(viewModel.locations());
 
+storedLocations.once("value", function(snapshot) {
+  console.log(snapshot.val());
+
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code);
+});
+
 //TODO: Add check for firebase before run yelp query
+//TODO: Use firebase data when exists
 //TODO: Add remove favorite function
 //TODO: Add another API -- NJ Transit, weather channel, sunrise and sunset times
 //TODO: Customize map colors
