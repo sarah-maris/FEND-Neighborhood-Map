@@ -190,7 +190,7 @@ function ViewModel() {
 	}
 
 	//Set content and event listener in infoWindow
-	self.infoWindowContent = function(location) {
+	self.setInfoWindow = function(location, index) {
 
 		//Set up div to hold infoWindow content
 		var windowContent = document.createElement('div');
@@ -216,7 +216,7 @@ function ViewModel() {
 
 		//Add click event for Add to Favorites button
 		google.maps.event.addDomListener(favButton, 'click', function () {
-			self.makeFav(location);
+			self.makeFav(location, index);
 		});
 
 		location.infoWindowContent = windowContent;
@@ -274,7 +274,7 @@ function ViewModel() {
 	});
 
 	//When item is favorited iicon changes to star bounces and infoWindow closes
-	self.makeFav = function(location) {
+	self.makeFav = function(location, index) {
 		//Change fav attribute to 'true'
 		location.fav = true;
 
@@ -283,6 +283,11 @@ function ViewModel() {
 
 		//Change to 'fav' icon
 		location.marker.icon = location.favIcon;
+
+		//Update favorite status in Firebase storage
+		storedLocations.child(index).update({
+			"fav": true
+		});
 
 		//Bounce icon
 		location.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -334,9 +339,8 @@ function GoogleMap() {
 			});
 			var marker = location.marker;
 
-		//Add infoWindow content to locations
-		viewModel.infoWindowContent(location);
-
+			//Add infoWindow content to locations
+			viewModel.setInfoWindow(location, i);
 
 			//Get content for infoWindow
 			var infoWindowContent = location.infoWindowContent;
