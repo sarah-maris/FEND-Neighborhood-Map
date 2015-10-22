@@ -5,6 +5,7 @@
 //***************************************************//
 
 function Model() {
+
 	var self = this;
 
 	//Set up observable array to hold locations
@@ -102,7 +103,9 @@ function Model() {
 	self.getLocations = function(businesses, category) {
 		for (var i=0; i < businesses.length; i++ ){
 			self.locations.push( new viewModel.bizInfo( businesses[i], category ));
+
 		}
+
 	};
 
 	//Get Yelp image
@@ -167,20 +170,28 @@ function ViewModel() {
 		this.cat = category.cat;
 		this.icon = 'img/' + this.cat + '.png';
 		this.favIcon = 'img/fav-' + this.cat + '.png';
+
+		//Set favorite attribute to false
 		this.fav = false;
 
+		//Set infoWindow content
+		this.windowHTML = '<div class="place-name">' + this.name + '</div>';
+		this.windowHTML += '<img class="place-image"src="' + this.imgUrl + '" alt="image of '+ this.name + '">';
+		this.windowHTML += '<div class="place-info">' + this.address + '<br>' + this.city + ',' + this.state + '<br>';
+		this.windowHTML += '<a href="tel:' + this.phone + '">' + this.dphone + '</a><br>';
+		this.windowHTML += '<img class="rating-image" src="' + this.stars + '" alt="Yelp star rating: '+ this.rating + '">';
+		this.windowHTML += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
+		this.windowHTML += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
+
+		//Push content to firebase
+		storedLocations.push(this);
+
+//TODO: make infoWindow a separate function
 		//Define content for info window
 		var windowContent = document.createElement('div');
 
 		//Build info window HTML
-		windowHTML = '<div class="place-name">' + this.name + '</div>';
-		windowHTML += '<img class="place-image"src="' + this.imgUrl + '" alt="image of '+ this.name + '">';
-		windowHTML += '<div class="place-info">' + this.address + '<br>' + this.city + ',' + this.state + '<br>';
-		windowHTML += '<a href="tel:' + this.phone + '">' + this.dphone + '</a><br>';
-		windowHTML += '<img class="rating-image" src="' + this.stars + '" alt="Yelp star rating: '+ this.rating + '">';
-		windowHTML += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
-		windowHTML += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
-		windowContent.innerHTML = windowHTML;
+		windowContent.innerHTML = this.windowHTML;
 
 		//Give window content 'info-window' class
 		windowContent.setAttribute('class', 'info-window');
@@ -358,10 +369,12 @@ function GoogleMap() {
 	google.maps.event.addDomListener(window, 'load', this.initialize);
 }
 
+var storedLocations = new Firebase('https://blistering-heat-6713.firebaseio.com/');
 var model = new Model();
 var viewModel =  new ViewModel();
 var map = new GoogleMap();
 ko.applyBindings(viewModel);
+console.log(viewModel.locations());
 
 //TODO: Add firebase so favorites persist
 //TODO: Add another API -- NJ Transit, weather channel, sunrise and sunset times

@@ -7,6 +7,6 @@ Red Bank New, Jersey is known locally for its unique restaurants, hotels, shoppi
 
 #####How to use this app to make your visit to Red Bank more enjoyable
 The page automatically loads information from the Yelp API and loads it on a Google Map.  Clicking on each map pointer will give you address, phone, Yelp ratings and a link to the Yelp website.
-In the infoWindow you can follow the link to the full Yelp review and add the establishment to your list of favorites
+In the infoWindow you can follow the link to the full Yelp review and add the establishment to your list of favorites.
 
 You can also filter by name or type of establishment.
