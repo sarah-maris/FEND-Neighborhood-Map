@@ -183,22 +183,28 @@ function ViewModel() {
 		this.windowHTML += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
 		this.windowHTML += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
 
-		//Push content to firebase
+		//Push JSON content to firebase
 		storedLocations.push(this);
 
-//TODO: make infoWindow a separate function
-		//Define content for info window
+		//Add infoWindow content to locations
+		self.infoWindowContent(this);
+	}
+
+	//Set content and event listener in infoWindow
+	self.infoWindowContent = function(location) {
+
+		//Set up div to hold infoWindow content
 		var windowContent = document.createElement('div');
 
-		//Build info window HTML
-		windowContent.innerHTML = this.windowHTML;
+		//Set HTML content for infoWindow
+		windowContent.innerHTML = location.windowHTML;
 
 		//Give window content 'info-window' class
 		windowContent.setAttribute('class', 'info-window');
 
 		//Create button for Yelp link
 		var yelpButton = windowContent.appendChild(document.createElement('div'));
-		yelpButton.innerHTML = '<a href="' + this.url + '" target="_blank">Read Full Review</a>';
+		yelpButton.innerHTML = '<a href="' + location.url + '" target="_blank">Read Full Review</a>';
 		yelpButton.setAttribute("class", "button");
 
 		//Create button for Add to Favorites
@@ -207,14 +213,14 @@ function ViewModel() {
 		favButton.setAttribute('class', 'button');
 
 		//Needed to bring locations into function
-		var that = this;
+		//var that = this;
 
 		//Add click event for Add to Favorites button
 		google.maps.event.addDomListener(favButton, 'click', function () {
-			self.makeFav(that);
+			self.makeFav(location);
 		});
 
-		this.contentString = windowContent;
+		location.infoWindowContent = windowContent;
 
 	};
 
@@ -268,9 +274,7 @@ function ViewModel() {
 		}
 	});
 
-
-
-	//When item is favorited iicon changes to star bounces and info window closes
+	//When item is favorited iicon changes to star bounces and infoWindow closes
 	self.makeFav = function(location) {
 		//Change fav attribute to 'true'
 		location.fav = true;
@@ -331,21 +335,21 @@ function GoogleMap() {
 			});
 			var marker = location.marker;
 
-			//Define content for info window
-			var contentString = location.contentString;
+			//Get content for infoWindow
+			var infoWindowContent = location.infoWindowContent;
 
-			//Add info window
+			//Add infoWindow
 			location.infoWindow = new google.maps.InfoWindow();
 			var infoWindow = location.infoWindow;
 
-			//Add click function to info window
-			google.maps.event.addListener(marker,'click', (function(marker,contentString,infoWindow){
+			//Add click function to marker to open infoWindow
+			google.maps.event.addListener(marker,'click', (function(marker,infoWindowContent,infoWindow){
 				return function() {
 					//Show infoWindow content on click
-					infoWindow.setContent(contentString);
+					infoWindow.setContent(infoWindowContent);
 					infoWindow.open(self.map,marker);
 				};
-			})(marker,contentString,infoWindow));
+			})(marker,infoWindowContent,infoWindow));
 
 		}
 	};
@@ -360,8 +364,8 @@ function GoogleMap() {
 		marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ marker.setAnimation(null); }, 900);
 
-		//Show contentString when infoWindow is opened
-		infoWindow.setContent(location.contentString);
+		//Show infoWindowContent when infoWindow is opened
+		infoWindow.setContent(location.infoWindowContent);
 		infoWindow.open(self.map,marker);
 
 	};
@@ -376,7 +380,8 @@ var map = new GoogleMap();
 ko.applyBindings(viewModel);
 console.log(viewModel.locations());
 
-//TODO: Add firebase so favorites persist
+//TODO: Add check for firebase before run yelp query
+//TODO: Add remove favorite function
 //TODO: Add another API -- NJ Transit, weather channel, sunrise and sunset times
 //TODO: Customize map colors
 //TODO: Upgrade search capacity to include autocomplete or filter by multiple items
