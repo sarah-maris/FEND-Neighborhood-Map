@@ -1,5 +1,6 @@
 //****************** MODEL **************************//
-//	* Get data from Yelp API
+//	* Set categories for Yelp data
+//	* Get data for each category from Yelp API
 //	* Build array of locations
 //	* Handle errors in data retrieval
 //***************************************************//
@@ -17,11 +18,10 @@ function Model() {
 		{ 'name':'restaurants', 'cat': 'restaurant' },
 		{ 'name':'hotels', 'cat': 'hotel' },
 		{ 'name':'shopping', 'cat': 'shopping' }
-	]
-
+	];
 
 	//Iterate through categories to get data from Yelp
-	self.getData = function(){
+	self.getNewData = function(){
 
 		//Set variables for counter and number of categories
 		self.counter = 0;
@@ -30,21 +30,18 @@ function Model() {
 		//Start with the first category -- next is called after successful data retrieval
 		self.getYelpData(self.categories[0]);
 
-
-
-	}
-
+	};
 
 	//Send API Query to Yelp
 	self.getYelpData = function(category, cb) {
 
 		var auth = {
-			consumerKey: "fCSqFxVC56k7RxD-CXhtFg",
-			consumerSecret: "_phQk4XXGzIsVRJ8ZfarixIURVw",
-			accessToken: "Ar-g_-LjgtRcBcXgKbTZ9zahrH2kdNNH",
-			accessTokenSecret: "NX2X5wtTxbjKn4Q04N0FWQoH-88",
+			consumerKey: 'fCSqFxVC56k7RxD-CXhtFg',
+			consumerSecret: '_phQk4XXGzIsVRJ8ZfarixIURVw',
+			accessToken: 'Ar-g_-LjgtRcBcXgKbTZ9zahrH2kdNNH',
+			accessTokenSecret: 'NX2X5wtTxbjKn4Q04N0FWQoH-88',
 			serviceProvider: {
-				signatureMethod: "HMAC-SHA1"
+				signatureMethod: 'HMAC-SHA1'
 			}
 		};
 
@@ -86,20 +83,33 @@ function Model() {
 		})
 		//When sucessful send to getLocations
 		.done( function( data ) {
+
+			//Push get data from each location
 			model.getLocations(data.businesses, category);
+
+			//Increment category counter
 			self.counter ++;
+
+			//Get data for next category
 			if (self.counter < self.numCats ) {
 				self.getYelpData( self.categories[self.counter] );
+
+			//When data has been received for all categories
+			} else {
+				//Push JSON content to firebase
+				storedLocations.set(self.locations())
+
+				//Set markers on map
+				viewModel.setMarkers();
 			}
-			//Push JSON content to firebase
-			storedLocations.set(self.locations())
 
 		})
+
 		//When fail show error message
 		//TOD0: Make response more robust
 		.fail ( function( data ){
-			alert( "fail");
-			console.log("Could not get data", data);
+			alert( 'fail');
+			console.log('Could not get data', data);
 		});
 
 	};
@@ -108,27 +118,58 @@ function Model() {
 	self.getLocations = function(businesses, category) {
 		for (var i=0; i < businesses.length; i++ ){
 			self.locations.push( new viewModel.bizInfo( businesses[i], category ));
-
 		}
 	};
 
 	//Get Yelp image
-    self.pwdByYelp = "img/Powered_By_Yelp_Black.png";
+    self.pwdByYelp = 'img/Powered_By_Yelp_Black.png';
 
 }
 
-//************************** VIEW MODEL *****************************//
-//	* Use Knockoutjs to bind observable data to page
+//************************** VIEW MODEL *****************************************//
+//  * Intialize locations either from Firebase storage or Yelp
+//  * Push location attributes from Yelp data in locations array
+//  * Set up infoWindows and map markers
+//  * Set click function on list to bounce marker and open infoWindow
 //  * Filter locations by user input (name and/or category)
 //  * Set marker visibilty to show only filtered locations on map
-//******************************************************************//
+//  * When item is favorited, add star and update Firebase data
+//*****************************************************************************//
 
 function ViewModel() {
 
     var self = this;
 
-	//Get Yelp data from API
-	model.getData();
+	//Check for data stored in Firebase
+	self.initializeLocations = function(){
+
+		//Read data from Firebase
+		storedLocations.once('value', function(snapshot) {
+
+			//Use stored data if it exists
+			if (snapshot.val()){
+
+				//Send message to console
+				console.log('Receiving data from Firebase');
+
+				//Set locations array to storedData array
+				model.locations(snapshot.val());
+
+				//set markers
+				self.setMarkers();
+
+			//If no stored data exists get new data from Yelp
+			} else {
+
+				//Send message to console
+				console.log('No stored data -- getting new data from Yelp');
+
+				//Get new Yelp Data
+				model.getNewData();
+
+			}
+		});
+	};
 
 	//Get data from model
     self.locations = ko.computed(function(){
@@ -158,7 +199,7 @@ function ViewModel() {
 
 		//Format phone number for display
 		this.phone = bizObj.phone;
-		this.dphone = "(" + bizObj.phone.slice(0,3) + ") " + bizObj.phone.slice(3,6) + "-" + bizObj.phone.slice(6);
+		this.dphone = '(' + bizObj.phone.slice(0,3) + ') ' + bizObj.phone.slice(3,6) + '-' + bizObj.phone.slice(6);
 
 		//Create a single array of items for search function: categories and business name
 		var keywords = [];
@@ -174,6 +215,7 @@ function ViewModel() {
 		this.cat = category.cat;
 		this.icon = 'img/' + this.cat + '.png';
 		this.favIcon = 'img/fav-' + this.cat + '.png';
+		this.showIcon = 'img/' + this.cat + '.png'; //this.icon;
 
 		//Set favorite attribute to false
 		this.fav = false;
@@ -187,7 +229,7 @@ function ViewModel() {
 		this.windowHTML += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
 		this.windowHTML += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
 
-	}
+	};
 
 	//Set content and event listener in infoWindow
 	self.setInfoWindow = function(location, index) {
@@ -204,15 +246,12 @@ function ViewModel() {
 		//Create button for Yelp link
 		var yelpButton = windowContent.appendChild(document.createElement('div'));
 		yelpButton.innerHTML = '<a href="' + location.url + '" target="_blank">Read Full Review</a>';
-		yelpButton.setAttribute("class", "button");
+		yelpButton.setAttribute('class', 'button');
 
 		//Create button for Add to Favorites
 		var favButton = windowContent.appendChild(document.createElement('div'));
 		favButton.innerHTML = 'Add to Favorites';
 		favButton.setAttribute('class', 'button');
-
-		//Needed to bring locations into function
-		//var that = this;
 
 		//Add click event for Add to Favorites button
 		google.maps.event.addDomListener(favButton, 'click', function () {
@@ -220,6 +259,81 @@ function ViewModel() {
 		});
 
 		location.infoWindowContent = windowContent;
+
+	};
+
+	//Set locations for markers
+	self.setMarkers = function() {
+
+		//Get locations
+		var mapLocations = this.locations();
+
+		//Set up marker for each location
+		for (var i = 0; i < mapLocations.length; i++) {
+			var location = mapLocations[i];
+
+			//Set marker attributes
+			location.marker = new google.maps.Marker({
+				position: {lat: location.lat, lng: location.lng },
+				map: map.map,
+				title: location.title,
+				icon: location.showIcon,
+				animation: google.maps.Animation.DROP
+			});
+
+			//Get content for infoWindow
+			self.setInfoWindow(location, i);
+
+			//Add new infoWindow
+			location.infoWindow = new google.maps.InfoWindow();
+
+			//Add click function to marker to open infoWindow
+			var marker = location.marker;
+			var infoWindowContent = location.infoWindowContent;
+			var infoWindow = location.infoWindow;
+
+			google.maps.event.addListener(marker,'click', (function(marker,infoWindowContent,infoWindow){
+
+				//Show infoWindow content on click
+				return function() {
+					infoWindow.setContent(infoWindowContent);
+					infoWindow.open(map.map,marker);
+				};
+
+			})(marker,infoWindowContent,infoWindow));
+
+		}
+	};
+
+	//When filtered item is clicked, map marker bounces and infoWindow opens
+	self.showDetails = function(location) {
+		location.infoWindow.close();
+		var marker = location.marker;
+		var infoWindow = location.infoWindow;
+
+		//Set marker animation to about one bounce
+		marker.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){ marker.setAnimation(null); }, 900);
+
+		//Show infoWindowContent when infoWindow is opened
+		infoWindow.setContent(location.infoWindowContent);
+		infoWindow.open(map.map,marker);
+
+	};
+
+	//When filtered item is clicked, map marker bounces and infoWindow opens
+	self.showDetails = function(location) {
+		location.infoWindow.close();
+		var marker = location.marker;
+		var infoWindow = location.infoWindow;
+
+		//Set marker animation to about one bounce
+		marker.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){ marker.setAnimation(null); }, 900);
+
+		//Show infoWindowContent when infoWindow is opened
+		infoWindow.setContent(location.infoWindowContent);
+		infoWindow.open(map.map,marker);
 
 	};
 
@@ -273,7 +387,7 @@ function ViewModel() {
 		}
 	});
 
-	//When item is favorited iicon changes to star bounces and infoWindow closes
+	//When item is favorited
 	self.makeFav = function(location, index) {
 		//Change fav attribute to 'true'
 		location.fav = true;
@@ -281,12 +395,14 @@ function ViewModel() {
 		//Close info window
 		location.infoWindow.close();
 
-		//Change to 'fav' icon
-		location.marker.icon = location.favIcon;
+		//Change 'showIcon' to 'fav' icon
+		location.showIcon = location.favIcon;
+		location.marker.icon = location.showIcon;
 
-		//Update favorite status in Firebase storage
+		//Update 'fav' and 'showIcon' data in Firebase storage
 		storedLocations.child(index).update({
-			"fav": true
+			'fav': true,
+			'showIcon': location.favIcon
 		});
 
 		//Bounce icon
@@ -295,11 +411,11 @@ function ViewModel() {
 
 	};
 
+self.initializeLocations();
 }
 
 //****************** VIEW **************************//
-//	* Use Google Map to display locations
-//  * Show markers and infoWindows
+//	* Initilize Google Map to display locations
 //**************************************************//
 
 function GoogleMap() {
@@ -316,86 +432,23 @@ function GoogleMap() {
 		};
 		self.map = new google.maps.Map(mapCanvas, mapOptions);
 
-		//Add markers to map
-		self.setMarkers();
-
-	};
-
-	//Set locations for markers
-	self.setMarkers = function() {
-
-		//Get locations from viewModel;
-		var locations = viewModel.locations();
-
-		//Set up marker for each location
-		for (var i = 0; i < locations.length; i++) {
-			var location = locations[i];
-			location.marker = new google.maps.Marker({
-				position: {lat: location.lat, lng: location.lng },
-				map: self.map,
-				title: location.title,
-				icon: location.icon,
-				animation: google.maps.Animation.DROP
-			});
-			var marker = location.marker;
-
-			//Add infoWindow content to locations
-			viewModel.setInfoWindow(location, i);
-
-			//Get content for infoWindow
-			var infoWindowContent = location.infoWindowContent;
-
-			//Add infoWindow
-			location.infoWindow = new google.maps.InfoWindow();
-			var infoWindow = location.infoWindow;
-
-			//Add click function to marker to open infoWindow
-			google.maps.event.addListener(marker,'click', (function(marker,infoWindowContent,infoWindow){
-				return function() {
-					//Show infoWindow content on click
-					infoWindow.setContent(infoWindowContent);
-					infoWindow.open(self.map,marker);
-				};
-			})(marker,infoWindowContent,infoWindow));
-
-		}
-	};
-
-	//When filtered item is clicked, map marker bounces and infoWindow opens
-	self.showDetails = function(location) {
-		location.infoWindow.close();
-		var marker = location.marker;
-		var infoWindow = location.infoWindow;
-
-		//Set marker animation to about one bounce
-		marker.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){ marker.setAnimation(null); }, 900);
-
-		//Show infoWindowContent when infoWindow is opened
-		infoWindow.setContent(location.infoWindowContent);
-		infoWindow.open(self.map,marker);
-
 	};
 
 	google.maps.event.addDomListener(window, 'load', this.initialize);
 }
+
+//****************** INITIALIZE **************************//
+//	* Link to Firebase
+//  * Declare new Model, ViewModel and View
+//  * Apply Knockout Bindings
+//**************************************************//
 
 var storedLocations = new Firebase('https://blistering-heat-6713.firebaseio.com/');
 var model = new Model();
 var viewModel =  new ViewModel();
 var map = new GoogleMap();
 ko.applyBindings(viewModel);
-console.log(viewModel.locations());
 
-storedLocations.once("value", function(snapshot) {
-  console.log(snapshot.val());
-
-}, function (errorObject) {
-  console.log("The read failed: " + errorObject.code);
-});
-
-//TODO: Add check for firebase before run yelp query
-//TODO: Use firebase data when exists
 //TODO: Add remove favorite function
 //TODO: Add another API -- NJ Transit, weather channel, sunrise and sunset times
 //TODO: Customize map colors
