@@ -97,7 +97,7 @@ function Model() {
 			//When data has been received for all categories
 			} else {
 				//Push JSON content to firebase
-				storedLocations.set(self.locations())
+				storedLocations.set(self.locations());
 
 				//Set markers on map
 				viewModel.setMarkers();
@@ -139,6 +139,9 @@ function Model() {
 function ViewModel() {
 
     var self = this;
+
+//  Initialize and get data
+//============================
 
 	//Check for data stored in Firebase
 	self.initializeLocations = function(){
@@ -321,71 +324,65 @@ function ViewModel() {
 
 	};
 
-	//When filtered item is clicked, map marker bounces and infoWindow opens
-	self.showDetails = function(location) {
-		location.infoWindow.close();
-		var marker = location.marker;
-		var infoWindow = location.infoWindow;
-
-		//Set marker animation to about one bounce
-		marker.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){ marker.setAnimation(null); }, 900);
-
-		//Show infoWindowContent when infoWindow is opened
-		infoWindow.setContent(location.infoWindowContent);
-		infoWindow.open(map.map,marker);
-
-	};
+//  Search operations
+//======================
 
 	//Set filter as an observable
-	self.filter = ko.observable('');
+	self.searchFilter = ko.observable('');
 
-	//Filter locations using computed function
-	self.filteredLocations = ko.computed(function() {
+	//Set filteredLocations as an observable array
+	self.filteredLocations = ko.observableArray();
+
+	//If no filter, show all locations else show filtered locations
+	self.visibleLocations = ko.computed(function() {
+		if (!self.searchFilter()){
+			return self.locations();
+		} else {
+			return self.filteredLocations();
+		}
+	});
+
+	self.filterLocations = function() {
 
 		//Convert filter to lower case (simplifies comparison)
-		var filter = self.filter().toLowerCase();
+		var searchFilter = self.searchFilter().toLowerCase();
 
-		if (!filter){
-			return self.locations();
+		//Clean out filteredLocations array
+		self.filteredLocations.removeAll();
 
-		} else {
-
-			//set output to empty variable
-			var output = null;
-
-			//Call filter function to pull out locations that match keyword
-			output = ko.utils.arrayFilter(self.locations(), keyWordfilter);
-
-			//Return array matching locations
-			return output;
-		}
-		//Keyword filter function
-		function keyWordfilter(location){
-
-			//Set match to false so location is not returned by default
-			var match = false;
-
-			//Set marker visibility to false
-			location.marker.setVisible(false);
+		//Iterate through each location to check for filter
+		self.locations().forEach(function(location) {
 
 			//Close infoWindow if open
 			location.infoWindow.close();
 
+			//Set each marker visibility to false
+			location.marker.setVisible(false);
+
+			//Set keywordMatch to false
+			var keyMatch = false;
+
 			//Check each item in keywords array for match
 			location.keywords.forEach(function(keyword) {
 
-				//If keyword matches filter, change match to true and make marker visible
-				if (keyword.toLowerCase().indexOf(filter) >= 0) {
-					match = true;
+				//If keyword matches filter, change keyMatch to true and make marker visible
+				if (keyword.toLowerCase().indexOf(searchFilter) >= 0) {
+					keyMatch = true;
 					location.marker.setVisible(true);
 				}
 			});
 
-			//return location if any match is found
-			return match;
-		}
-	});
+			//If there is a keyword match, add to filteredLocations
+			if (keyMatch){
+				self.filteredLocations.push(location);
+			}
+
+		});
+
+	};
+
+//  Favorite functions
+//======================
 
 	//When item is favorited
 	self.makeFav = function(location, index) {
