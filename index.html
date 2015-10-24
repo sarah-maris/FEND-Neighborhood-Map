@@ -23,7 +23,9 @@
 	<section id="place-list" >
 		<p>Searching for: <input data-bind="value: searchFilter, valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
 		<h2>Filtered List:</h2>
-		<ul data-bind="foreach: visibleLocations">
+		<ul data-bind="foreach: visibleLocations().sort(function(left, right) {
+                        return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
+                    })">
 			<li class="place" data-bind="text: $data.name,  click: viewModel.showDetails"></li>
 		</ul>
 	</section>
