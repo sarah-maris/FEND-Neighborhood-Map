@@ -158,8 +158,11 @@ function ViewModel() {
 				//Set locations array to storedData array
 				model.locations(snapshot.val());
 
-				//set markers
+				//Set markers
 				self.setMarkers();
+
+				//Add favorites to menu
+				self.showFavs();
 
 			//If no stored data exists get new data from Yelp
 			} else {
@@ -308,6 +311,10 @@ function ViewModel() {
 		}
 	};
 
+//  Menu operations
+//======================
+
+
 //  Search operations
 //======================
 
@@ -367,7 +374,11 @@ function ViewModel() {
 
 	//When filtered item is clicked, map marker bounces and infoWindow opens
 	self.showDetails = function(location) {
+
+		//Close infoWindow
 		location.infoWindow.close();
+
+		//Set up variables
 		var marker = location.marker;
 		var infoWindow = location.infoWindow;
 
@@ -384,7 +395,26 @@ function ViewModel() {
 //  Favorite functions
 //======================
 
-	//When item is favorited
+	//Set favorites menu list as an observable array
+	self.favsMenu = ko.observableArray();
+
+	//Add favorites to favsMenu
+	self.showFavs = function() {
+
+		//Clean out array
+		self.favsMenu.removeAll();
+
+		//Iterate through each location to check for filter
+		self.locations().forEach(function(location) {
+
+			//If location is a favorite, add to favsMenu array
+			if (location.fav === true){
+				self.favsMenu.push(location);
+			}
+
+		});
+
+	};//When item is favorited
 	self.makeFav = function(location, index) {
 		//Change fav attribute to 'true'
 		location.fav = true;
@@ -406,7 +436,11 @@ function ViewModel() {
 		location.marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ location.marker.setAnimation(null); }, 750);
 
+		//Update favorites in menu
+		self.showFavs();
+
 	};
+
 
 self.initializeLocations();
 }
