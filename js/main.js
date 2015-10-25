@@ -101,6 +101,9 @@ function Model() {
 
 				//Set markers on map
 				viewModel.setMarkers();
+
+				//Add categories and locations to menu
+				viewModel.showCats();
 			}
 
 		})
@@ -163,6 +166,9 @@ function ViewModel() {
 
 				//Add favorites to menu
 				self.showFavs();
+
+				//Add categories and locations to menu
+				self.showCats();
 
 			//If no stored data exists get new data from Yelp
 			} else {
@@ -313,6 +319,39 @@ function ViewModel() {
 
 //  Menu operations
 //======================
+
+	//Set location categories as an observable array
+	self.menuCats = ko.observableArray();
+
+	//Add locations to menu by category
+	self.showCats = function(category) {
+
+		//Get categories from Model
+		var menuCategories = model.categories;
+
+		//Iterate through categories
+		for (var i = 0; i < menuCategories.length; i++) {
+
+			//Push each category into menuCats array
+			self.menuCats.push(menuCategories[i]);
+
+			//Set variables
+			var cat = menuCategories[i].cat;
+			self.menuCats()[i].locations = ko.observableArray();
+
+			//Iterate through locations
+			self.locations().forEach(function(location) {
+
+				//If category matches, add to locations attribute of menuCats array
+				if (location.cat == cat){
+					self.menuCats()[i].locations.push(location);
+				}
+
+			});
+
+		};
+
+	}
 
 
 //  Search operations
