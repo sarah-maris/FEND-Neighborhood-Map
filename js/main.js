@@ -14,10 +14,10 @@ function Model() {
 
 	//Add categories that we want to include
 	self.categories = [
-		{ 'name':'movietheaters,musicvenues', 'cat': 'entertainment' },
-		{ 'name':'restaurants', 'cat': 'restaurant' },
-		{ 'name':'hotels', 'cat': 'hotel' },
-		{ 'name':'shopping', 'cat': 'shopping' }
+		{ 'name': 'Entertainment', 'yelpName':'movietheaters,musicvenues', 'cat': 'entertainment' },
+		{ 'name': 'Restaurants','yelpName':'restaurants', 'cat': 'restaurant' },
+		{ 'name': 'Hotels','yelpName':'hotels', 'cat': 'hotel' },
+		{ 'name': 'Shopping', 'yelpName':'shopping', 'cat': 'shopping' }
 	];
 
 	//Iterate through categories to get data from Yelp
@@ -54,7 +54,7 @@ function Model() {
 		};
 		parameters = [];
 		parameters.push(['location', near]);
-		parameters.push(['category_filter', category.name]);
+		parameters.push(['category_filter', category.yelpName]);
 		parameters.push(['radius_filter', radius]);
 		parameters.push(['sort', sort]);
 		parameters.push(['callback', 'cb']);
@@ -308,22 +308,6 @@ function ViewModel() {
 		}
 	};
 
-	//When filtered item is clicked, map marker bounces and infoWindow opens
-	self.showDetails = function(location) {
-		location.infoWindow.close();
-		var marker = location.marker;
-		var infoWindow = location.infoWindow;
-
-		//Set marker animation to about one bounce
-		marker.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){ marker.setAnimation(null); }, 900);
-
-		//Show infoWindowContent when infoWindow is opened
-		infoWindow.setContent(location.infoWindowContent);
-		infoWindow.open(map.map,marker);
-
-	};
-
 //  Search operations
 //======================
 
@@ -378,6 +362,22 @@ function ViewModel() {
 			}
 
 		});
+
+	};
+
+	//When filtered item is clicked, map marker bounces and infoWindow opens
+	self.showDetails = function(location) {
+		location.infoWindow.close();
+		var marker = location.marker;
+		var infoWindow = location.infoWindow;
+
+		//Set marker animation to about one bounce
+		marker.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){ marker.setAnimation(null); }, 900);
+
+		//Show infoWindowContent when infoWindow is opened
+		infoWindow.setContent(location.infoWindowContent);
+		infoWindow.open(map.map,marker);
 
 	};
 
