@@ -134,6 +134,7 @@ function Model() {
 //  * Push location attributes from Yelp data in locations array
 //  * Set up infoWindows and map markers
 //  * Set click function on list to bounce marker and open infoWindow
+//  * Sort locations by category and display in sidebar
 //  * Filter locations by user input (name and/or category)
 //  * Set marker visibilty to show only filtered locations on map
 //  * When item is favorited, add star and update Firebase data
@@ -332,27 +333,39 @@ function ViewModel() {
 		//Iterate through categories
 		for (var i = 0; i < menuCategories.length; i++) {
 
-			//Push each category into menuCats array
-			self.menuCats.push(menuCategories[i]);
+			//Add temp object to hold items
+			var catMenuItems = {};
 
-			//Set variables
-			var cat = menuCategories[i].cat;
-			self.menuCats()[i].locations = ko.observableArray();
+			//Add category and name to temp object
+			catMenuItems.cat = menuCategories[i].cat;
+			catMenuItems.name = menuCategories[i].name;
+
+			//Add temp array to hold list of matching locations for the category
+			var menuLocations = [];
+
+			//Get locations
+			var locations = self.locations();
 
 			//Iterate through locations
-			self.locations().forEach(function(location) {
+			for (var j=0; j<  locations.length; j++){
 
-				//If category matches, add to locations attribute of menuCats array
-				if (location.cat == cat){
-					self.menuCats()[i].locations.push(location);
+				//If category matches, add to array of matching locations
+				if (locations[j].cat == catMenuItems.cat){
+					menuLocations.push(locations[j]);
 				}
+			}
 
-			});
+		//Set menuLocations to observable array of matching locations
+		catMenuItems.menuLocations = ko.observableArray(menuLocations);
 
-		};
+		//Push each category into menuCats array
+		self.menuCats.push(catMenuItems);
 
-	}
+		}
 
+	};
+//TODO:  Add class for each category
+//TODO:  Make cats menu alpha order
 
 //  Search operations
 //======================
