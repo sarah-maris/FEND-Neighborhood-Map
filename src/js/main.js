@@ -364,8 +364,6 @@ function ViewModel() {
 		}
 
 	};
-//TODO:  Add class for each category
-//TODO:  Make cats menu alpha order
 
 //  Search operations
 //======================
