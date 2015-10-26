@@ -30,6 +30,9 @@
 		<h2>Categories:</h2>
 		<ul data-bind="foreach: menuCats">
 			<li class="place" data-bind="text: name"></li>
+			<ul data-bind="foreach: menuLocations">
+                <li data-bind="text: $data.name, click: viewModel.showDetails"></li>
+			</ul>
 		</ul>
 		<p>Searching for: <input data-bind="value: searchFilter, valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
 		<h2>Filtered List:</h2>
