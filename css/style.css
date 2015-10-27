@@ -35,20 +35,6 @@ h3 {
 	float: left;
 }
 
-/***** List of locations *****/
-#place-list {
-	width: 20%;
-	padding: 0;
-	display: block;
-	float: left;
-}
-
-#place-list ul {
-	list-style-type: none;
-	padding: 10px;
-	margin: 0;
-}
-
 /***** InfoWindows *****/
 .info-window {
 	height: 250px;
@@ -120,7 +106,11 @@ h3 {
 	text-decoration: none;
 }
 
+.hide {
+	display: none;
+}
 
+/***** Sidebar categories  *****/
 .title {
 	font-size: 24px;
 	font-weight: bold;
@@ -143,4 +133,18 @@ h3 {
 .shopping {
 	background-color: #125017;
 	border-bottom: 1px solid black;
+}
+
+/***** Sidebar list of locations *****/
+#place-list {
+	width: 20%;
+	padding: 0;
+	display: block;
+	float: left;
+}
+
+#place-list ul {
+	list-style-type: none;
+	padding: 10px;
+	margin: 0;
 }

@@ -299,15 +299,33 @@ function ViewModel() {
 		yelpButton.setAttribute('class', 'button');
 
 		//Create button for Add to Favorites
-		var favButton = windowContent.appendChild(document.createElement('div'));
-		favButton.innerHTML = 'Add to Favorites';
-		favButton.setAttribute('class', 'button');
+		location.favButton = windowContent.appendChild(document.createElement('div'));
+		location.favButton.innerHTML = 'Add to Favorites';
+		location.favButton.setAttribute('class', 'button');
+
+		//Create button for Remove from Favorites
+		location.unFavButton = windowContent.appendChild(document.createElement('div'));
+		location.unFavButton.innerHTML = 'Remove from Favorites';
+		location.unFavButton.setAttribute('class', 'button hide');
+
+		//Set attributes for button based on favorite status
+		if (location.fav === true) {
+			location.favButton.setAttribute('class', 'button hide');
+			location.unFavButton.setAttribute('class', 'button');
+		} else {
+			location.favButton.setAttribute('class', 'button');
+			location.unFavButton.setAttribute('class', 'button hide');
+		}
 
 		//Add click event for Add to Favorites button
-		google.maps.event.addDomListener(favButton, 'click', function () {
+		google.maps.event.addDomListener(location.favButton, 'click', function () {
 			self.makeFav(location, index);
 		});
 
+		//Add click event for Remove from Favorites button
+		google.maps.event.addDomListener(location.unFavButton, 'click', function () {
+			self.removeFav(location, index);
+		});
 		location.infoWindowContent = windowContent;
 
 	};
@@ -505,10 +523,19 @@ function ViewModel() {
 			if (location.fav === true){
 				self.favsMenu.push(location);
 			}
+//TODO: Get accordian to work for Favs menu
+		//Set states for accordian menu
+		self.favsMenu.openState = ko.observable({focussed: false, shouldOpen: false});
+		self.favsMenu.toggle = function (favsMenu, event) {
+            var shouldOpen = favsMenu.openState().shouldOpen;
+			self.favsMenu.openState({focussed: true, shouldOpen: !shouldOpen});
+		}
 
 		});
 
-	};//When item is favorited
+	};
+
+	//When item is favorited
 	self.makeFav = function(location, index) {
 		//Change fav attribute to 'true'
 		location.fav = true;
@@ -519,6 +546,10 @@ function ViewModel() {
 		//Change 'showIcon' to 'fav' icon
 		location.showIcon = location.favIcon;
 		location.marker.icon = location.showIcon;
+
+		//Update infoWindow buttons
+		location.favButton.setAttribute('class', 'button hide');
+		location.unFavButton.setAttribute('class', 'button');
 
 		//Update 'fav' and 'showIcon' data in Firebase storage
 		storedLocations.child(index).update({
@@ -535,7 +566,36 @@ function ViewModel() {
 
 	};
 
+	//When item is removed from favorites
+	self.removeFav = function(location, index) {
+		//Change fav attribute to 'false'
+		location.fav = false;
 
+		//Close info window
+		location.infoWindow.close();
+
+		//Change 'showIcon' to 'fav' icon
+		location.showIcon = location.icon;
+		location.marker.icon = location.showIcon;
+
+		//Update infoWindow buttons
+		location.favButton.setAttribute('class', 'button hide');
+		location.unFavButton.setAttribute('class', 'button');
+
+		//Update 'fav' and 'showIcon' data in Firebase storage
+		storedLocations.child(index).update({
+			'fav': false,
+			'showIcon': location.icon
+		});
+
+		//Bounce icon
+		location.marker.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){ location.marker.setAnimation(null); }, 750);
+
+		//Update favorites in menu
+		self.showFavs();
+
+	};
 self.initializeLocations();
 }
 
@@ -574,7 +634,6 @@ var viewModel =  new ViewModel();
 var map = new GoogleMap();
 ko.applyBindings(viewModel);
 
-//TODO: Add remove favorite function
 //TODO: Add another API -- NJ Transit, weather channel, sunrise and sunset times
 //TODO: Customize map colors
 //TODO: Upgrade search capacity to include autocomplete or filter by multiple items
