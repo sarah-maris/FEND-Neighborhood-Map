@@ -164,6 +164,31 @@ function Model() {
 	//Get Yelp image
     self.pwdByYelp = 'img/Powered_By_Yelp_Black.png';
 
+	//Get Weather data
+	self.getWundergroundData = function(){
+		$.ajax({
+			url : "http://api.wunderground.com/api/4d00d2a5eb37d968/forecast/q/NJ/Red_Bank.json",
+			dataType : "jsonp",
+			async: true
+		})
+
+		.done ( function( data ) {
+			console.log(data);
+			viewModel.getWeather(data);
+		})
+		//When fail show error message
+		//TOD0: Make response more robust
+		.fail ( function( data ){
+			alert( 'fail');
+			console.log('Could not get data', data);
+		});
+
+	}
+
+	//Get Wunderground logo
+    self.pwdByYelp = 'img/wundergroundLogo_4c_horz.png';
+
+self.getWundergroundData();
 }
 
 //************************** VIEW MODEL *****************************************//
@@ -181,7 +206,7 @@ function ViewModel() {
 
     var self = this;
 
-//  Initialize and get data
+//  Initialize and get location data
 //============================
 
 	//Check for data stored in Firebase
@@ -535,7 +560,7 @@ function ViewModel() {
 
 	};
 
-	//When item is favorited
+	//Add location to favorites
 	self.makeFav = function(location, index) {
 		//Change fav attribute to 'true'
 		location.fav = true;
@@ -566,7 +591,7 @@ function ViewModel() {
 
 	};
 
-	//When item is removed from favorites
+	//Remove location from favorites
 	self.removeFav = function(location, index) {
 		//Change fav attribute to 'false'
 		location.fav = false;
@@ -596,6 +621,34 @@ function ViewModel() {
 		self.showFavs();
 
 	};
+
+//  Get weather data
+//======================
+
+	self.getWeather = function(data){
+
+		weather = data.forecast.simpleforecast.forecastday;
+		rightNow = data.forecast.txt_forecast.forecastday[0];
+		console.log(weather, rightNow);
+
+		self.forecast = ko.observableArray();
+
+		for (var i = 0; i < weather.length; i++ ){
+			var day = {};
+			day.shortday = weather[i].date.weekday_short;
+			day.fullday = weather[i].date.weekday;
+			day.month = weather[i].date.monthname;
+			day.date = weather[i].date.day;
+			day.highTemp = weather[i].high.fahrenheit;
+			day.lowTemp = weather[i].low.fahrenheit;
+			day.icon = weather[i].icon;
+			day.iconURL = weather[i].icon_url;
+			day.precip = weather[i].pop;
+			self.forecast.push(day);
+		}
+		console.log(self.forecast());
+	}
+
 self.initializeLocations();
 }
 
