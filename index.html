@@ -31,9 +31,9 @@
 		<ul data-bind="foreach: menuCats().sort(function(left, right) {
                         return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
                     })">
-			<li data-bind="text: name, css: cat + ' title'"></li>
+			<li data-bind="text: name, css: cat + ' title', accordion: openState, click: toggle"></li>
 			<ul data-bind="foreach: menuLocations">
-                <li data-bind="text: $data.name, css: $parent.cat + ' location'"click: viewModel.showDetails"></li>
+                <li data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></li>
 			</ul>
 		</ul>
 		<p>Searching for: <input data-bind="value: searchFilter, valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />

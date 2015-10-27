@@ -1,3 +1,40 @@
+ko.bindingHandlers.accordion = {
+
+        init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            $(element).next().hide();
+        },
+        update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+
+            var slideUpTime = 300;
+            var slideDownTime = 400;
+
+            var openState = ko.utils.unwrapObservable(valueAccessor());
+            var focussed = openState.focussed;
+            var shouldOpen = openState.shouldOpen;
+
+            if (focussed) {
+
+                var clickedGroup = viewModel;
+
+                $.each(bindingContext.$root.menuCats(), function (idx, group) {
+                    if (clickedGroup != group) {
+                        group.openState({focussed: false, shouldOpen: false});
+                    }
+                });
+            }
+
+            var dropDown = $(element).next();
+
+            if (focussed && shouldOpen) {
+                dropDown.slideDown(slideDownTime);
+            } else if (focussed && !shouldOpen) {
+                dropDown.slideUp(slideUpTime);
+            } else if (!focussed && !shouldOpen) {
+                dropDown.slideUp(slideUpTime);
+            }
+        }
+    };
+
 //****************** MODEL **************************//
 //	* Set categories for Yelp data
 //	* Get data for each category from Yelp API
@@ -333,7 +370,7 @@ function ViewModel() {
 		//Iterate through categories
 		for (var i = 0; i < menuCategories.length; i++) {
 
-			//Add temp object to hold items
+			//Add temp object to hold properties of each menu category
 			var catMenuItems = {};
 
 			//Add category and name to temp object
@@ -357,6 +394,13 @@ function ViewModel() {
 
 		//Set menuLocations to observable array of matching locations
 		catMenuItems.menuLocations = ko.observableArray(menuLocations);
+
+		//Set states for accordian menu
+		catMenuItems.openState = ko.observable({focussed: false, shouldOpen: false});
+		catMenuItems.toggle = function (catMenuItems, event) {
+            var shouldOpen = catMenuItems.openState().shouldOpen;
+			catMenuItems.openState({focussed: true, shouldOpen: !shouldOpen});
+		}
 
 		//Push each category into menuCats array
 		self.menuCats.push(catMenuItems);
