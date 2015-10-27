@@ -35,12 +35,13 @@ ko.bindingHandlers.accordion = {
         }
     };
 
-//****************** MODEL **************************//
+//****************** MODEL ********************************//
 //	* Set categories for Yelp data
 //	* Get data for each category from Yelp API
-//	* Build array of locations
+//	* Send data to ViewModel to build array of locations
+//	* Get weather data from Wunderground
 //	* Handle errors in data retrieval
-//***************************************************//
+//********************************************************//
 
 function Model() {
 
@@ -186,7 +187,7 @@ function Model() {
 	}
 
 	//Get Wunderground logo
-    self.pwdByYelp = 'img/wundergroundLogo_4c_horz.png';
+    self.wundergroundImg = 'img/wundergroundLogo_4c_horz.png';
 
 self.getWundergroundData();
 }
@@ -627,10 +628,12 @@ function ViewModel() {
 
 	self.getWeather = function(data){
 
-		weather = data.forecast.simpleforecast.forecastday;
-		rightNow = data.forecast.txt_forecast.forecastday[0];
+		var weather = data.forecast.simpleforecast.forecastday;
+		var rightNow = data.forecast.txt_forecast.forecastday[0];
 		console.log(weather, rightNow);
-
+//TODO: Create today object with data from weather[0] and rightNow
+//TODO: Remove unnecessary data from forecast
+//TODO: Display weather data on page
 		self.forecast = ko.observableArray();
 
 		for (var i = 0; i < weather.length; i++ ){
@@ -687,7 +690,5 @@ var viewModel =  new ViewModel();
 var map = new GoogleMap();
 ko.applyBindings(viewModel);
 
-//TODO: Add another API -- NJ Transit, weather channel, sunrise and sunset times
 //TODO: Customize map colors
-//TODO: Upgrade search capacity to include autocomplete or filter by multiple items
 //TODO: Make error handling more robust
