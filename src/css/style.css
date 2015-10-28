@@ -120,6 +120,11 @@ h3 {
 	border-bottom: 1px solid black;
 }
 
+.favorites{
+	background-color: #c0900e;
+	border-bottom: 1px solid black;
+}
+
 .restaurant{
 	background-color: #97282c;
 	border-bottom: 1px solid black;

@@ -18,6 +18,7 @@ You can also filter by name or type of establishment.
 * Firebase is used to store data
 * Location data from Yelp
 * Weather data from Wunderground
+* Simple Knockout JQuery Accordion from https://gist.github.com/MattFriedman/4670386
 
 #####Issues
 * Not all locations are included in the map.  Yelp api is limited to 20 locations per query and there more than 20 stores and restaurants in Red Bank.  Could do multiple queries but would clutter the map.
