@@ -21,21 +21,22 @@
 		<h3>Trip Planner</h3>
     </header>
 	<section id="place-list" >
-		<h2>Favorites:</h2>
-		<ul data-bind="foreach: favsMenu().sort(function(left, right) {
+	<div id="accordion">
+		<div class="accordion-toggle favorites title">Favorites</div>
+		<div class="accordion-content" data-bind="foreach: favsMenu().sort(function(left, right) {
                         return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
                     })">
-			<li class="place" data-bind="text: $data.name,  click: viewModel.showDetails"></li>
-		</ul>
-		<h2>Categories:</h2>
-		<ul data-bind="foreach: menuCats().sort(function(left, right) {
+			<div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
+		</div>
+		<div  data-bind="foreach: menuCats().sort(function(left, right) {
                         return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
                     })">
-			<li data-bind="text: name, css: cat + ' title', accordion: openState, click: toggle"></li>
-			<ul data-bind="foreach: menuLocations">
-                <li data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></li>
-			</ul>
-		</ul>
+			<div data-bind="text: name, css: cat + ' title', accordion: tabState, click: toggle"></div>
+			<div  data-bind="foreach: menuLocations">
+                <div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
+			</div>
+		</div>
+	</div>
 		<p>Searching for: <input data-bind="value: searchFilter, valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
 		<h2>Filtered List:</h2>
 		<ul data-bind="foreach: visibleLocations().sort(function(left, right) {

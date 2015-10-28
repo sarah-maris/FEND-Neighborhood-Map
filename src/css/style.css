@@ -120,13 +120,18 @@ h3 {
 	border-bottom: 1px solid black;
 }
 
-.restaurant{
-	background-color: #97282c;
+.favorites{
+	background-color: #c0900e;
 	border-bottom: 1px solid black;
 }
 
 .hotel{
 	background-color: #1b317d;
+	border-bottom: 1px solid black;
+}
+
+.restaurant{
+	background-color: #97282c;
 	border-bottom: 1px solid black;
 }
 
@@ -148,3 +153,6 @@ h3 {
 	padding: 10px;
 	margin: 0;
 }
+
+  .accordion-content {display: none;}
+  .accordion-content.default {display: block;}

@@ -1,39 +1,52 @@
 ko.bindingHandlers.accordion = {
 
-        init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+		//Start will all accordian tabs closed
+        init: function (element, valueAccessor) {
             $(element).next().hide();
         },
-        update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
 
-            var slideUpTime = 300;
-            var slideDownTime = 400;
+		//
+        update: function (element, valueAccessor, allBindings, clickedCategory, bindingContext) {
 
-            var openState = ko.utils.unwrapObservable(valueAccessor());
-            var focussed = openState.focussed;
-            var shouldOpen = openState.shouldOpen;
+			//Get state of tab from observable
+            var tabState = ko.unwrap(valueAccessor());
+			var isOpen = tabState.isOpen;
+            var shouldOpen = tabState.shouldOpen;
 
-            if (focussed) {
+			//If a tab is selected, close tabs for other categories
+			if (isOpen) {
 
-                var clickedGroup = viewModel;
+                var openCategory = clickedCategory;
 
-                $.each(bindingContext.$root.menuCats(), function (idx, group) {
-                    if (clickedGroup != group) {
-                        group.openState({focussed: false, shouldOpen: false});
+				//Iterate through each category and close if not chosen tab
+                $.each(bindingContext.$root.menuCats(), function (idx, category) {
+                    if (openCategory != category) {
+                        category.tabState({isOpen: false, shouldOpen: false});
                     }
                 });
             }
 
-            var dropDown = $(element).next();
-
-            if (focussed && shouldOpen) {
-                dropDown.slideDown(slideDownTime);
-            } else if (focussed && !shouldOpen) {
-                dropDown.slideUp(slideUpTime);
-            } else if (!focussed && !shouldOpen) {
-                dropDown.slideUp(slideUpTime);
-            }
+			//Open tab if closed and close tab if open
+            if (shouldOpen) {
+                $(element).next().slideDown('fast');
+            } else if (!shouldOpen) {
+                $(element).next().slideUp('fast');
+			}
         }
     };
+
+  $(document).ready(function($) {
+    $('#accordion').find('.accordion-toggle').click(function(){
+
+      //Expand or collapse this panel
+      $(this).next().slideToggle('fast');
+
+      //Hide the other panels
+      $(".accordion-content").not($(this).next()).slideUp('fast');
+
+    });
+  });
+
 
 //****************** MODEL ********************************//
 //	* Set categories for Yelp data
@@ -439,12 +452,15 @@ function ViewModel() {
 		//Set menuLocations to observable array of matching locations
 		catMenuItems.menuLocations = ko.observableArray(menuLocations);
 
-		//Set states for accordian menu
-		catMenuItems.openState = ko.observable({focussed: false, shouldOpen: false});
+		//Set states for accordion tabs
+		catMenuItems.tabState = ko.observable({isOpen: false, shouldOpen: false});
 		catMenuItems.toggle = function (catMenuItems, event) {
-            var shouldOpen = catMenuItems.openState().shouldOpen;
-			catMenuItems.openState({focussed: true, shouldOpen: !shouldOpen});
+            var shouldOpen = catMenuItems.tabState().shouldOpen;
+			catMenuItems.tabState({isOpen: true, shouldOpen: !shouldOpen});
 		}
+		catMenuItems
+
+
 
 		//Push each category into menuCats array
 		self.menuCats.push(catMenuItems);
@@ -524,7 +540,7 @@ function ViewModel() {
 		marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ marker.setAnimation(null); }, 900);
 
-		//Show infoWindowContent when infoWindow is opened
+		//Show infoWindowContent when infoWindow is isOpen
 		infoWindow.setContent(location.infoWindowContent);
 		infoWindow.open(map.map,marker);
 
@@ -549,13 +565,6 @@ function ViewModel() {
 			if (location.fav === true){
 				self.favsMenu.push(location);
 			}
-//TODO: Get accordian to work for Favs menu
-		//Set states for accordian menu
-		self.favsMenu.openState = ko.observable({focussed: false, shouldOpen: false});
-		self.favsMenu.toggle = function (favsMenu, event) {
-            var shouldOpen = favsMenu.openState().shouldOpen;
-			self.favsMenu.openState({focussed: true, shouldOpen: !shouldOpen});
-		}
 
 		});
 
