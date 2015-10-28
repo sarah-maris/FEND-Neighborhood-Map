@@ -1,52 +1,56 @@
+//****************** HANDLERS ******************************************//
+//	* Create custom binding to trigger accodion for ko observed items
+//	* Use simple jquery accordion for non-observed items
+//*********************************************************************//
+
+//Accordion function for ko observed items
 ko.bindingHandlers.accordion = {
 
-		//Start will all accordian tabs closed
-        init: function (element, valueAccessor) {
-            $(element).next().hide();
-        },
+	//Start with all accordian tabs closed
+	init: function (element, valueAccessor) {
+		$(element).next().hide();
+	},
 
-		//
-        update: function (element, valueAccessor, allBindings, clickedCategory, bindingContext) {
+	//
+	update: function (element, valueAccessor, allBindings, clickedCategory, bindingContext) {
 
-			//Get state of tab from observable
-            var tabState = ko.unwrap(valueAccessor());
-			var isOpen = tabState.isOpen;
-            var shouldOpen = tabState.shouldOpen;
+		//Get state of tab from observable
+		var tabOpen = ko.unwrap(valueAccessor());
 
-			//If a tab is selected, close tabs for other categories
-			if (isOpen) {
+		//If a tab is selected, close tabs for other categories
+		if (tabOpen) {
 
-                var openCategory = clickedCategory;
+			var openCategory = clickedCategory;
 
-				//Iterate through each category and close if not chosen tab
-                $.each(bindingContext.$root.menuCats(), function (idx, category) {
-                    if (openCategory != category) {
-                        category.tabState({isOpen: false, shouldOpen: false});
-                    }
-                });
-            }
+			//Iterate through each category and close if not chosen tab
+			$.each(bindingContext.$root.sidebarCats(), function (idx, category) {
+				if (openCategory != category) {
+					category.tabOpen(false);
+				}
+			});
+		}
 
-			//Open tab if closed and close tab if open
-            if (shouldOpen) {
-                $(element).next().slideDown('fast');
-            } else if (!shouldOpen) {
-                $(element).next().slideUp('fast');
-			}
-        }
-    };
+		//Open tab if closed and close tab if open
+		if (tabOpen) {
+			$(element).next().slideDown('slow');
+		} else if (!tabOpen) {
+			$(element).next().slideUp('fast');
+		}
+	}
+};
 
-  $(document).ready(function($) {
-    $('#accordion').find('.accordion-toggle').click(function(){
+//Simple accordinon for non-observed items based on http://uniondesign.ca/simple-accordion-without-jquery-ui/
+$(document).ready(function($) {
+	$('#accordion').find('.accordion-toggle').click(function(){
 
-      //Expand or collapse this panel
-      $(this).next().slideToggle('fast');
+		//Expand or collapse this panel
+		$(this).next().slideToggle('fast');
 
-      //Hide the other panels
-      $(".accordion-content").not($(this).next()).slideUp('fast');
+		//Hide the other panels
+		$(".accordion-content").not($(this).next()).slideUp('fast');
 
     });
   });
-
 
 //****************** MODEL ********************************//
 //	* Set categories for Yelp data
@@ -153,8 +157,12 @@ function Model() {
 				//Set markers on map
 				viewModel.setMarkers();
 
-				//Add categories and locations to menu
+				//Add categories and locations to sidebar
 				viewModel.showCats();
+
+				//Get weather data
+				self.getWundergroundData();
+
 			}
 
 		})
@@ -202,7 +210,7 @@ function Model() {
 	//Get Wunderground logo
     self.wundergroundImg = 'img/wundergroundLogo_4c_horz.png';
 
-self.getWundergroundData();
+
 }
 
 //************************** VIEW MODEL *****************************************//
@@ -241,11 +249,14 @@ function ViewModel() {
 				//Set markers
 				self.setMarkers();
 
-				//Add favorites to menu
+				//Add favorites to sidebar
 				self.showFavs();
 
-				//Add categories and locations to menu
+				//Add categories and locations to sidebar
 				self.showCats();
+
+				//Get weather data
+				model.getWundergroundData();
 
 			//If no stored data exists get new data from Yelp
 			} else {
@@ -412,30 +423,30 @@ function ViewModel() {
 		}
 	};
 
-//  Menu operations
+//  Sidebar operations
 //======================
 
 	//Set location categories as an observable array
-	self.menuCats = ko.observableArray();
+	self.sidebarCats = ko.observableArray();
 
-	//Add locations to menu by category
+	//Add locations to sidebar by category
 	self.showCats = function(category) {
 
 		//Get categories from Model
-		var menuCategories = model.categories;
+		var categories = model.categories;
 
 		//Iterate through categories
-		for (var i = 0; i < menuCategories.length; i++) {
+		for (var i = 0; i < categories.length; i++) {
 
-			//Add temp object to hold properties of each menu category
-			var catMenuItems = {};
+			//Add temp object to hold properties of each location category
+			var categoryLocations = {};
 
 			//Add category and name to temp object
-			catMenuItems.cat = menuCategories[i].cat;
-			catMenuItems.name = menuCategories[i].name;
+			categoryLocations.cat = categories[i].cat;
+			categoryLocations.name = categories[i].name;
 
 			//Add temp array to hold list of matching locations for the category
-			var menuLocations = [];
+			var sidebarLocations = [];
 
 			//Get locations
 			var locations = self.locations();
@@ -444,26 +455,23 @@ function ViewModel() {
 			for (var j=0; j<  locations.length; j++){
 
 				//If category matches, add to array of matching locations
-				if (locations[j].cat == catMenuItems.cat){
-					menuLocations.push(locations[j]);
+				if (locations[j].cat == categoryLocations.cat){
+					sidebarLocations.push(locations[j]);
 				}
 			}
 
-		//Set menuLocations to observable array of matching locations
-		catMenuItems.menuLocations = ko.observableArray(menuLocations);
+		//Set sidebarLocations to observable array of matching locations
+		categoryLocations.sidebarLocations = ko.observableArray(sidebarLocations);
 
-		//Set states for accordion tabs
-		catMenuItems.tabState = ko.observable({isOpen: false, shouldOpen: false});
-		catMenuItems.toggle = function (catMenuItems, event) {
-            var shouldOpen = catMenuItems.tabState().shouldOpen;
-			catMenuItems.tabState({isOpen: true, shouldOpen: !shouldOpen});
+		//Set initial state for category accordion tabs to closed
+		categoryLocations.tabOpen = ko.observable(false);
+		categoryLocations.toggle = function (categoryLocations, event) {
+            var currentState = categoryLocations.tabOpen();
+			categoryLocations.tabOpen(!currentState);
 		}
-		catMenuItems
 
-
-
-		//Push each category into menuCats array
-		self.menuCats.push(catMenuItems);
+		//Push each category into sidebarCats array
+		self.sidebarCats.push(categoryLocations);
 
 		}
 
@@ -549,21 +557,21 @@ function ViewModel() {
 //  Favorite functions
 //======================
 
-	//Set favorites menu list as an observable array
-	self.favsMenu = ko.observableArray();
+	//Set favorites sidebar list as an observable array
+	self.favsSidebar = ko.observableArray();
 
-	//Add favorites to favsMenu
+	//Add favorites to favsSidebar
 	self.showFavs = function() {
 
 		//Clean out array
-		self.favsMenu.removeAll();
+		self.favsSidebar.removeAll();
 
 		//Iterate through each location to check for filter
 		self.locations().forEach(function(location) {
 
-			//If location is a favorite, add to favsMenu array
+			//If location is a favorite, add to favsSidebar array
 			if (location.fav === true){
-				self.favsMenu.push(location);
+				self.favsSidebar.push(location);
 			}
 
 		});
@@ -596,7 +604,7 @@ function ViewModel() {
 		location.marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ location.marker.setAnimation(null); }, 750);
 
-		//Update favorites in menu
+		//Update favorites in sidebar
 		self.showFavs();
 
 	};
@@ -627,7 +635,7 @@ function ViewModel() {
 		location.marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ location.marker.setAnimation(null); }, 750);
 
-		//Update favorites in menu
+		//Update favorites in sidebar
 		self.showFavs();
 
 	};

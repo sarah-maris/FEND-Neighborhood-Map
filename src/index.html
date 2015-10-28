@@ -23,16 +23,16 @@
 	<section id="place-list" >
 	<div id="accordion">
 		<div class="accordion-toggle favorites title">Favorites</div>
-		<div class="accordion-content" data-bind="foreach: favsMenu().sort(function(left, right) {
+		<div class="accordion-content" data-bind="foreach: favsSidebar().sort(function(left, right) {
                         return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
                     })">
 			<div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
 		</div>
-		<div  data-bind="foreach: menuCats().sort(function(left, right) {
+		<div  data-bind="foreach: sidebarCats().sort(function(left, right) {
                         return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
                     })">
-			<div data-bind="text: name, css: cat + ' title', accordion: tabState, click: toggle"></div>
-			<div  data-bind="foreach: menuLocations">
+			<div data-bind="text: name, css: cat + ' title', accordion: tabOpen, click: toggle"></div>
+			<div  data-bind="foreach: sidebarLocations">
                 <div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
 			</div>
 		</div>

@@ -10,6 +10,10 @@ The page automatically loads information from the Yelp API and loads it on a Goo
 
 In the infoWindow you can follow the link to the full Yelp review and add the establishment to your list of favorites.  When an item is "favorited", its icon changes to a star.  Favorites are saved in the Firebase database.
 
+A list of Favorites can be seen by clicking on the Favorites tab in the sidebar.
+
+Locations can be sorted by category type by clicking on a category in the sidebar
+
 You can also filter by name or type of establishment.
 
 #####Key Features
@@ -18,6 +22,8 @@ You can also filter by name or type of establishment.
 * Firebase is used to store data
 * Location data from Yelp
 * Weather data from Wunderground
+* Sidebar accordion using Knockoutjs custom bindings
 
-#####Issues
+#####Future features
 * Not all locations are included in the map.  Yelp api is limited to 20 locations per query and there more than 20 stores and restaurants in Red Bank.  Could do multiple queries but would clutter the map.
+* Could include more categories or separate generic restaurant category into different cuisines and service types.  Same thing for shopping category

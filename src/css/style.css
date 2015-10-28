@@ -154,5 +154,11 @@ h3 {
 	margin: 0;
 }
 
-  .accordion-content {display: none;}
-  .accordion-content.default {display: block;}
+/*****  Javascript Accordion *****/
+.accordion-content {
+	display: none;
+}
+
+.accordion-content.default {
+	display: block;
+}
