@@ -1,4 +1,5 @@
 ko.bindingHandlers.accordion = {
+//Adapted from Simple Knockout JQuery Accordion by Matt Friedman https://gist.github.com/MattFriedman/4670386
 
         init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
             $(element).next().hide();
@@ -9,27 +10,27 @@ ko.bindingHandlers.accordion = {
             var slideDownTime = 400;
 
             var openState = ko.utils.unwrapObservable(valueAccessor());
-            var focussed = openState.focussed;
+            var focused = openState.focused;
             var shouldOpen = openState.shouldOpen;
 
-            if (focussed) {
+            if (focused) {
 
                 var clickedGroup = viewModel;
 
-                $.each(bindingContext.$root.menuCats(), function (idx, group) {
+                $.each(bindingContext.$root.sidebarGroups(), function (idx, group) {
                     if (clickedGroup != group) {
-                        group.openState({focussed: false, shouldOpen: false});
+                        group.openState({focused: false, shouldOpen: false});
                     }
                 });
             }
 
             var dropDown = $(element).next();
 
-            if (focussed && shouldOpen) {
+            if (focused && shouldOpen) {
                 dropDown.slideDown(slideDownTime);
-            } else if (focussed && !shouldOpen) {
+            } else if (focused && !shouldOpen) {
                 dropDown.slideUp(slideUpTime);
-            } else if (!focussed && !shouldOpen) {
+            } else if (!focused && !shouldOpen) {
                 dropDown.slideUp(slideUpTime);
             }
         }
@@ -399,59 +400,7 @@ function ViewModel() {
 		}
 	};
 
-//  Menu operations
-//======================
 
-	//Set location categories as an observable array
-	self.menuCats = ko.observableArray();
-
-	//Add locations to menu by category
-	self.showCats = function(category) {
-
-		//Get categories from Model
-		var menuCategories = model.categories;
-
-		//Iterate through categories
-		for (var i = 0; i < menuCategories.length; i++) {
-
-			//Add temp object to hold properties of each menu category
-			var catMenuItems = {};
-
-			//Add category and name to temp object
-			catMenuItems.cat = menuCategories[i].cat;
-			catMenuItems.name = menuCategories[i].name;
-
-			//Add temp array to hold list of matching locations for the category
-			var menuLocations = [];
-
-			//Get locations
-			var locations = self.locations();
-
-			//Iterate through locations
-			for (var j=0; j<  locations.length; j++){
-
-				//If category matches, add to array of matching locations
-				if (locations[j].cat == catMenuItems.cat){
-					menuLocations.push(locations[j]);
-				}
-			}
-
-		//Set menuLocations to observable array of matching locations
-		catMenuItems.menuLocations = ko.observableArray(menuLocations);
-
-		//Set states for accordian menu
-		catMenuItems.openState = ko.observable({focussed: false, shouldOpen: false});
-		catMenuItems.toggle = function (catMenuItems, event) {
-            var shouldOpen = catMenuItems.openState().shouldOpen;
-			catMenuItems.openState({focussed: true, shouldOpen: !shouldOpen});
-		}
-
-		//Push each category into menuCats array
-		self.menuCats.push(catMenuItems);
-
-		}
-
-	};
 
 //  Search operations
 //======================
@@ -542,22 +491,41 @@ function ViewModel() {
 		//Clean out array
 		self.favsMenu.removeAll();
 
+		//Add temp variable to hold properties of favorites object
+		var favsObj = {};
+
+		//Add category and name to temp object
+		favsObj.cat = "favorites";
+		favsObj.name = "Favorites";
+
+		//Add temp array to hold list of filtered locations
+		var favLocations = [];
+
+
+		//Get locations
+		var locations = self.locations();
+
 		//Iterate through each location to check for filter
-		self.locations().forEach(function(location) {
+		for (var j=0; j<  locations.length; j++){
 
 			//If location is a favorite, add to favsMenu array
-			if (location.fav === true){
-				self.favsMenu.push(location);
-			}
-//TODO: Get accordian to work for Favs menu
-		//Set states for accordian menu
-		self.favsMenu.openState = ko.observable({focussed: false, shouldOpen: false});
-		self.favsMenu.toggle = function (favsMenu, event) {
-            var shouldOpen = favsMenu.openState().shouldOpen;
-			self.favsMenu.openState({focussed: true, shouldOpen: !shouldOpen});
+			if (locations[j].fav === true){
+				favLocations.push(locations[j]);
+			};
 		}
 
-		});
+		//
+		favsObj.favLocations = ko.observableArray(favLocations);
+
+		//Set states for accordian menu
+		favsObj.openState = ko.observable({focused: false, shouldOpen: false});
+		favsObj.toggle = function (favsObj, event) {
+			var shouldOpen = favsObj.openState().shouldOpen;
+			favsObj.openState({focused: true, shouldOpen: !shouldOpen});
+		}
+
+		//Push each category into sidebarGroups array
+		self.favsMenu.push(favsObj);
 
 	};
 
@@ -620,6 +588,60 @@ function ViewModel() {
 
 		//Update favorites in menu
 		self.showFavs();
+
+	};
+
+//  Sidebar operations
+//======================
+
+	//Set sidebar item groups as an observable array
+	self.sidebarGroups = ko.observableArray();
+
+	//Add categories and locations
+	self.showCats = function(category) {
+
+		//Get categories from Model
+		var menuCategories = model.categories;
+
+		//Iterate through categories
+		for (var i = 0; i < menuCategories.length; i++) {
+
+			//Add temp object to hold properties of each menu category
+			var catMenuItems = {};
+
+			//Add category and name to temp object
+			catMenuItems.cat = menuCategories[i].cat;
+			catMenuItems.name = menuCategories[i].name;
+
+			//Add temp array to hold list of matching locations for the category
+			var menuLocations = [];
+
+			//Get locations
+			var locations = self.locations();
+
+			//Iterate through locations
+			for (var j=0; j<  locations.length; j++){
+
+				//If category matches, add to array of matching locations
+				if (locations[j].cat == catMenuItems.cat){
+					menuLocations.push(locations[j]);
+				}
+			}
+
+		//Set menuLocations to observable array of matching locations
+		catMenuItems.menuLocations = ko.observableArray(menuLocations);
+
+		//Set states for accordian menu
+		catMenuItems.openState = ko.observable({focused: false, shouldOpen: false});
+		catMenuItems.toggle = function (catMenuItems, event) {
+            var shouldOpen = catMenuItems.openState().shouldOpen;
+			catMenuItems.openState({focused: true, shouldOpen: !shouldOpen});
+		}
+
+		//Push each category into sidebarGroups array
+		self.sidebarGroups.push(catMenuItems);
+
+		}
 
 	};
 
