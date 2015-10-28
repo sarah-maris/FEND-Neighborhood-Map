@@ -419,7 +419,7 @@ function ViewModel() {
 			return self.filteredLocations();
 		}
 	});
-
+//TODO: Remove self.visible and make self.FL at ko.computed() -- or make self.visible the filter for screen
 	self.filterLocations = function() {
 
 		//Convert filter to lower case (simplifies comparison)
