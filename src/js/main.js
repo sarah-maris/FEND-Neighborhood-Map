@@ -41,6 +41,7 @@ ko.bindingHandlers.accordion = {
 
 //Simple accordinon for non-observed items based on http://uniondesign.ca/simple-accordion-without-jquery-ui/
 $(document).ready(function($) {
+
 	$('#accordion').find('.accordion-toggle').click(function(){
 
 		//Expand or collapse this panel
@@ -50,6 +51,7 @@ $(document).ready(function($) {
 		$(".accordion-content").not($(this).next()).slideUp('fast');
 
     });
+
   });
 
 //****************** MODEL ********************************//
@@ -494,6 +496,7 @@ function ViewModel() {
 			return self.filteredLocations();
 		}
 	});
+//TODO: Remove self.visible and make self.FL at ko.computed() -- or make self.visible the filter for screen
 
 	self.filterLocations = function() {
 
