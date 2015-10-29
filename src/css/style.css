@@ -5,12 +5,12 @@
 }
 
 header {
-	background-color:#97282C;
-	color: #000;
+	background-color:#000;
 }
 
 body {
-	background-color: #97282C;
+	background-color: #000;
+	color: #fff;
 	font-family: 'Ubuntu', sans-serif;
 }
 
@@ -38,6 +38,7 @@ h3 {
 /***** InfoWindows *****/
 .info-window {
 	height: 250px;
+	color: #000;
 }
 
 .place-name {
@@ -114,6 +115,7 @@ h3 {
 .title {
 	font-size: 24px;
 	font-weight: bold;
+	padding: 5px 10px;
 	margin: 0;
 }
 .entertainment{
@@ -149,9 +151,8 @@ h3 {
 	float: left;
 }
 
-#place-list ul {
-	list-style-type: none;
-	padding: 10px;
+.location {
+	padding: 5px 10px;
 	margin: 0;
 }
 
