@@ -18,43 +18,64 @@
   }
 }
 */
- 
+
  [class^="icon-"]:before, [class*=" icon-"]:before {
   font-family: "fontello";
   font-style: normal;
   font-weight: normal;
   speak: none;
- 
+
   display: inline-block;
   text-decoration: inherit;
   width: 1em;
   /* CUSTOM */
   margin: 0 .4em 0 0;
   text-align: center;
-  /* opacity: .8; */
- 
+
   /* For safety - reset parent styles, that can break glyph codes*/
   font-variant: normal;
   text-transform: none;
- 
+
   /* fix buttons height, for twitter bootstrap */
   line-height: 1em;
- 
-  /* Animation center compensation - margins should be symmetric */
-  /* remove if not needed */
-  /* margin-left: .2em; */
- 
-  /* you can be more comfortable with increased icons size */
+
   /* font-size: 120%; */
- 
+
   /* Font smoothing. That was taken from TWBS */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
- 
-  /* Uncomment for 3D effect */
-  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
- 
+
+ [class^="icon-"]:after, [class*=" icon-"]:after {
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  /* CUSTOM */
+  margin: .7em 0 0 0;
+  font-size: 50%;
+  vertical-align:bottom;
+  text-align: center;
+  float: right;
+  /* opacity: .8; */
+
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+
+
+
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 .icon-restaurant:before { content: '\e800'; } /* '' */
 .icon-hotel:before { content: '\e801'; } /* '' */
 .icon-entertainment:before { content: '\e802'; } /* '' */
@@ -63,9 +84,9 @@
 .icon-bank:before { content: '\e805'; } /* '' */
 .icon-favorites:before { content: '\e806'; } /* '' */
 .icon-search:before { content: '\e807'; } /* '' */
-.icon-right:before { content: '\e808'; } /* '' */
-.icon-down:before { content: '\e809'; } /* '' */
-.icon-up:before { content: '\e80a'; } /* '' */
+.icon-right:after { content: '\e808'; } /* '' */
+.icon-down:after { content: '\e809'; } /* '' */
+.icon-up:after { content: '\e80a'; } /* '' */
 .icon-weather:before { content: '\e80b'; } /* '' */
 .icon-sun:before { content: '\e80c'; } /* '' */
 .icon-cloud:before { content: '\e80d'; } /* '' */
