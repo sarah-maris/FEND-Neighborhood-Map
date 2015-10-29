@@ -14,6 +14,8 @@
 	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 	<link href='https://fonts.googleapis.com/css?family=Architects+Daughter|Ubuntu:400,700' rel='stylesheet' type='text/css'>
     <link href="css/style.css" rel="stylesheet">
+	<link href="fonts/css/fontello.css" rel="stylesheet">
+
   </head>
   <body>
     <header>
@@ -22,19 +24,19 @@
     </header>
 	<section id="place-list" >
 		<div id="accordion">
-			<div class="accordion-toggle favorites title">Favorites</div>
-			<div class="accordion-content" data-bind="foreach: favsSidebar().sort(function(left, right) {
-							return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
-						})">
-				<div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
+			<h2 class="accordion-toggle favorites title icon-favorites">Favorites</h2>
+				<div class="accordion-content" data-bind="foreach: favsSidebar().sort(function(left, right) {
+								return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
+							})">
+					<div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
 			</div>
 			<div  data-bind="foreach: sidebarCats().sort(function(left, right) {
 							return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
 						})">
-				<div data-bind="text: name, css: cat + ' title', accordion: tabOpen, click: toggle"></div>
-				<div  data-bind="foreach: sidebarLocations">
-					<div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
-				</div>
+				<h2 data-bind="text: name, css: cat + ' title icon-' + cat, accordion: tabOpen, click: toggle"></h2>
+					<div  data-bind="foreach: sidebarLocations">
+						<div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
+					</div>
 			</div>
 		</div>
 		<p>Searching for: <input data-bind="value: searchFilter, valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />

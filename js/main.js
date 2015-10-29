@@ -712,3 +712,4 @@ ko.applyBindings(viewModel);
 
 //TODO: Customize map colors
 //TODO: Make error handling more robust
+//TODO: CSS -- background black, colors for each type white for favs
