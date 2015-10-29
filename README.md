@@ -23,6 +23,7 @@ You can also filter by name or type of establishment.
 * Location data from Yelp
 * Weather data from Wunderground
 * Sidebar accordion using Knockoutjs custom bindings
+* Category icons using Fontello custom icon collection
 
 #####Future features
 * Not all locations are included in the map.  Yelp api is limited to 20 locations per query and there more than 20 stores and restaurants in Red Bank.  Could do multiple queries but would clutter the map.
