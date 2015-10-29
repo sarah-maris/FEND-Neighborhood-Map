@@ -418,6 +418,8 @@ function ViewModel() {
 				return function() {
 					infoWindow.setContent(infoWindowContent);
 					infoWindow.open(map.map,marker);
+					marker.setAnimation(google.maps.Animation.BOUNCE);
+					setTimeout(function(){ marker.setAnimation(null); }, 750);
 				};
 
 			})(marker,infoWindowContent,infoWindow));
@@ -549,7 +551,7 @@ function ViewModel() {
 
 		//Set marker animation to about one bounce
 		marker.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){ marker.setAnimation(null); }, 900);
+		setTimeout(function(){ marker.setAnimation(null); }, 750);
 
 		//Show infoWindowContent when infoWindow is isOpen
 		infoWindow.setContent(location.infoWindowContent);
