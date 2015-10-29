@@ -6,9 +6,10 @@
 //Accordion function for ko observed items
 ko.bindingHandlers.accordion = {
 
-	//Start with all accordian tabs closed
+	//Start with all accordian tabs closed and arrow pointing down
 	init: function (element, valueAccessor) {
 		$(element).next().hide();
+		$(element).addClass("icon-down");
 	},
 
 	//
@@ -30,18 +31,20 @@ ko.bindingHandlers.accordion = {
 			});
 		}
 
-		//Open tab if closed and close tab if open
+		//Open tab if closed and close tab if open and change icon direction
 		if (tabOpen) {
 			$(element).next().slideDown('slow');
+			$(element).removeClass("icon-down").addClass("icon-up");
 		} else if (!tabOpen) {
 			$(element).next().slideUp('fast');
+			$(element).removeClass("icon-up").addClass("icon-down");
 		}
 	}
 };
 
 //Simple accordinon for non-observed items based on http://uniondesign.ca/simple-accordion-without-jquery-ui/
 $(document).ready(function($) {
-
+//TODO Fix function to add arrow toggle or make Favorites an observable
 	$('#accordion').find('.accordion-toggle').click(function(){
 
 		//Expand or collapse this panel
