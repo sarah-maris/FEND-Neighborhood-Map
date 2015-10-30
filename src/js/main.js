@@ -42,6 +42,20 @@ ko.bindingHandlers.accordion = {
 	}
 };
 
+//Simple accordinon for non-observed items based on http://uniondesign.ca/simple-accordion-without-jquery-ui/
+$(document).ready(function($) {
+//TODO Fix function to add arrow toggle or make Favorites an observable
+	$('#accordion').find('.accordion-toggle').click(function(){
+
+		//Expand or collapse this panel
+		$(this).next().slideToggle('fast');
+
+		//Hide the other panels
+		$(".accordion-content").not($(this).next()).slideUp('fast');
+
+    });
+
+  });
 
 //****************** MODEL ********************************//
 //	* Set categories for Yelp data
@@ -557,31 +571,19 @@ function ViewModel() {
 	//Add favorites to favsSidebar
 	self.showFavs = function() {
 
-		var favs = {}	
-		favs.name = "Favorites";
-
-		//Set initial state for favorites accordion tab to closed
-		favs.tabOpen = ko.observable(true);
-		favs.toggle = function (favs, event) {
-			var currentState = favs.tabOpen();
-			favs.tabOpen(!currentState);
-		}
-
-		//set up locations array
-		favs.favLocations = [];
+		//Clean out array
+		self.favsSidebar.removeAll();
 
 		//Iterate through each location to check for filter
 		self.locations().forEach(function(location) {
 
 			//If location is a favorite, add to favsSidebar array
 			if (location.fav === true){
-				favs.favLocations.push(location);
+				self.favsSidebar.push(location);
 			}
 
 		});
-		
-	self.favsSidebar(favs);
-	
+
 	};
 
 	//Add location to favorites
