@@ -33,25 +33,25 @@ ko.bindingHandlers.accordion = {
 
 		//Open tab if closed and close tab if open and change icon direction
 		if (tabOpen) {
-			$(element).next().slideDown('slow');
+			$(element).next().slideDown('400');
 			$(element).removeClass("icon-down").addClass("icon-up");
 		} else if (!tabOpen) {
-			$(element).next().slideUp('fast');
+			$(element).next().slideUp('400');
 			$(element).removeClass("icon-up").addClass("icon-down");
 		}
 	}
 };
 
-//Simple accordinon for non-observed items based on http://uniondesign.ca/simple-accordion-without-jquery-ui/
+//Simple jquery accordinon for favorites
 $(document).ready(function($) {
-//TODO Fix function to add arrow toggle or make Favorites an observable
+
 	$('#accordion').find('.accordion-toggle').click(function(){
 
-		//Expand or collapse this panel
-		$(this).next().slideToggle('fast');
+		//Toggle the 'open' class (triggers change in arrow icon)
+		$(this).toggleClass("icon-down icon-up");
 
-		//Hide the other panels
-		$(".accordion-content").not($(this).next()).slideUp('fast');
+		//Expand or collapse this panel
+		$(this).next().slideToggle('400');
 
     });
 
