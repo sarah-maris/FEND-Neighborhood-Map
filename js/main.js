@@ -715,6 +715,9 @@ var viewModel =  new ViewModel();
 var map = new GoogleMap();
 ko.applyBindings(viewModel);
 
+//TODO: Show only that category on map when cat is chosen  -- create a setVisible function for cats
+//TODO: Add weather (see above)
+//TODO: Fix search -- better styling and remove default
 //TODO: Customize map colors
 //TODO: Make error handling more robust
 //TODO: CSS -- background black, colors for each type white for favs
