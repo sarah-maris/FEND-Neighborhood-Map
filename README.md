@@ -1,6 +1,7 @@
 ##Front End Nanodegree Project 5: Neighborhood Map
 ###Red Bank Trip Planner
 *This project uses the Knockoutjs framework to present data from Google Maps, the Yelp API and the Wunderground API.*
+See live here: http://sarah-maris.github.io/FEND-Neighborhood-Map/
 
 #####About Red Bank
 Red Bank New, Jersey is known locally for its unique restaurants, hotels, shopping and entertainment venues.  Located near the Jersey Shore, Red Bank is about an hour from New York City and accessible by train (NJ Transit), car (exit 109 on the New Jersey Parkway) or car.
@@ -14,12 +15,12 @@ A list of Favorites can be seen by clicking on the Favorites tab in the sidebar.
 
 Locations can be sorted by category type by clicking on a category in the sidebar
 
-You can also filter by name or type of establishment.
+Locations can also filtered by name or keyword (cuisine, type of establishment etc.)
 
 #####Key Features
 * Google Maps used to display data
 * Knockoutjs library used to update data as it changes
-* Firebase is used to store data
+* Firebase used to store data on locations and favorites
 * Location data from Yelp
 * Weather data from Wunderground
 * Sidebar accordion using Knockoutjs custom bindings
