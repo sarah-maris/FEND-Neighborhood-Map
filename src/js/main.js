@@ -30,9 +30,7 @@ ko.bindingHandlers.accordion = {
 				if (openCategory === category) {
 
 					//Show  markers
-					category.sidebarLocations().forEach(function(location) {
-						location.marker.setVisible(true);
-					});
+					viewModel.showMarkers(category.sidebarLocations());
 
 				//If not chosen category
 				} else {
@@ -40,10 +38,7 @@ ko.bindingHandlers.accordion = {
 					category.tabOpen(false);
 
 					//Hide markers
-					category.sidebarLocations().forEach(function(location) {
-						location.marker.setVisible(false);
-					});
-
+					viewModel.hideMarkers(category.sidebarLocations());
 				}
 			});
 		}
@@ -507,6 +502,28 @@ function ViewModel() {
 		}
 
 	};
+
+	//Show markers
+	self.showMarkers = function(locations){
+
+		locations.forEach(function(location) {
+
+			//Set markers to visible
+			location.marker.setVisible(true);
+
+			//Bpunce one time
+			location.marker.setAnimation(google.maps.Animation.BOUNCE);
+			setTimeout(function(){ location.marker.setAnimation(null); }, 750);
+		});
+	}
+
+	//Hide markers
+	self.hideMarkers = function(locations){
+
+		locations.forEach(function(location) {
+			location.marker.setVisible(false);
+		});
+	}
 
 //  Search operations
 //======================
