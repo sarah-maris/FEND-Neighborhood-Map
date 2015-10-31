@@ -143,6 +143,19 @@ h3 {
 	border-bottom: 1px solid black;
 }
 
+.instruction-title {
+	color: #c0900e;
+	font: bold 18px 'Ubuntu', sans-serif;
+	margin: 10px 0 5px 0;
+	text-align: center;
+}
+
+.instructions {
+	font: 14px 'Ubuntu', sans-serif;
+	margin: 0 0 10px 0;
+	text-align: center;
+}
+
 /***** Sidebar list of locations *****/
 #place-list {
 	width: 20%;
