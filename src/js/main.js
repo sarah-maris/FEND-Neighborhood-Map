@@ -63,13 +63,19 @@ ko.bindingHandlers.accordion = {
 //Simple jquery accordion for favorites
 $(document).ready(function($) {
 
+	//Set initial state as closed
+	var favsOpen = false;
+
 	$('#accordion').find('.accordion-toggle').click(function(){
 
 		//Toggle the 'open' class (triggers change in arrow icon)
 		$(this).toggleClass("icon-down icon-up");
 
-		//Expand or collapse this panel
+		//Open or close tab
 		$(this).next().slideToggle('400');
+
+		//Toggle open state
+		favsOpen = ( favsOpen ? false : true );
 
     });
 
