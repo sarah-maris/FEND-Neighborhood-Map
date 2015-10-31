@@ -21,13 +21,11 @@ ko.bindingHandlers.accordion = {
 		//If a tab is selected, close tabs for other categories
 		if (tabOpen) {
 
-			var openCategory = clickedCategory;
-
 			//Iterate through each category
 			$.each(bindingContext.$root.sidebarCats(), function (idx, category) {
 
 				//If chosen category
-				if (openCategory === category) {
+				if (clickedCategory === category) {
 
 					//Show  markers
 					viewModel.showMarkers(category.sidebarLocations());
@@ -41,14 +39,22 @@ ko.bindingHandlers.accordion = {
 					viewModel.hideMarkers(category.sidebarLocations());
 				}
 			});
-		}
 
-		//Open tab if closed and close tab if open and change icon direction
-		if (tabOpen) {
+			//Open tab
 			$(element).next().slideDown('400');
+
+			//Toggle icon
 			$(element).removeClass("icon-down").addClass("icon-up");
-		} else if (!tabOpen) {
+
+		} else {
+
+			//Hide markers
+			viewModel.hideMarkers(clickedCategory.sidebarLocations());
+
+			//Close tab
 			$(element).next().slideUp('400');
+
+			//Toggle icon
 			$(element).removeClass("icon-up").addClass("icon-down");
 		}
 
