@@ -1,6 +1,7 @@
 ##Front End Nanodegree Project 5: Neighborhood Map
 ###Red Bank Trip Planner
 *This project uses the Knockoutjs framework to present data from Google Maps, the Yelp API and the Wunderground API.*
+
 See live here: http://sarah-maris.github.io/FEND-Neighborhood-Map/
 
 #####About Red Bank

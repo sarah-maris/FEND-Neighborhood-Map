@@ -23,10 +23,27 @@ ko.bindingHandlers.accordion = {
 
 			var openCategory = clickedCategory;
 
-			//Iterate through each category and close if not chosen tab
+			//Iterate through each category
 			$.each(bindingContext.$root.sidebarCats(), function (idx, category) {
-				if (openCategory != category) {
+
+				//If chosen category
+				if (openCategory === category) {
+
+					//Show  markers
+					category.sidebarLocations().forEach(function(location) {
+						location.marker.setVisible(true);
+					});
+
+				//If not chosen category
+				} else {
+					//Close tab
 					category.tabOpen(false);
+
+					//Hide markers
+					category.sidebarLocations().forEach(function(location) {
+						location.marker.setVisible(false);
+					});
+
 				}
 			});
 		}
@@ -39,10 +56,11 @@ ko.bindingHandlers.accordion = {
 			$(element).next().slideUp('400');
 			$(element).removeClass("icon-up").addClass("icon-down");
 		}
+
 	}
 };
 
-//Simple jquery accordinon for favorites
+//Simple jquery accordion for favorites
 $(document).ready(function($) {
 
 	$('#accordion').find('.accordion-toggle').click(function(){
@@ -501,7 +519,6 @@ function ViewModel() {
 			return self.filteredLocations();
 		}
 	});
-//TODO: Remove self.visible and make self.FL at ko.computed() -- or make self.visible the filter for screen
 
 	self.filterLocations = function() {
 
@@ -692,8 +709,8 @@ function GoogleMap() {
 
 		var mapCanvas = document.getElementById('map');
 		var mapOptions = {
-			center: new google.maps.LatLng(40.349628, -74.067073),
-			zoom: 17,
+			center: new google.maps.LatLng(40.351724, -74.067342),
+			zoom: 16,
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 		self.map = new google.maps.Map(mapCanvas, mapOptions);
@@ -715,7 +732,7 @@ var viewModel =  new ViewModel();
 var map = new GoogleMap();
 ko.applyBindings(viewModel);
 
-//TODO: Show only that category on map when cat is chosen  -- create a setVisible function for cats
+//TODO: Add icon on sidebar to add/remove from favorites
 //TODO: Add weather (see above)
 //TODO: Fix search -- better styling and remove default
 //TODO: Customize map colors
