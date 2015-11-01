@@ -543,11 +543,6 @@ function ViewModel() {
 				isVisible = true;
 			}
 
-			//Check if all locations are visible
-			if (visible.indexOf("all") >= 0) {
-				isVisible = true;
-			}
-
 			//If location is in visible list, set markers to visible
 			if ( isVisible ){
 
