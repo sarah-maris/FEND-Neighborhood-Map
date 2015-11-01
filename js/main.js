@@ -18,27 +18,11 @@ ko.bindingHandlers.accordion = {
 		//Get state of tab from observable
 		var tabOpen = ko.unwrap(valueAccessor());
 
-		//If a tab is selected
+		//If a tab is opened
 		if (tabOpen) {
 
-			//Iterate through each category
-			$.each(bindingContext.$root.sidebarCats(), function (idx, category) {
-
-				//If chosen category
-				if (clickedCategory === category) {
-
-					//Show  markers
-					viewModel.showMarkers(category.sidebarLocations());
-
-				//If not chosen category
-				} else {
-					//Close tab
-					category.tabOpen(false);
-
-					//Hide markers
-					viewModel.hideMarkers(category.sidebarLocations());
-				}
-			});
+			//Add category to list of visible markers
+			viewModel.visibleCats.push(clickedCategory.cat);
 
 			//Open tab
 			$(element).next().slideDown('400');
@@ -46,10 +30,11 @@ ko.bindingHandlers.accordion = {
 			//Toggle icon
 			$(element).toggleClass("icon-down icon-up");
 
+		//If a tab is closed
 		} else {
 
-			//Hide markers
-			viewModel.hideMarkers(clickedCategory.sidebarLocations());
+		//Remove category from list of visible markers
+		viewModel.visibleCats.remove(clickedCategory.cat);
 
 			//Close tab
 			$(element).next().slideUp('400');
@@ -58,6 +43,8 @@ ko.bindingHandlers.accordion = {
 			$(element).toggleClass("icon-down icon-up");
 		}
 
+		//Show the visible markers
+		viewModel.showMarkers();
 	}
 };
 
@@ -76,17 +63,22 @@ $(document).ready(function($) {
 
 		//Toggle open state
 		if (favsOpen){
+			viewModel.visibleCats.push("favs");
 			viewModel.favsOpen(false);
-		} else (viewModel.favsOpen(true));
+		} else {
+			viewModel.visibleCats.remove("favs");
+			(viewModel.favsOpen(true));
+		}
 
 
-		//Show favs when opem
+		//Show favs when open
 		if (favsOpen){
-			viewModel.showMarkers(viewModel.favsSidebar());
+						viewModel.visibleCats.push("favs");
+		//	viewModel.showMarkers(viewModel.favsSidebar());
 
 		} else {
-
-			viewModel.hideMarkers(viewModel.favsSidebar());
+			viewModel.visibleCats.remove("favs");
+			//viewModel.hideMarkers(viewModel.favsSidebar());
 		}
 
     });
@@ -520,25 +512,57 @@ function ViewModel() {
 
 	};
 
+	self.visibleCats = ko.observableArray();
+
 	//Show markers
-	self.showMarkers = function(locations){
+	self.showMarkers = function(){
 
+		//Get list of visible location categories
+		var visible = self.visibleCats();
+
+		//Get all locations
+		var locations = self.locations();
+
+		//Iterate through locations
 		locations.forEach(function(location) {
 
-			//Set markers to visible
-			location.marker.setVisible(true);
+			//Set default visibility to false
+			var isVisible = false;
 
-			//Bpunce one time
-			location.marker.setAnimation(google.maps.Animation.BOUNCE);
-			setTimeout(function(){ location.marker.setAnimation(null); }, 750);
-		});
-	}
+			//Check if "favorites" is in visible list
+			if (visible.indexOf("favs")>= 0) {
 
-	//Hide markers
-	self.hideMarkers = function(locations){
+				//Check if location is favorite
+				if (location.fav){
+					isVisible = true;
+				}
+			}
 
-		locations.forEach(function(location) {
-			location.marker.setVisible(false);
+			//Check if location's category is in visible list
+			if (visible.indexOf( location.cat) >= 0) {
+				isVisible = true;
+			}
+
+			//Check if all locations are visible
+			if (visible.indexOf("all") >= 0) {
+				isVisible = true;
+			}
+
+			//If location is in visible list, set markers to visible
+			if ( isVisible ){
+
+				//Set markers to visible
+				location.marker.setVisible(true);
+
+				//Bounce one time
+				location.marker.setAnimation(google.maps.Animation.BOUNCE);
+				setTimeout(function(){ location.marker.setAnimation(null); }, 750);
+
+			} else {
+
+				//Set marker to not visible
+				location.marker.setVisible(false);
+			}
 		});
 	}
 
