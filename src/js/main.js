@@ -53,7 +53,8 @@ $(document).ready(function($) {
 
 	$('#favoritesTab').click(function(){
 
-		favsOpen = viewModel.favsOpen();
+		//Get previous open state
+		favsClosed = viewModel.favsClosed();
 
 		//Toggle the 'open' class (triggers change in arrow icon)
 		$('#favoritesTab').toggleClass("icon-down icon-up");
@@ -61,24 +62,23 @@ $(document).ready(function($) {
 		//Open or close tab
 		$('#favoritesTab').next().slideToggle('400');
 
-		//Toggle open state
-		if (favsOpen){
+		//If closed, toggle to open state
+		if (favsClosed){
+
+			//Add "favs" from visible category list
 			viewModel.visibleCats.push("favs");
-			viewModel.favsOpen(false);
+
+			//Set open state to current open state (false)
+			viewModel.favsClosed(false);
+
+		//Else toggle to closed state
 		} else {
+
+			//Remove "favs" from visible category list
 			viewModel.visibleCats.remove("favs");
-			(viewModel.favsOpen(true));
-		}
 
-
-		//Show favs when open
-		if (favsOpen){
-						viewModel.visibleCats.push("favs");
-		//	viewModel.showMarkers(viewModel.favsSidebar());
-
-		} else {
-			viewModel.visibleCats.remove("favs");
-			//viewModel.hideMarkers(viewModel.favsSidebar());
+			//Set open state to current open state (true)
+			viewModel.favsClosed(true);
 		}
 
     });
@@ -725,7 +725,7 @@ function ViewModel() {
 	};
 
 	//Start with "Favorites" tab closed
-	self.favsOpen = ko.observable(true);
+	self.favsClosed = ko.observable(true);
 
 
 //  Get weather data
@@ -795,7 +795,7 @@ var viewModel =  new ViewModel();
 var map = new GoogleMap();
 ko.applyBindings(viewModel);
 
-//TODO: Add icon on sidebar to add/remove from favorites
+//TODO: Move more of tab functions to VM - move entire jquery function to view???
 //TODO: Add weather (see above)
 //TODO: Fix search -- better styling and remove default
 //TODO: Customize map colors

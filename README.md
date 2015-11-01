@@ -14,11 +14,11 @@ In the infoWindow you can follow the link to the full Yelp review and add the es
 
 A list of Favorites can be seen by clicking on the Favorites tab in the sidebar.
 
-Locations can be sorted by category type by clicking on a category in the sidebar
+Locations can be viewed by category type by clicking on a category in the sidebar
 
 Locations can also filtered by name or keyword (cuisine, type of establishment etc.)
 
-#####Key Features
+#####Resources
 * Google Maps used to display data
 * Knockoutjs library used to update data as it changes
 * Firebase used to store data on locations and favorites
@@ -28,5 +28,6 @@ Locations can also filtered by name or keyword (cuisine, type of establishment e
 * Category icons using Fontello custom icon collection
 
 #####Future features
-* Not all locations are included in the map.  Yelp api is limited to 20 locations per query and there more than 20 stores and restaurants in Red Bank.  Could do multiple queries but would clutter the map.
-* Could include more categories or separate generic restaurant category into different cuisines and service types.  Same thing for shopping category
+* **Develop more complete list of locations.**  Yelp api is limited to 20 locations per query and there more than 20 stores and restaurants in Red Bank.  Could do multiple queries but would clutter the map.
+* **Include more categories or separate generic restaurant category into different cuisines and service types.**  Same thing for shopping category
+* **Add location input button**  This app could be used for any location with a decent Yelp presence using an input box and geocoding to get the lat/long coordinates.
