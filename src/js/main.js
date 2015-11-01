@@ -449,8 +449,7 @@ function ViewModel() {
 				return function() {
 					infoWindow.setContent(infoWindowContent);
 					infoWindow.open(map.map,marker);
-					marker.setAnimation(google.maps.Animation.BOUNCE);
-					setTimeout(function(){ marker.setAnimation(null); }, 750);
+					self.bounceMarker(marker);
 				};
 
 			})(marker,infoWindowContent,infoWindow));
@@ -550,8 +549,7 @@ function ViewModel() {
 				location.marker.setVisible(true);
 
 				//Bounce one time
-				location.marker.setAnimation(google.maps.Animation.BOUNCE);
-				setTimeout(function(){ location.marker.setAnimation(null); }, 750);
+				self.bounceMarker(location.marker);
 
 			} else {
 
@@ -605,8 +603,13 @@ function ViewModel() {
 				//If keyword matches filter, change keyMatch to true and make marker visible
 				if (keyword.toLowerCase().indexOf(searchFilter) >= 0) {
 					keyMatch = true;
+
+					//Set marker visible
 					location.marker.setVisible(true);
-				}
+
+					//Bounce one time
+					self.bounceMarker(location.marker);;
+					}
 			});
 
 			//If there is a keyword match, add to filteredLocations
@@ -629,8 +632,7 @@ function ViewModel() {
 		var infoWindow = location.infoWindow;
 
 		//Set marker animation to about one bounce
-		marker.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){ marker.setAnimation(null); }, 750);
+		self.bounceMarker(location.marker);;
 
 		//Show infoWindowContent when infoWindow is isOpen
 		infoWindow.setContent(location.infoWindowContent);
@@ -685,8 +687,7 @@ function ViewModel() {
 		});
 
 		//Bounce icon
-		location.marker.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){ location.marker.setAnimation(null); }, 750);
+		self.bounceMarker(location.marker);;
 
 		//Update favorites in sidebar
 		self.showFavs();
@@ -716,8 +717,7 @@ function ViewModel() {
 		});
 
 		//Bounce icon
-		location.marker.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){ location.marker.setAnimation(null); }, 750);
+		self.bounceMarker(location.marker);;
 
 		//Update favorites in sidebar
 		self.showFavs();
@@ -755,6 +755,15 @@ function ViewModel() {
 			self.forecast.push(day);
 		}
 		console.log(self.forecast());
+	}
+
+// Marker functions
+//======================
+
+	//Bounces marker one time
+	self.bounceMarker = function(marker) {
+		marker.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){ marker.setAnimation(null); }, 750);
 	}
 
 self.initializeLocations();
@@ -800,4 +809,3 @@ ko.applyBindings(viewModel);
 //TODO: Fix search -- better styling and remove default
 //TODO: Customize map colors
 //TODO: Make error handling more robust
-//TODO: CSS -- background black, colors for each type white for favs
