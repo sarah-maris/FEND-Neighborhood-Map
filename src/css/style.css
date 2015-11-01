@@ -169,7 +169,7 @@ h3 {
 	margin: 0;
 }
 
-/*****  Javascript Accordion *****/
+/***** Favorites Accordion *****/
 #favoritesList {
-	display: none;
+	display: block;
 }
