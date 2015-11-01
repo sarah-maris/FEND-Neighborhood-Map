@@ -170,10 +170,6 @@ h3 {
 }
 
 /*****  Javascript Accordion *****/
-.accordion-content {
+#favoritesList {
 	display: none;
-}
-
-.accordion-content.default {
-	display: block;
 }
