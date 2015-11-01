@@ -44,7 +44,7 @@ ko.bindingHandlers.accordion = {
 			$(element).next().slideDown('400');
 
 			//Toggle icon
-			$(element).removeClass("icon-down").addClass("icon-up");
+			$(element).toggleClass("icon-down icon-up");
 
 		} else {
 
@@ -55,7 +55,7 @@ ko.bindingHandlers.accordion = {
 			$(element).next().slideUp('400');
 
 			//Toggle icon
-			$(element).removeClass("icon-up").addClass("icon-down");
+			$(element).toggleClass("icon-down icon-up");
 		}
 
 	}
@@ -64,28 +64,28 @@ ko.bindingHandlers.accordion = {
 //Simple jquery accordion for favorites
 $(document).ready(function($) {
 
-	$('#favoritesList').click(function(){
+	$('#favoritesTab').click(function(){
 
 		favsOpen = viewModel.favsOpen();
 
 		//Toggle the 'open' class (triggers change in arrow icon)
-		$('#favoritesList').toggleClass("icon-down icon-up");
+		$('#favoritesTab').toggleClass("icon-down icon-up");
 
 		//Open or close tab
-		$('#favoritesList').next().slideToggle('400');
+		$('#favoritesTab').next().slideToggle('400');
 
 		//Toggle open state
 		if (favsOpen){
 			viewModel.favsOpen(false);
 		} else (viewModel.favsOpen(true));
-				//favsOpen = viewModel.favsOpen();
+
 
 		//Show favs when opem
 		if (favsOpen){
 			viewModel.showMarkers(viewModel.favsSidebar());
 
 		} else {
-			console.log("not open")
+
 			viewModel.hideMarkers(viewModel.favsSidebar());
 		}
 
