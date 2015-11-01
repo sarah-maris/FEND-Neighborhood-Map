@@ -171,5 +171,5 @@ h3 {
 
 /***** Favorites Accordion *****/
 #favoritesList {
-	display: block;
+	display: none;
 }
