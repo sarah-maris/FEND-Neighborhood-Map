@@ -18,7 +18,7 @@ ko.bindingHandlers.accordion = {
 		//Get state of tab from observable
 		var tabOpen = ko.unwrap(valueAccessor());
 
-		//If a tab is selected, close tabs for other categories
+		//If a tab is selected
 		if (tabOpen) {
 
 			//Iterate through each category
@@ -64,19 +64,31 @@ ko.bindingHandlers.accordion = {
 //Simple jquery accordion for favorites
 $(document).ready(function($) {
 
-	//Set initial state as closed
-	var favsOpen = false;
 
 	$('#accordion').find('.accordion-toggle').click(function(){
 
+		favsOpen = viewModel.favsOpen();
+
 		//Toggle the 'open' class (triggers change in arrow icon)
-		$(this).toggleClass("icon-down icon-up");
+		$('.accordion-toggle').toggleClass("icon-down icon-up");
 
 		//Open or close tab
-		$(this).next().slideToggle('400');
+		$('.accordion-toggle').next().slideToggle('400');
 
 		//Toggle open state
-		favsOpen = ( favsOpen ? false : true );
+		if (favsOpen){
+			viewModel.favsOpen(false);
+		} else (viewModel.favsOpen(true));
+				//favsOpen = viewModel.favsOpen();
+
+		//Show favs when opem
+		if (favsOpen){
+			viewModel.showMarkers(viewModel.favsSidebar());
+
+		} else {
+			console.log("not open")
+			viewModel.hideMarkers(viewModel.favsSidebar());
+		}
 
     });
 
@@ -693,6 +705,10 @@ function ViewModel() {
 		self.showFavs();
 
 	};
+
+		//Start with "Favorites" tab closed
+	self.favsOpen = ko.observable(true);
+
 
 //  Get weather data
 //======================
