@@ -64,16 +64,15 @@ ko.bindingHandlers.accordion = {
 //Simple jquery accordion for favorites
 $(document).ready(function($) {
 
-
-	$('#accordion').find('.accordion-toggle').click(function(){
+	$('#favoritesList').click(function(){
 
 		favsOpen = viewModel.favsOpen();
 
 		//Toggle the 'open' class (triggers change in arrow icon)
-		$('.accordion-toggle').toggleClass("icon-down icon-up");
+		$('#favoritesList').toggleClass("icon-down icon-up");
 
 		//Open or close tab
-		$('.accordion-toggle').next().slideToggle('400');
+		$('#favoritesList').next().slideToggle('400');
 
 		//Toggle open state
 		if (favsOpen){
@@ -706,7 +705,7 @@ function ViewModel() {
 
 	};
 
-		//Start with "Favorites" tab closed
+	//Start with "Favorites" tab closed
 	self.favsOpen = ko.observable(true);
 
 
