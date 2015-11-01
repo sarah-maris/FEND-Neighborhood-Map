@@ -21,7 +21,11 @@
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-inline-css": "^2.0.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-rev": "^6.0.1",
+    "gulp-usemin": "^0.3.14",
     "imagemin-jpeg-recompress": "^4.3.0",
-    "imagemin-pngquant": "^4.2.0"
+    "imagemin-pngquant": "^4.2.0",
+    "run-sequence": "^1.1.4"
   }
 }

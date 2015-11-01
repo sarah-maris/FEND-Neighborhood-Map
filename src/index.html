@@ -6,16 +6,20 @@
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="An interactive map to help you enjoy your visit to Red Bank, New Jersey">
     <meta name="author" content="Sarah Maris">
-	<script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
-	<script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js"></script>
+    <!-- build:js js/lib.min.js -->
 	<script src="components/jquery/dist/jquery.min.js"></script>
 	<script src="components/knockout/dist/knockout.js"></script>
+    <!-- endbuild -->
+    <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+	<script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script> 
+	<script src="https://maps.googleapis.com/maps/api/js"></script>    
 	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 	<link href='https://fonts.googleapis.com/css?family=Architects+Daughter|Ubuntu:400,700' rel='stylesheet' type='text/css'>
+    <!-- build:css css/style.min.css -->
     <link href="css/style.css" rel="stylesheet">
 	<link href="fonts/css/fontello-custom.css" rel="stylesheet">
-
+    <!-- endbuild -->
+    
   </head>
   <body>
     <header>
@@ -57,6 +61,8 @@
 	</section>
 	<footer>
 	</footer>
+    <!-- build:inlinejs -->
 	<script src="js/main.js"></script>
+    <!-- endbuild -->
   </body>
 </html>
