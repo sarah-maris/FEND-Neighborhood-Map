@@ -8,8 +8,8 @@ ko.bindingHandlers.accordion = {
 
 	//Start with all accordian tabs closed and arrow pointing down
 	init: function (element, valueAccessor) {
-		$(element).next().hide();
-		$(element).addClass("icon-down");
+		//$(element).next().hide();
+		$(element).addClass("icon-up");
 	},
 
 	//
@@ -499,7 +499,7 @@ function ViewModel() {
 		categoryLocations.sidebarLocations = ko.observableArray(sidebarLocations);
 
 		//Set initial state for category accordion tabs to closed
-		categoryLocations.tabOpen = ko.observable(false);
+		categoryLocations.tabOpen = ko.observable(true);
 		categoryLocations.toggle = function (categoryLocations, event) {
             var currentState = categoryLocations.tabOpen();
 			categoryLocations.tabOpen(!currentState);
