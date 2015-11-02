@@ -43,7 +43,7 @@
 			<div  data-bind="foreach: sidebarCats().sort(function(left, right) {
 							return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
 						})">
-				<h2 data-bind="text: name, css: cat + ' title icon-' + cat, accordion: tabOpen, click: toggle"></h2>
+				<h2 data-bind="text: name, css: cat + ' title icon-up icon-' + cat, accordion: tabOpen, click: toggle"></h2>
 					<div  data-bind="foreach: sidebarLocations">
 						<div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
 					</div>

@@ -1,16 +1,8 @@
-//****************** HANDLERS ******************************************//
+//****************** HANDLER ******************************************//
 //	* Create custom binding to trigger accodion for ko observed items
-//	* Use simple jquery accordion for non-observed items
-//*********************************************************************//
+//********************************************************************//
 
-//Accordion function for ko observed items
 ko.bindingHandlers.accordion = {
-
-	//Start with all accordian tabs closed and arrow pointing down
-	init: function (element, valueAccessor) {
-		//$(element).next().hide();
-		$(element).addClass("icon-up");
-	},
 
 	//Update tab state when clicked
 	update: function (element, valueAccessor, allBindings, clickedCategory, bindingContext) {
@@ -18,72 +10,9 @@ ko.bindingHandlers.accordion = {
 		//Get state of tab from observable
 		var tabOpen = ko.unwrap(valueAccessor());
 
-		//If a tab is opened
-		if (tabOpen) {
-
-			//Add category to list of visible markers
-			viewModel.visibleCategories.push(clickedCategory.cat);
-
-			//Open tab
-			$(element).next().slideDown('400');
-
-			//Toggle icon
-			$(element).toggleClass("icon-down icon-up");
-
-		//If a tab is closed
-		} else {
-
-		//Remove category from list of visible markers
-		viewModel.visibleCategories.remove(clickedCategory.cat);
-
-			//Close tab
-			$(element).next().slideUp('400');
-
-			//Toggle icon
-			$(element).toggleClass("icon-down icon-up");
-		}
-
-		//Show the visible markers
-		viewModel.showMarkers();
+		viewModel.toggleTabs(element, tabOpen, clickedCategory)
 	}
 };
-
-//Simple jquery accordion for favorites
-$(document).ready(function($) {
-
-	$('#favoritesTab').click(function(){
-
-		//Get previous open state
-		favsClosed = viewModel.favsClosed();
-
-		//Toggle the 'open' class (triggers change in arrow icon)
-		$('#favoritesTab').toggleClass("icon-down icon-up");
-
-		//Open or close tab
-		$('#favoritesTab').next().slideToggle('400');
-
-		//If closed, toggle to open state
-		if (favsClosed){
-
-			//Add "favs" from visible category list
-			viewModel.visibleCategories.push("favs");
-
-			//Set open state to current open state (false)
-			viewModel.favsClosed(false);
-
-		//Else toggle to closed state
-		} else {
-
-			//Remove "favs" from visible category list
-			viewModel.visibleCategories.remove("favs");
-
-			//Set open state to current open state (true)
-			viewModel.favsClosed(true);
-		}
-
-    });
-
-  });
 
 //****************** MODEL ********************************//
 //	* Set categories for Yelp data
@@ -426,7 +355,7 @@ function ViewModel() {
 			//Set marker attributes
 			location.marker = new google.maps.Marker({
 				position: {lat: location.lat, lng: location.lng },
-				map: map.map,
+				map: view.map,
 				title: location.title,
 				icon: location.showIcon,
 				animation: google.maps.Animation.DROP
@@ -448,7 +377,7 @@ function ViewModel() {
 				//Show infoWindow content on click
 				return function() {
 					infoWindow.setContent(infoWindowContent);
-					infoWindow.open(map.map,marker);
+					infoWindow.open(view.map,marker);
 					self.bounceMarker(marker);
 				};
 
@@ -566,6 +495,37 @@ function ViewModel() {
 		});
 	};
 
+	self.toggleTabs = function(element, tabOpen, clickedCategory){
+			//If a tab is opened
+		if (tabOpen) {
+
+			//Add category to list of visible markers
+			self.visibleCategories.push(clickedCategory.cat);
+
+			//Open tab
+			$(element).next().slideDown('400');
+
+			//Toggle icon
+			$(element).removeClass("icon-down").addClass("icon-up");
+
+		//If a tab is closed
+		} else {
+
+		//Remove category from list of visible markers
+		self.visibleCategories.remove(clickedCategory.cat);
+
+			//Close tab
+			$(element).next().slideUp('400');
+
+			//Toggle icon
+			$(element).removeClass("icon-up").addClass("icon-down");
+		}
+
+		//Show the visible markers
+		self.showMarkers();
+
+	}
+
 //  Search operations
 //======================
 
@@ -635,7 +595,7 @@ function ViewModel() {
 
 		//Show infoWindowContent when infoWindow is isOpen
 		infoWindow.setContent(location.infoWindowContent);
-		infoWindow.open(map.map,marker);
+		infoWindow.open(view.map,marker);
 
 	};
 
@@ -767,11 +727,11 @@ function ViewModel() {
 //	* Initilize Google Map to display locations
 //**************************************************//
 
-function GoogleMap() {
+function View() {
 	var self = this;
 
 	//Initialize Google Map
-	self.initialize = function() {
+	self.initializeMap = function() {
 
 		var mapCanvas = document.getElementById('map');
 		var mapOptions = {
@@ -783,7 +743,44 @@ function GoogleMap() {
 
 	};
 
-	google.maps.event.addDomListener(window, 'load', this.initialize);
+	google.maps.event.addDomListener(window, 'load', this.initializeMap);
+
+	//Add jquery accordion for favorites tab
+	$(document).ready(function($) {
+
+		$('#favoritesTab').click(function(){
+
+			//Get previous open state
+			favsClosed = viewModel.favsClosed();
+
+			//Toggle the 'open' class (triggers change in arrow icon)
+			$('#favoritesTab').toggleClass("icon-down icon-up");
+
+			//Open or close tab
+			$('#favoritesTab').next().slideToggle('400');
+
+			//If closed, toggle to open state
+			if (favsClosed){
+
+				//Add "favs" from visible category list
+				viewModel.visibleCategories.push("favs");
+
+				//Set open state to current open state (false)
+				viewModel.favsClosed(false);
+
+			//Else toggle to closed state
+			} else {
+
+				//Remove "favs" from visible category list
+				viewModel.visibleCategories.remove("favs");
+
+				//Set open state to current open state (true)
+				viewModel.favsClosed(true);
+			}
+
+		});
+
+  });
 }
 
 //****************** INITIALIZE **************************//
@@ -795,7 +792,7 @@ function GoogleMap() {
 var storedLocations = new Firebase('https://blistering-heat-6713.firebaseio.com/');
 var model = new Model();
 var viewModel =  new ViewModel();
-var map = new GoogleMap();
+var view = new View();
 ko.applyBindings(viewModel);
 
 //TODO: Move more of tab functions to VM - move entire jquery function to view???
