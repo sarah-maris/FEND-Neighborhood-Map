@@ -566,6 +566,25 @@ function ViewModel() {
 			self.closeTab(category, element);
 		});
 
+		//Check current status of 'Favorites' tab
+		favsClosed = self.favsClosed();
+
+		//If open, toggle to closed state
+		if (!favsClosed){
+
+			//Remove "favs" from visible category list
+			self.visibleCategories.remove("favs");
+
+			//Set open state to current open state (true)
+			self.favsClosed(true);
+
+			//Toggle the 'open' class
+			$('#favoritesTab').toggleClass("icon-down icon-up");
+
+			//Close tab
+			$('#favoritesTab').next().slideToggle('400');
+		}
+
 		//Convert filter to lower case (simplifies comparison)
 		var searchFilter = self.searchFilter().toLowerCase();
 
