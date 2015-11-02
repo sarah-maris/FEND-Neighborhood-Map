@@ -35,5 +35,7 @@ Weather data for the next four days is listed in the site header.
 
 #####Future features
 * **Develop more complete list of locations.**  Yelp api is limited to 20 locations per query and there more than 20 stores and restaurants in Red Bank.  Could do multiple queries but would clutter the map.
+
 * **Include more categories or separate generic restaurant category into different cuisines and service types.**  Same thing for shopping category
+
 * **Add location input button**  This app could be used for any location with a decent Yelp presence using an input box and geocoding to get the lat/long coordinates.

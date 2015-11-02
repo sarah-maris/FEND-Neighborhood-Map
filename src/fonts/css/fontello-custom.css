@@ -70,8 +70,6 @@
   /* fix buttons height, for twitter bootstrap */
   line-height: 1em;
 
-
-
   /* Font smoothing. That was taken from TWBS */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -83,10 +81,22 @@
 .icon-shopping:before { content: '\e804'; } /* '' */
 .icon-bank:before { content: '\e805'; } /* '' */
 .icon-favorites:before { content: '\e806'; } /* '' */
-.icon-search:before { content: '\e807'; } /* '' */
+.icon-search:after { content: '\e807'; } /* '' */
 .icon-right:after { content: '\e808'; } /* '' */
 .icon-down:after { content: '\e809'; } /* '' */
 .icon-up:after { content: '\e80a'; } /* '' */
 .icon-weather:before { content: '\e80b'; } /* '' */
 .icon-sun:before { content: '\e80c'; } /* '' */
 .icon-cloud:before { content: '\e80d'; } /* '' */
+
+
+/* Icon in search box */
+.icon-search:after {
+  color: #a8a8a8;
+  content: '\e807';
+  font-size: 18px;
+  position: relative;
+  margin-right: 10px;
+  margin-top: -36px;
+  z-index: 1;
+}

@@ -11,15 +11,15 @@
 	<script src="components/knockout/dist/knockout.js"></script>
     <!-- endbuild -->
     <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
-	<script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script> 
-	<script src="https://maps.googleapis.com/maps/api/js"></script>    
+	<script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js"></script>
 	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 	<link href='https://fonts.googleapis.com/css?family=Architects+Daughter|Ubuntu:400,700' rel='stylesheet' type='text/css'>
     <!-- build:css css/style.min.css -->
     <link href="css/style.css" rel="stylesheet">
 	<link href="fonts/css/fontello-custom.css" rel="stylesheet">
     <!-- endbuild -->
-    
+
   </head>
   <body>
     <header>
@@ -27,35 +27,35 @@
 		<h3>Trip Planner</h3>
     </header>
 	<section id="place-list" >
-		<div id="accordion">
-			<h2 id="favoritesTab" class="favorites title icon-favorites icon-down">Favorites</h2>
-			<div id="favoritesList" data-bind="foreach: favsSidebar().sort(function(left, right) {
-								return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
-							})">
-				<div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
-
-			</div>
-			<div>
-				<h4 class="instruction-title">Add a favorite location</h4>
-				<p class="instructions">Click on the map marker<br>
-				Choose "Add to Favorites"</p>
-			</div>
-			<div  data-bind="foreach: sidebarCats().sort(function(left, right) {
-							return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
-						})">
-				<h2 data-bind="text: name, css: cat + ' title icon-up icon-' + cat, accordion: tabOpen, click: toggle"></h2>
-					<div  data-bind="foreach: sidebarLocations">
-						<div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
-					</div>
-			</div>
-		</div>
-		<p>Searching for: <input data-bind="value: searchFilter, valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
-		<h2>Filtered List:</h2>
+		<span class="icon"><i class="icon-search">
+			<input type="search" placeholder= "Name or Keyword" class="icon-search" data-bind="value: searchFilter, css: 'icon-favorites', valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
+		</i></span>
 		<div data-bind="foreach: filteredLocations().sort(function(left, right) {
                         return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
                     })">
 			<div class="place" data-bind="text: $data.name,  click: viewModel.showDetails"></div>
 		</div>
+		<h2 id="favoritesTab" class="favorites title icon-favorites icon-down">Favorites</h2>
+		<div id="favoritesList" data-bind="foreach: favsSidebar().sort(function(left, right) {
+							return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
+						})">
+			<div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
+
+		</div>
+		<div>
+			<h4 class="instruction-title">Add a favorite location</h4>
+			<p class="instructions">Click on the map marker<br>
+			Choose "Add to Favorites"</p>
+		</div>
+		<div  data-bind="foreach: sidebarCats().sort(function(left, right) {
+						return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
+					})">
+			<h2 data-bind="text: name, css: cat + ' title icon-up icon-' + cat, accordion: tabOpen, click: toggle"></h2>
+				<div  data-bind="foreach: sidebarLocations">
+					<div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
+				</div>
+		</div>
+
 	</section>
 	<section id="map">
 	</section>
