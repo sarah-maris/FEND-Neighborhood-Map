@@ -3,6 +3,7 @@ var gulp = require('gulp');
 //Dependencies
 var concat = require('gulp-concat');
 var del = require('del');
+var ghPages = require('gulp-gh-pages');
 var imagemin = require('gulp-imagemin');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
@@ -21,7 +22,7 @@ var usemin = require('gulp-usemin');
 var paths = {
     styles: ['src/css/**/*.css', 'src/fonts/css/*.css'],
     alljs: [ 'src/components/jquery/dist/jquery.min.js','src/components/knockout/dist/knockout.js', 'src/js/*.js' ],
-    myjs: [ 'src/js/*.js', ],
+    appjs: [ 'src/js/*.js', ],
     html: ['src/*.html'],
     images: ['src/img/*'],
     fonts: ['src/fonts/font/*']
@@ -56,7 +57,7 @@ gulp.task('min-styles', function(){
 
 //Lint js
 gulp.task('lint', function() {
-  return gulp.src(paths.myjs)
+  return gulp.src(paths.appjs)
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
 });
@@ -85,6 +86,12 @@ gulp.task('min-scripts', function(){
 gulp.task('fonts', function() {
     return gulp.src(paths.fonts)
      .pipe(gulp.dest('build/font/'));
+});
+
+//Send build to GitHub pages
+gulp.task('deploy', function() {
+  return gulp.src('./build/**/*')
+    .pipe(ghPages());
 });
 
 //Watch for changes, run tasks and notify
