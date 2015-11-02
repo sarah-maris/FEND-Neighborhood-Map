@@ -51,7 +51,7 @@
 		</div>
 		<p>Searching for: <input data-bind="value: searchFilter, valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
 		<h2>Filtered List:</h2>
-		<div data-bind="foreach: visibleLocations().sort(function(left, right) {
+		<div data-bind="foreach: filteredLocations().sort(function(left, right) {
                         return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
                     })">
 			<div class="place" data-bind="text: $data.name,  click: viewModel.showDetails"></div>

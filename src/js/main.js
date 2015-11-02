@@ -12,7 +12,7 @@ ko.bindingHandlers.accordion = {
 		$(element).addClass("icon-up");
 	},
 
-	//
+	//Update tab state when clicked
 	update: function (element, valueAccessor, allBindings, clickedCategory, bindingContext) {
 
 		//Get state of tab from observable
@@ -22,7 +22,7 @@ ko.bindingHandlers.accordion = {
 		if (tabOpen) {
 
 			//Add category to list of visible markers
-			viewModel.visibleCats.push(clickedCategory.cat);
+			viewModel.visibleCategories.push(clickedCategory.cat);
 
 			//Open tab
 			$(element).next().slideDown('400');
@@ -34,7 +34,7 @@ ko.bindingHandlers.accordion = {
 		} else {
 
 		//Remove category from list of visible markers
-		viewModel.visibleCats.remove(clickedCategory.cat);
+		viewModel.visibleCategories.remove(clickedCategory.cat);
 
 			//Close tab
 			$(element).next().slideUp('400');
@@ -66,7 +66,7 @@ $(document).ready(function($) {
 		if (favsClosed){
 
 			//Add "favs" from visible category list
-			viewModel.visibleCats.push("favs");
+			viewModel.visibleCategories.push("favs");
 
 			//Set open state to current open state (false)
 			viewModel.favsClosed(false);
@@ -75,7 +75,7 @@ $(document).ready(function($) {
 		} else {
 
 			//Remove "favs" from visible category list
-			viewModel.visibleCats.remove("favs");
+			viewModel.visibleCategories.remove("favs");
 
 			//Set open state to current open state (true)
 			viewModel.favsClosed(true);
@@ -262,7 +262,7 @@ function ViewModel() {
     var self = this;
 
 //  Initialize and get location data
-//============================
+//====================================
 
 	//Check for data stored in Firebase
 	self.initializeLocations = function(){
@@ -457,6 +457,12 @@ function ViewModel() {
 		}
 	};
 
+	//Bounce marker one time
+	self.bounceMarker = function(marker) {
+		marker.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){ marker.setAnimation(null); }, 750);
+	};
+
 //  Sidebar operations
 //======================
 
@@ -511,13 +517,14 @@ function ViewModel() {
 
 	};
 
-	self.visibleCats = ko.observableArray();
+	//Set up array to hold the categories of locations that are visible
+	self.visibleCategories = ko.observableArray();
 
-	//Show markers
+	//Show markers of visible locations
 	self.showMarkers = function(){
 
 		//Get list of visible location categories
-		var visible = self.visibleCats();
+		var visible = self.visibleCategories();
 
 		//Get all locations
 		var locations = self.locations();
@@ -568,15 +575,7 @@ function ViewModel() {
 	//Set filteredLocations as an observable array
 	self.filteredLocations = ko.observableArray();
 
-	//If no filter, show all locations else show filtered locations
-	self.visibleLocations = ko.computed(function() {
-		if (!self.searchFilter()){
-			return self.locations();
-		} else {
-			return self.filteredLocations();
-		}
-	});
-
+	//Filter locations based on input from 'searchFilter'
 	self.filterLocations = function() {
 
 		//Convert filter to lower case (simplifies comparison)
@@ -757,16 +756,11 @@ function ViewModel() {
 		console.log(self.forecast());
 	};
 
-// Marker functions
+//  Run data request
 //======================
 
-	//Bounces marker one time
-	self.bounceMarker = function(marker) {
-		marker.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){ marker.setAnimation(null); }, 750);
-	};
+	self.initializeLocations();
 
-self.initializeLocations();
 }
 
 //****************** VIEW **************************//
@@ -809,3 +803,6 @@ ko.applyBindings(viewModel);
 //TODO: Fix search -- better styling and remove default
 //TODO: Customize map colors
 //TODO: Make error handling more robust
+//TODO: Close info windows when market goes invisible
+//TODO: Empty search input when tab open
+//TODO: Search in category
