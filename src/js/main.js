@@ -238,7 +238,7 @@ function Model() {
 			console.log('Could not get data', data);
 		});
 
-	}
+	};
 
 	//Get Wunderground logo
     self.wundergroundImg = 'img/wundergroundLogo_4c_horz.png';
@@ -502,7 +502,7 @@ function ViewModel() {
 		categoryLocations.toggle = function (categoryLocations, event) {
             var currentState = categoryLocations.tabOpen();
 			categoryLocations.tabOpen(!currentState);
-		}
+		};
 
 		//Push each category into sidebarCats array
 		self.sidebarCats.push(categoryLocations);
@@ -557,7 +557,7 @@ function ViewModel() {
 				location.marker.setVisible(false);
 			}
 		});
-	}
+	};
 
 //  Search operations
 //======================
@@ -608,7 +608,7 @@ function ViewModel() {
 					location.marker.setVisible(true);
 
 					//Bounce one time
-					self.bounceMarker(location.marker);;
+					self.bounceMarker(location.marker);
 					}
 			});
 
@@ -632,7 +632,7 @@ function ViewModel() {
 		var infoWindow = location.infoWindow;
 
 		//Set marker animation to about one bounce
-		self.bounceMarker(location.marker);;
+		self.bounceMarker(location.marker);
 
 		//Show infoWindowContent when infoWindow is isOpen
 		infoWindow.setContent(location.infoWindowContent);
@@ -687,7 +687,7 @@ function ViewModel() {
 		});
 
 		//Bounce icon
-		self.bounceMarker(location.marker);;
+		self.bounceMarker(location.marker);
 
 		//Update favorites in sidebar
 		self.showFavs();
@@ -717,7 +717,7 @@ function ViewModel() {
 		});
 
 		//Bounce icon
-		self.bounceMarker(location.marker);;
+		self.bounceMarker(location.marker);
 
 		//Update favorites in sidebar
 		self.showFavs();
@@ -755,7 +755,7 @@ function ViewModel() {
 			self.forecast.push(day);
 		}
 		console.log(self.forecast());
-	}
+	};
 
 // Marker functions
 //======================
@@ -764,7 +764,7 @@ function ViewModel() {
 	self.bounceMarker = function(marker) {
 		marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ marker.setAnimation(null); }, 750);
-	}
+	};
 
 self.initializeLocations();
 }
@@ -805,7 +805,7 @@ var map = new GoogleMap();
 ko.applyBindings(viewModel);
 
 //TODO: Move more of tab functions to VM - move entire jquery function to view???
-//TODO: Add weather (see above)
+//TODO: Add weather (see above) -- put in top bar
 //TODO: Fix search -- better styling and remove default
 //TODO: Customize map colors
 //TODO: Make error handling more robust
