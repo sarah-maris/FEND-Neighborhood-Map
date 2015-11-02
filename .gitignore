@@ -17,7 +17,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-
 #node
 # Logs
 logs
@@ -50,6 +49,11 @@ node_modules/
 
 # Bower
 components
+
+#Build and deploy directories
+.publish/
+build/
+
 
 #WordPress
 *.log

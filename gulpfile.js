@@ -96,8 +96,8 @@ gulp.task('deploy', function() {
 
 //Watch for changes, run tasks and notify
 gulp.task('watch', function(){
-  gulp.watch( paths.js, ['lint']);
-  gulp.watch( paths.js, function(event) {
+  gulp.watch( paths.appjs, ['lint']);
+  gulp.watch( paths.appjs, function(event) {
    console.log('File ' + event.path + ' was ' + event.type + ', linting ...');
   });
   gulp.watch( paths.images, ['png-images']);
@@ -108,6 +108,10 @@ gulp.task('watch', function(){
   gulp.watch( paths.images, function(event) {
    console.log('File ' + event.path + ' was ' + event.type + ', running font transfer ...');
   });
+  gulp.watch( [paths.appjs, paths.styles, paths.html], ['usemin'])
+  gulp.watch( [paths.appjs, paths.styles, paths.html], function(event) {
+     console.log('File ' + event.path + ' was ' + event.type + ', running usemin ...');
+  });
 });
 
 gulp.task('usemin', function() {
@@ -116,27 +120,22 @@ gulp.task('usemin', function() {
       css: [ minifyCSS(), 'concat', rev() ],
       html: [ minifyHTML({ empty: true }) ],
       js: [ uglify(), rev() ],
-      inlinejs: [ uglify() ],
-    //  inlinecss: [ minifyCSS(), 'concat' ]
+      inlinejs: [ uglify() ]
     }))
     .pipe(gulp.dest('build/'));
 });
 
-//Entire project build sequence
+//Project build sequence -- RUN gulp clean-build FIRST. Had to remove from sequence because of bug.
 gulp.task('build', function(callback) {
   runSequence(
-
-    // ***REMOVED -- task sequence stops when 'clean-build' is run -- do manually for now ***
-    //Clean out build directory
-    //'clean-build',
-
     //Run synchronous tasks
     ['usemin', 'lint', 'png-images', 'fonts'],
+	//Set updated file to github.io
+	'deploy',
     //Watch for changes
     'watch',
     callback);
 });
-//TODO: Add gulp-gh pages
-//TODO: Fix hang in sequence with clean
-//TODO: Add watch path for usemin (html, css)
-//TODO: Add task to create sourcemaps for css and js
+
+//TODO: Find better way to clean build directory. Current method doesn't work with runSequence
+//TODO: Find alternative for usemin that allows for sourcemaps
