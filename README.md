@@ -8,15 +8,17 @@ See live here: http://sarah-maris.github.io/FEND-Neighborhood-Map/
 Red Bank New, Jersey is known locally for its unique restaurants, hotels, shopping and entertainment venues.  Located near the Jersey Shore, Red Bank is about an hour from New York City and accessible by train (NJ Transit), car (exit 109 on the New Jersey Parkway) or car.
 
 #####How to use this app to make your visit to Red Bank more enjoyable
-The page automatically loads information from the Yelp API and loads it on a Google Map.  Clicking on each map pointer will give you address, phone, Yelp ratings and a link to the Yelp website.
+The page automatically loads information from the Yelp API and loads it on a Google Map.  Locations are stored in the Firebase database -- new locations are called only when database has been cleared or there is an error communicating with Firebase.
 
-In the infoWindow you can follow the link to the full Yelp review and add the establishment to your list of favorites.  When an item is "favorited", its icon changes to a star.  Favorites are saved in the Firebase database.
+Clicking on each location's map marker will give you address, phone, Yelp ratings and a link to the Yelp website to read full reviews and more details about the location.
+
+Favorites can be added or removed by clicking on buttons inside the Google Map infoWindows. When an item is "favorited", its icon changes to a star.  Favorites are saved in the Firebase database and persist after re-opening or refreshing the page.
 
 A list of Favorites can be seen by clicking on the Favorites tab in the sidebar.
 
-Locations can be viewed by category type by clicking on a category in the sidebar
+Locations can be filtered by name or keyword (cuisine, type of establishment etc.).  They  can also be filtered by category by clicking on the category tabs in the sidebar.
 
-Locations can also filtered by name or keyword (cuisine, type of establishment etc.)
+Weather data for the next four days is listed in the site header.
 
 #####Resources
 * Google Maps used to display data
@@ -25,7 +27,11 @@ Locations can also filtered by name or keyword (cuisine, type of establishment e
 * Location data from Yelp
 * Weather data from Wunderground
 * Sidebar accordion using Knockoutjs custom bindings
+* Simple jQuery accordion for non-observable tab
 * Category icons using Fontello custom icon collection
+* Bower used as package handleran
+* Gulp used as task runner for build process
+* GitHub.io used to host site
 
 #####Future features
 * **Develop more complete list of locations.**  Yelp api is limited to 20 locations per query and there more than 20 stores and restaurants in Red Bank.  Could do multiple queries but would clutter the map.
