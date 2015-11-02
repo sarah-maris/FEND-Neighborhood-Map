@@ -505,7 +505,8 @@ function ViewModel() {
 
 			//Empty search filter
 			self.searchFilter('');
-
+		//Clean out filteredLocations array
+		self.filteredLocations.removeAll();
 			//Add category to list of visible markers
 			self.visibleCategories.push(clickedCategory.cat);
 
@@ -555,9 +556,9 @@ function ViewModel() {
 	//Filter locations based on input from 'searchFilter'
 	self.filterLocations = function() {
 
-		//Close all open Category tabs
+		//Close open category and favorite tabs
+		//Get all categories and iterate through
 		var categories = self.sidebarCats();
-
 		categories.forEach( function(category){
 
 			//Set variable for dom element
@@ -565,8 +566,8 @@ function ViewModel() {
 				console.log(category.cat, category.tabOpen(),element);
 
 			//Close tab
-
 			self.closeTab(category, element);
+
 		});
 
 		//Check current status of 'Favorites' tab
@@ -812,8 +813,9 @@ function View() {
 			//If closed, toggle to open state
 			if (favsClosed){
 
-				//Empty search filter
+				//Empty search filter amd filteredLocations array
 				viewModel.searchFilter('');
+				viewModel.filteredLocations.removeAll();
 
 				//Add "favs" from visible category list
 				viewModel.visibleCategories.push("favs");
