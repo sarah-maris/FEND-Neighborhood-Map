@@ -503,6 +503,9 @@ function ViewModel() {
 		//If a tab is opened
 		if (tabOpen) {
 
+			//Empty search filter
+			self.searchFilter('');
+
 			//Add category to list of visible markers
 			self.visibleCategories.push(clickedCategory.cat);
 
@@ -809,6 +812,9 @@ function View() {
 			//If closed, toggle to open state
 			if (favsClosed){
 
+				//Empty search filter
+				viewModel.searchFilter('');
+
 				//Add "favs" from visible category list
 				viewModel.visibleCategories.push("favs");
 
@@ -846,5 +852,4 @@ ko.applyBindings(viewModel);
 //TODO: Fix search -- better styling
 //TODO: Customize map colors
 //TODO: Make error handling more robust
-//TODO: Empty search input when tab open
 //TODO: Search in category
