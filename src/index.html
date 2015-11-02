@@ -22,42 +22,56 @@
 
   </head>
   <body>
+
     <header>
 		<h1>Red Bank</h1>
 		<h3>Trip Planner</h3>
     </header>
-	<section id="place-list" >
-		<span class="icon"><i class="icon-search">
-			<input type="search" placeholder= "Name or Keyword" class="icon-search" data-bind="value: searchFilter, css: 'icon-favorites', valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
-		</i></span>
-		<div data-bind="foreach: filteredLocations().sort(function(left, right) {
-                        return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
-                    })">
-			<div class="place" data-bind="text: $data.name,  click: viewModel.showDetails"></div>
-		</div>
-		<h2 id="favoritesTab" class="favorites title icon-favorites icon-down">Favorites</h2>
-		<div id="favoritesList" data-bind="foreach: favsSidebar().sort(function(left, right) {
-							return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
-						})">
-			<div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
 
+	<section id="sidebar">
+
+		<!-- Search input box -->
+		<span class="icon">
+			<i class="icon-search">
+				<input placeholder= "Name or Keyword" class="icon-search" data-bind="value: searchFilter, css: 'icon-favorites', valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
+			</i>
+		</span>
+
+		<!-- Search results (sorted by name) -->
+		<div data-bind="foreach: filteredLocations().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)})">
+			<div class="search location" data-bind="text: $data.name,  click: viewModel.showDetails"></div>
 		</div>
+
+		<!-- Favorites tab -->
+		<h2 id="favoritesTab" class="favorites title icon-favorites icon-down">Favorites</h2>
+
+		<!-- Favorites (sorted by name) -->
+		<div id="favoritesList" data-bind="foreach: favsSidebar().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
+			<div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
+		</div>
+
+		<!-- Favorites instructions -->
 		<div>
 			<h4 class="instruction-title">Add a favorite location</h4>
-			<p class="instructions">Click on the map marker<br>
-			Choose "Add to Favorites"</p>
+			<p class="instructions">Click on the map marker<br>Choose "Add to Favorites"</p>
 		</div>
-		<div  data-bind="foreach: sidebarCats().sort(function(left, right) {
-						return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
-					})">
+
+		<!-- Category tabs (sorted by name) -->
+		<div  data-bind="foreach: sidebarCats().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
+
+			<!-- Category name -->
 			<h2 data-bind="text: name, css: cat + ' title icon-up icon-' + cat, accordion: tabOpen, click: toggle"></h2>
-				<div  data-bind="foreach: sidebarLocations">
-					<div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
-				</div>
+
+			<!-- Locations (sorted by name) -->
+			<div  data-bind="foreach: sidebarLocations().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
+				<div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
+			</div>
 		</div>
 
 	</section>
+
 	<section id="map">
+	<!-- Google Map goes here -->
 	</section>
 	<footer>
 	</footer>
