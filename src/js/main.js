@@ -10,7 +10,7 @@ ko.bindingHandlers.accordion = {
 		//Get state of tab from observable
 		var tabOpen = ko.unwrap(valueAccessor());
 
-		viewModel.toggleTabs(element, tabOpen, clickedCategory)
+		viewModel.toggleTabs(element, tabOpen, clickedCategory);
 	}
 };
 
@@ -489,6 +489,9 @@ function ViewModel() {
 
 			} else {
 
+				//Close infoWindow if open
+				location.infoWindow.close();
+
 				//Set marker to not visible
 				location.marker.setVisible(false);
 			}
@@ -496,7 +499,8 @@ function ViewModel() {
 	};
 
 	self.toggleTabs = function(element, tabOpen, clickedCategory){
-			//If a tab is opened
+
+		//If a tab is opened
 		if (tabOpen) {
 
 			//Add category to list of visible markers
@@ -511,20 +515,30 @@ function ViewModel() {
 		//If a tab is closed
 		} else {
 
-		//Remove category from list of visible markers
-		self.visibleCategories.remove(clickedCategory.cat);
-
-			//Close tab
-			$(element).next().slideUp('400');
-
-			//Toggle icon
-			$(element).removeClass("icon-up").addClass("icon-down");
+			//Hide markers and close tab
+			self.closeTab(clickedCategory, element);
 		}
 
 		//Show the visible markers
 		self.showMarkers();
 
-	}
+	};
+
+	self.closeTab = function(category, element){
+
+		//Remove category from list of visible markers
+		self.visibleCategories.remove(category.cat);
+
+		//Close tab
+		$(element).next().slideUp('400');
+
+		//Toggle icon
+		$(element).removeClass("icon-up").addClass("icon-down");
+
+		//Set tabOpen to false
+		category.tabOpen(false);
+
+	};
 
 //  Search operations
 //======================
@@ -537,6 +551,20 @@ function ViewModel() {
 
 	//Filter locations based on input from 'searchFilter'
 	self.filterLocations = function() {
+
+		//Close all open Category tabs
+		var categories = self.sidebarCats();
+
+		categories.forEach( function(category){
+
+			//Set variable for dom element
+			var element = ".title." + category.cat;
+				console.log(category.cat, category.tabOpen(),element);
+
+			//Close tab
+
+			self.closeTab(category, element);
+		});
 
 		//Convert filter to lower case (simplifies comparison)
 		var searchFilter = self.searchFilter().toLowerCase();
@@ -795,11 +823,9 @@ var viewModel =  new ViewModel();
 var view = new View();
 ko.applyBindings(viewModel);
 
-//TODO: Move more of tab functions to VM - move entire jquery function to view???
 //TODO: Add weather (see above) -- put in top bar
-//TODO: Fix search -- better styling and remove default
+//TODO: Fix search -- better styling
 //TODO: Customize map colors
 //TODO: Make error handling more robust
-//TODO: Close info windows when market goes invisible
 //TODO: Empty search input when tab open
 //TODO: Search in category
