@@ -504,9 +504,11 @@ function ViewModel() {
 		if (tabOpen) {
 
 			//Empty search filter
-			self.searchFilter('');
-		//Clean out filteredLocations array
-		self.filteredLocations.removeAll();
+			self.searchText('');
+
+			//Clean out filteredLocations array
+			self.filteredLocations.removeAll();
+
 			//Add category to list of visible markers
 			self.visibleCategories.push(clickedCategory.cat);
 
@@ -548,13 +550,16 @@ function ViewModel() {
 //======================
 
 	//Set filter as an observable
-	self.searchFilter = ko.observable('');
+	self.searchText = ko.observable('');
 
 	//Set filteredLocations as an observable array
 	self.filteredLocations = ko.observableArray();
 
-	//Filter locations based on input from 'searchFilter'
+	//Filter locations based on input from 'searchText'
 	self.filterLocations = function() {
+
+		//Get search text
+		var searchText = self.searchText();
 
 		//Close open category and favorite tabs
 		//Get all categories and iterate through
@@ -563,7 +568,6 @@ function ViewModel() {
 
 			//Set variable for dom element
 			var element = ".title." + category.cat;
-				console.log(category.cat, category.tabOpen(),element);
 
 			//Close tab
 			self.closeTab(category, element);
@@ -589,9 +593,6 @@ function ViewModel() {
 			$('#favoritesTab').next().slideToggle('400');
 		}
 
-		//Convert filter to lower case (simplifies comparison)
-		var searchFilter = self.searchFilter().toLowerCase();
-
 		//Clean out filteredLocations array
 		self.filteredLocations.removeAll();
 
@@ -611,7 +612,7 @@ function ViewModel() {
 			location.keywords.forEach(function(keyword) {
 
 				//If keyword matches filter, change keyMatch to true and make marker visible
-				if (keyword.toLowerCase().indexOf(searchFilter) >= 0) {
+				if (keyword.toLowerCase().indexOf(searchText) >= 0) {
 					keyMatch = true;
 
 					//Set marker visible
@@ -629,6 +630,8 @@ function ViewModel() {
 
 		});
 
+		//Put search text back in filter (removed when tabs were closed)
+		self.searchText(searchText);
 	};
 
 	//When filtered item is clicked, map marker bounces and infoWindow opens
@@ -814,7 +817,7 @@ function View() {
 			if (favsClosed){
 
 				//Empty search filter amd filteredLocations array
-				viewModel.searchFilter('');
+				viewModel.searchText('');
 				viewModel.filteredLocations.removeAll();
 
 				//Add "favs" from visible category list
@@ -851,7 +854,5 @@ var view = new View();
 ko.applyBindings(viewModel);
 
 //TODO: Add weather (see above) -- put in top bar
-//TODO: Fix search -- better styling
 //TODO: Customize map colors
 //TODO: Make error handling more robust
-//TODO: Search in category
