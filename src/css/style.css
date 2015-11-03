@@ -3,10 +3,6 @@
 	box-sizing: border-box;
 }
 
-header {
-	background-color:#000;
-}
-
 body {
 	background-color: #000;
 	color: #fff;
@@ -14,17 +10,88 @@ body {
 	margin: 20px;
 }
 
-h1 {
-	font: bold 40px 'Ubuntu', sans-serif;
+/***** Site Header *****/
+#title-box {
+	display: inline-block;
+	float: left;
+	width: calc( 40% - 40px);
+}
+
+#site-title {
+	font: bold 60px 'Ubuntu', sans-serif;
 	margin: 20px 20px 0 20px;
 }
-h3 {
-	font-family: 'Architects Daughter', cursive;
+
+#subtitle {
+	font: bold 36px 'Architects Daughter', cursive;
 	margin: 0 20px 20px 20px;
+}
+
+/***** Weather *****/
+
+
+#weather-box {
+	display: inline-block;
+	float: right;
+	margin: 30px 20px 0 20px;
+	width: 60%;
+}
+
+#current,
+#forecast {
+	display: inline-block;
+	float: right;
+	text-align: center;
+	padding: 0 10px;
+}
+
+.weather-info{
+	display: inline-block;
+	float: left;
+	padding: 0 10px;
+	text-align: center;
+}
+
+.day {
+	font: bold 18px 'Architects Daughter', cursive;;
+}
+
+.temp {
+	font: 16px Roboto, Arial, sans-serif;
+}
+
+#current-title {
+	display:block;
+	font: bold 18px 'Architects Daughter', cursive;
+	margin: 0;
+	text-align:left;
+}
+
+#current-conditions {
+	display:block;
+	margin: 0;
+	padding: 10px 0;
+	text-align:left;
+}
+
+#attribution {
+	display: inline-block;
+	float: left;
+	font: 10px Roboto, Arial, sans-serif;
+	margin: 15px 0;
+	text-align: left;
+	width: 50px;
+}
+
+#wunderground-logo{
+	float: left;
+	margin: 10px;
+	width: 120px;
 }
 
 /***** Sidebar  *****/
 #sidebar {
+	clear: both;
 	display: block;
 	float: left;
 	padding: 0;
@@ -190,71 +257,4 @@ input:focus {
 
 .hide {
 	display: none;
-}
-
-/***** Weather *****/
-
-#site-title {
-	display: inline-block;
-	float: left;
-	width: 33%;
-}
-
-#weather {
-	display: inline-block;
-	float: right;
-	width: 67%;
-}
-
-.weather-info{
-	display: inline-block;
-	float: left;
-	text-align: center;
-	padding: 0 10px;
-}
-
-#current, #forecast {
-	display: inline-block;
-	float: right;
-	text-align: center;
-	padding: 0 10px;
-}
-
-.day {
-	font: bold 18px 'Architects Daughter', cursive;;
-}
-
-.temp {
-	font: 16px Roboto, Arial, sans-serif;
-}
-#sidebar{
-	clear: both;
-}
-
-#wunderground-logo{
-	width: 120px;
-	float: left;
-	margin: 10px;
-}
-
-#current-title {
-	display:block;
-	margin: 0;
-	text-align:left;
-}
-
-#current-conditions {
-	display:block;
-	margin: 0;
-	padding: 10px 0;
-	text-align:left;
-}
-
-#attribution {
-	display: inline-block;
-	text-align: left;
-	font: 10px Roboto, Arial, sans-serif;
-	width: 50px;
-	float: left;
-	margin: 15px 0;
 }
