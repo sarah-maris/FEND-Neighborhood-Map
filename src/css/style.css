@@ -191,3 +191,70 @@ input:focus {
 .hide {
 	display: none;
 }
+
+/***** Weather *****/
+
+#site-title {
+	display: inline-block;
+	float: left;
+	width: 33%;
+}
+
+#weather {
+	display: inline-block;
+	float: right;
+	width: 67%;
+}
+
+.weather-info{
+	display: inline-block;
+	float: left;
+	text-align: center;
+	padding: 0 10px;
+}
+
+#current, #forecast {
+	display: inline-block;
+	float: right;
+	text-align: center;
+	padding: 0 10px;
+}
+
+.day {
+	font: bold 18px 'Architects Daughter', cursive;;
+}
+
+.temp {
+	font: 16px Roboto, Arial, sans-serif;
+}
+#sidebar{
+	clear: both;
+}
+
+#wunderground-logo{
+	width: 120px;
+	float: left;
+	margin: 10px;
+}
+
+#current-title {
+	display:block;
+	margin: 0;
+	text-align:left;
+}
+
+#current-conditions {
+	display:block;
+	margin: 0;
+	padding: 10px 0;
+	text-align:left;
+}
+
+#attribution {
+	display: inline-block;
+	text-align: left;
+	font: 10px Roboto, Arial, sans-serif;
+	width: 50px;
+	float: left;
+	margin: 15px 0;
+}

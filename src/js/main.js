@@ -145,9 +145,6 @@ function Model() {
 		}
 	};
 
-	//Get Yelp image
-    self.pwdByYelp = 'img/Powered_By_Yelp_Black.png';
-
 	//Get Weather data
 	self.getWundergroundData = function(){
 		$.ajax({
@@ -157,7 +154,7 @@ function Model() {
 		})
 
 		.done ( function( data ) {
-			console.log(data);
+			console.log("Receiving weather data from Wunderground");
 			viewModel.getWeather(data);
 		})
 		//When fail show error message
@@ -168,10 +165,6 @@ function Model() {
 		});
 
 	};
-
-	//Get Wunderground logo
-    self.wundergroundImg = 'img/wundergroundLogo_4c_horz.png';
-
 
 }
 
@@ -203,7 +196,7 @@ function ViewModel() {
 			if (snapshot.val()){
 
 				//Send message to console
-				console.log('Receiving data from Firebase');
+				console.log('Receiving location and favorites data from Firebase');
 
 				//Set locations array to storedData array
 				model.locations(snapshot.val());
@@ -224,7 +217,7 @@ function ViewModel() {
 			} else {
 
 				//Send message to console
-				console.log('No stored data -- getting new data from Yelp');
+				console.log('No stored data -- getting new location data from Yelp');
 
 				//Get new Yelp Data
 				model.getNewData();
@@ -288,7 +281,7 @@ function ViewModel() {
 		this.windowHTML += '<div class="place-info">' + this.address + '<br>' + this.city + ',' + this.state + '<br>';
 		this.windowHTML += '<a href="tel:' + this.phone + '">' + this.dphone + '</a><br>';
 		this.windowHTML += '<img class="rating-image" src="' + this.stars + '" alt="Yelp star rating: '+ this.rating + '">';
-		this.windowHTML += '<img class="yelp" src="' + model.pwdByYelp + '" alt="Powered by Yelp"></div>';
+		this.windowHTML += '<img class="yelp" src="img/Powered_By_Yelp_Black.png" alt="Powered by Yelp"></div>';
 		this.windowHTML += '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">'+ this.snippet + '</span></div>';
 
 	};
@@ -744,30 +737,37 @@ function ViewModel() {
 //  Get weather data
 //======================
 
+	self.currentConditions = ko.observable();
+
+	self.forecast = ko.observableArray();
+
 	self.getWeather = function(data){
 
 		var weather = data.forecast.simpleforecast.forecastday;
-		var rightNow = data.forecast.txt_forecast.forecastday[0];
-		console.log(weather, rightNow);
-//TODO: Create today object with data from weather[0] and rightNow
-//TODO: Remove unnecessary data from forecast
-//TODO: Display weather data on page
-		self.forecast = ko.observableArray();
+		var rightNow = data.forecast.txt_forecast.forecastday[0].fcttext;
 
 		for (var i = 0; i < weather.length; i++ ){
+
+			//Set up temp object
 			var day = {};
+
+			//Get data properties
 			day.shortday = weather[i].date.weekday_short;
-			day.fullday = weather[i].date.weekday;
-			day.month = weather[i].date.monthname;
-			day.date = weather[i].date.day;
-			day.highTemp = weather[i].high.fahrenheit;
-			day.lowTemp = weather[i].low.fahrenheit;
-			day.icon = weather[i].icon;
-			day.iconURL = weather[i].icon_url;
-			day.precip = weather[i].pop;
+			day.highTemp = weather[i].high.fahrenheit + '°';
+			day.lowTemp = weather[i].low.fahrenheit + '°';
+
+			//Change default icon to preferred
+			day.iconURL = weather[i].icon_url.replace("k","i");
+			day.iconAlt = weather[i].icon;
+
+			//Add day object to array
 			self.forecast.push(day);
+
 		}
-		console.log(self.forecast());
+
+		//Get current weather conditions
+		self.currentConditions(rightNow);
+
 	};
 
 //  Run data request
@@ -856,3 +856,4 @@ ko.applyBindings(viewModel);
 //TODO: Add weather (see above) -- put in top bar
 //TODO: Customize map colors
 //TODO: Make error handling more robust
+//TODO: Add logos for Yelp and Wunderground in footer

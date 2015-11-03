@@ -24,8 +24,29 @@
   <body>
 
     <header>
-		<h1>Red Bank</h1>
-		<h3>Trip Planner</h3>
+		<div id="site-title">
+			<h1>Red Bank</h1>
+			<h3>Trip Planner</h3>
+		</div>
+		<div id="weather">
+			<div id="current">
+				<h3 id="current-title">Current Weather Conditions</h3>
+				<p id="current-conditions" data-bind="text: currentConditions"></p>
+				<p id="attribution">Weather data from</p>
+				<img id="wunderground-logo" src="img/wundergroundLogo_4c_rev_horz.png" alt="weather data from Wunderground">
+			</div>
+			<div id="forecast">
+				<div class="day" data-bind="foreach: forecast">
+					<div class="weather-info">
+						<div class="day" data-bind="text: $data.shortday"></div>
+						<div class="temp" data-bind="text: $data.highTemp"></div>
+						<div class="temp" data-bind="text: $data.lowTemp"></div>
+						<img data-bind="attr: { src: $data.iconURL, alt: $data.icon }">
+					</div>
+				</div>
+			</div>
+		</div>
+
     </header>
 
 	<section id="sidebar">
