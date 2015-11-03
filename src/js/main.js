@@ -11,6 +11,8 @@ ko.bindingHandlers.accordion = {
 		var tabOpen = ko.unwrap(valueAccessor());
 
 		viewModel.toggleTabs(element, tabOpen, clickedCategory);
+
+		viewModel.showAll();
 	}
 };
 
@@ -168,16 +170,16 @@ function Model() {
 
 }
 
-//************************** VIEW MODEL *****************************************//
+//************************** VIEW MODEL *****************************************************//
 //  * Intialize locations either from Firebase storage or Yelp
 //  * Push location attributes from Yelp data in locations array
 //  * Set up infoWindows and map markers
 //  * Set click function on list to bounce marker and open infoWindow
 //  * Sort locations by category and display in sidebar
 //  * Filter locations by user input (name and/or category)
-//  * Set marker visibilty to show only filtered locations on map
+//  * Set marker visibilty to show only filtered locations on map when search is active
 //  * When item is favorited, add star and update Firebase data
-//*****************************************************************************//
+//******************************************************************************************//
 
 function ViewModel() {
 
@@ -224,6 +226,7 @@ function ViewModel() {
 
 			}
 		});
+
 	};
 
 	//Get data from model
@@ -733,6 +736,43 @@ function ViewModel() {
 	//Start with "Favorites" tab closed
 	self.favsClosed = ko.observable(true);
 
+//  Show all function
+//======================
+
+	self.allMarkers = ko.observableArray();
+
+	self.showAll = function(){
+
+		//Get locations array
+		var locations = self.locations();
+
+		//Check search and tab open states
+		var searchActive = self.searchText() != "";
+		var tabsOpen = self.visibleCategories().length >=1;
+
+		//Create temporary array to hold locations
+		var tempArray = [];
+
+		//If search is not active and all tabs are closed
+		if ( !searchActive && !tabsOpen ) {
+
+			//Iterate through locations
+			for (var i=0; i<  locations.length; i++){
+
+				//Set markers to visible
+				locations[i].marker.setVisible(true);
+
+				//Bounce one time
+				self.bounceMarker(locations[i].marker);
+
+				//Add location to temporary array
+				tempArray.push(locations[i])
+			}
+		}
+
+		//Set allMarkers equal to temporary array
+		self.allMarkers(tempArray);
+	}
 
 //  Get weather data
 //======================
@@ -853,7 +893,8 @@ var viewModel =  new ViewModel();
 var view = new View();
 ko.applyBindings(viewModel);
 
-//TODO: Add weather (see above) -- put in top bar
 //TODO: Customize map colors
 //TODO: Make error handling more robust
-//TODO: Add logos for Yelp and Wunderground in footer
+//TODO: Check out sync, hide secret codes
+//TODO: Add flexbox for mobile response
+//TODO: Add "showAll"  -- when showCats = [] and searchText ="" -- check for tabs closed
