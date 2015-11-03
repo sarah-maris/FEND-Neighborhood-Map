@@ -429,7 +429,7 @@ function ViewModel() {
 		categoryLocations.sidebarLocations = ko.observableArray(sidebarLocations);
 
 		//Set initial state for category accordion tabs to closed
-		categoryLocations.tabOpen = ko.observable(true);
+		categoryLocations.tabOpen = ko.observable(false);
 		categoryLocations.toggle = function (categoryLocations, event) {
             var currentState = categoryLocations.tabOpen();
 			categoryLocations.tabOpen(!currentState);
