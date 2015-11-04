@@ -57,7 +57,7 @@ body {
 }
 
 .temp {
-	font: 16px Roboto, Arial, sans-serif;
+	font: 16px Ubuntu, Arial, sans-serif;
 }
 
 #current-title {
@@ -77,7 +77,7 @@ body {
 #attribution {
 	display: inline-block;
 	float: left;
-	font: 10px Roboto, Arial, sans-serif;
+	font: 10px Ubuntu, Arial, sans-serif;
 	margin: 15px 0;
 	text-align: left;
 	width: 50px;
@@ -99,6 +99,7 @@ body {
 }
 
 .title {
+	border-radius: 5px;
 	font-size: 24px;
 	font-weight: bold;
 	padding: 5px 10px;
@@ -219,7 +220,7 @@ input:focus {
 .review {
 	clear: both;
 	display: block;
-	font: italic 11px Roboto, Arial, sans-serif;
+	font: italic 11px Ubuntu, Arial, sans-serif;
 	max-width: 250px;
 	padding: 5px;
 }
