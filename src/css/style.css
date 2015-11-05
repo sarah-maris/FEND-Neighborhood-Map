@@ -277,6 +277,21 @@ input:focus {
 	margin-right: auto;
 }
 
+/* Small laptop and desktop screens */
+@media screen and (min-width: 1025px)  and (max-width: 1274px){
+
+	#site-title {
+		font-size: 60px;
+		margin-left: 0;
+	}
+
+	#subtitle {
+		font-size: 30px;
+		margin-left: 0;
+	}
+}
+
+
 /* Large tablet and small tablet landscape */
 @media screen and (min-width: 850px)  and (max-width: 1024px){
 
