@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 
 //Dependencies
+var autoprefixer = require('gulp-autoprefixer');
 var concat = require('gulp-concat');
 var del = require('del');
 var ghPages = require('gulp-gh-pages');
@@ -27,6 +28,16 @@ var paths = {
     images: ['src/img/*'],
     fonts: ['src/fonts/font/*']
 }
+
+//Autoprefixer
+gulp.task('autoprefix', function () {
+  return gulp.src(paths.styles)
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }))
+        .pipe(gulp.dest('dist'));
+});
 
 //Clean out build directory
 gulp.task('clean-build', function (cb) {

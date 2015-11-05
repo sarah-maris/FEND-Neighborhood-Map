@@ -36,7 +36,7 @@ The app is fully responsive and works well on all screen sizes.
 * GitHub.io used to host site
 * Flexbox used for responsive design elements
 
-#####Future features
+#####Ideas for future development and optimization
 * **Develop more complete list of locations.**  Yelp api is limited to 20 locations per query and there more than 20 stores and restaurants in Red Bank.  Could do multiple queries but would clutter the map.
 
 * **Include more categories or separate generic restaurant category into different cuisines and service types.**  Same thing for shopping category

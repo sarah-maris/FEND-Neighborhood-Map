@@ -11,7 +11,11 @@ body {
 }
 
 .flexcontainer {
+	display: -webkit-flex;
+	display: -ms-flexbox;
 	display: flex;
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
 	max-width: 1600px;
 	margin-left: auto;
@@ -20,9 +24,17 @@ body {
 
 /***** Site Header *****/
 #title-box {
+	-webkit-flex-basis: 30%;
+	-ms-flex-preferred-size: 30%;
 	flex-basis: 30%;
+	display: -webkit-flex;
+	display: -ms-flexbox;
 	display: flex;
+	-webkit-flex-direction: column;
+	-ms-flex-direction: column;
 	flex-direction: column;
+	-webkit-order: 0;
+	-ms-flex-order: 0;
 	order: 0;
 }
 
@@ -39,20 +51,34 @@ body {
 /***** Weather *****/
 
 #weather-box {
+	display: -webkit-flex;
+	display: -ms-flexbox;
 	display: flex;
+	-webkit-flex-basis: 70%;
+	-ms-flex-preferred-size: 70%;
 	flex-basis: 70%;
+	-webkit-order: 1;
+	-ms-flex-order: 1;
 	order: 1;
 	padding: 30px 0 0 0;
 }
 
 #forecast {
+	-webkit-flex-basis: 50%;
+	-ms-flex-preferred-size: 50%;
 	flex-basis: 50%;
 	padding: 0 10px;
 }
 
 #forecast-box {
+	display: -webkit-flex;
+	display: -ms-flexbox;
 	display: flex;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
 	flex-direction: row;
+		-webkit-justify-content: flex-end;
+		-ms-flex-pack: end;
 		justify-content: flex-end;
 }
 
@@ -71,6 +97,8 @@ body {
 }
 
 #current {
+	-webkit-flex-basis: 50%;
+	-ms-flex-preferred-size: 50%;
 	flex-basis: 50%;
 	padding: 0 10px;
 	text-align: center;
@@ -105,7 +133,11 @@ body {
 /***** Sidebar  *****/
 #sidebar {
 	padding: 0;
+	-webkit-flex-basis: 25%;
+	-ms-flex-preferred-size: 25%;
 	flex-basis: 25%;
+	-webkit-order: 1;
+	-ms-flex-order: 1;
 	order: 1;
 }
 
@@ -191,11 +223,15 @@ input:focus {
 
 /***** Map *****/
 #map {
+	-webkit-flex-basis: 75%;
+	-ms-flex-preferred-size: 75%;
 	flex-basis: 75%;
 	height: 800px;
 	background-color: #CCC;
 	margin: 10px 0;
 	border-radius: 5px;
+	-webkit-order: 3;
+	-ms-flex-order: 3;
 	order: 3;
 }
 
@@ -278,6 +314,8 @@ input:focus {
 /* Large screens */
 @media screen and (min-width: 1275px){
 	#sidebar {
+		-webkit-flex-basis: 275px;
+		-ms-flex-preferred-size: 275px;
 		flex-basis: 275px;
 		margin: 0 0 0 10px;
 	}
@@ -327,10 +365,14 @@ input:focus {
 
 	/* Give sidebar more space */
 	#sidebar {
+		-webkit-flex-basis: 33%;
+		-ms-flex-preferred-size: 33%;
 		flex-basis: 33%;
 	}
 
 	#map {
+		-webkit-flex-basis: 67%;
+		-ms-flex-preferred-size: 67%;
 		flex-basis: 67%;
 	}
 
@@ -394,15 +436,21 @@ input:focus {
 	#map,
 	#sidebar,
 	#weather-box{
+		-webkit-flex-basis: 100%;
+		-ms-flex-preferred-size: 100%;
 		flex-basis: 100%;
 	}
 
 	/* Move sidebar and weather below map */
 	#map {
+		-webkit-order: 1;
+		-ms-flex-order: 1;
 		order: 1;
 	}
 
 	#sidebar {
+		-webkit-order: 2;
+		-ms-flex-order: 2;
 		order: 2;
 	}
 
@@ -431,9 +479,13 @@ input:focus {
 	}
 
 	#weather-box {
+		-webkit-flex-direction: column;
+		-ms-flex-direction: column;
 		flex-direction: column;
+		-webkit-order: 4;
+		-ms-flex-order: 4;
 		order: 4;
-		padding: 10px 0 0 0:
+		padding: 10px 0 0 0;
 	}
 
 	/* Adjust InfoWindow and content size */
