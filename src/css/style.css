@@ -13,11 +13,8 @@ body {
 /***** Site Header *****/
 #title-box {
 	flex-basis: 30%;
-	display: -webkit-flex;
 	display: flex;
-	-webkit-flex-direction: column; /* Safari */
 	flex-direction: column;
-	-webkit-order: 0; /* Safari */
 	order: 0;
 }
 
@@ -35,27 +32,25 @@ body {
 
 
 #weather-box {
-	display: -webkit-flex; /* Safari */
 	display: flex;
 	flex-basis: 70%;
-	-webkit-flex-direction: row; /* Safari */
-	flex-direction: row;
-	-webkit-justify-content: flex-end; /* Safari */
-	justify-content:  flex-end;
-	padding: 30px 0 0 0;
-	-webkit-order: 1; /* Safari */
 	order: 1;
+	padding: 30px 0 0 0;
 }
 
-#current,
 #forecast {
-	float: right;
-	text-align: center;
+	flex-basis: 50%;
 	padding: 0 10px;
 }
 
+#forecast-box {
+	display: flex;
+	flex-direction: row;
+		justify-content: flex-end;
+}
+
 .weather-info{
-	float: left;
+
 	padding: 0 10px;
 	text-align: center;
 }
@@ -66,6 +61,12 @@ body {
 
 .temp {
 	font: 16px Ubuntu, Arial, sans-serif;
+}
+
+#current {
+	flex-basis: 50%;
+	padding: 0 10px;
+	text-align: center;
 }
 
 #current-title {
@@ -85,7 +86,7 @@ body {
 	font: 10px Ubuntu, Arial, sans-serif;
 	margin: 15px 0;
 	text-align: left;
-	flex-basis: 50px;
+	width: 50px;
 }
 
 #wunderground-logo{
@@ -98,7 +99,6 @@ body {
 #sidebar {
 	padding: 0;
 	flex-basis: 25%;
-	-webkit-order: 1; /* Safari */
 	order: 1;
 }
 
@@ -187,7 +187,6 @@ input:focus {
 	background-color: #CCC;
 	margin: 10px 0;
 	border-radius: 5px;
-	-webkit-order: 3; /* Safari */
 	order: 3;
 }
 
@@ -250,8 +249,6 @@ input:focus {
 	background: #97282C;
 	border-radius: 5px;
 	display:inline;
-	-webkit-border-radius: 5;
-	-moz-border-radius: 5;
 	font-size: 12px;
 	margin: 5px;
 	padding: 5px;
@@ -272,9 +269,7 @@ input:focus {
 
 /* On the flex container */
 .flexcontainer {
-	display: -webkit-flex;
 	display: flex;
-	-webkit-flex-wrap: wrap; /* Safari */
 	flex-wrap: wrap;
 	max-width: 1600px;
 	margin-left: auto;
@@ -284,12 +279,24 @@ input:focus {
 /* Smartphone portrait */
 @media screen and (min-width: 320px)  and (max-width: 379px) {
 
+	/* Make full width */
 	#title-box,
 	#map,
 	#sidebar,
 	#weather-box{
 		flex-basis: 100%;
 	}
+
+	/* Move sidebar and weather below map */
+	#map {
+		order: 1;
+	}
+
+	#sidebar {
+		order: 2;
+	}
+
+	/*Adjust font size, padding and margins */
 
 	#site-title {
 		font-size: 40px;
@@ -299,23 +306,6 @@ input:focus {
 	#subtitle {
 		font-size: 24px;
 		margin: 0 5px 5px 5px;
-	}
-
-	#map {
-		-webkit-order: 1; /* Safari */
-		order: 1;
-	}
-
-	#sidebar {
-		-webkit-order: 2; /* Safari */
-		order: 2;
-	}
-	#weather-box {
-		-webkit-flex-direction: column; /* Safari */
-		flex-direction: column;
-		-webkit-order: 4; /* Safari */
-		order: 4;
-		padding: 10px 0 0:
 	}
 
 	#current, #forecast{
@@ -329,6 +319,41 @@ input:focus {
 		margin-right: 0;
 	}
 
+	#weather-box {
+		flex-direction: column;
+		order: 4;
+		padding: 10px 0 0:
+	}
+
+	/* Adjust InfoWindow and content size */
+	.info-window {
+		height: 300px;
+	}
+
+	.gm-style .gm-style-iw {
+		font-size: 11px;
+	}
+
+	.place-name{
+		font-size: 16px;
+	}
+	.place-image {
+		width: 75px;
+	}
+
+	.rating-image {
+		padding-left: 0;
+	}
+
+	.button {
+		display: block;
+		width: 90%;
+		text-align: center;
+	}
+
+	.hide {
+		display: none;
+	}
 }
 
  /* TODO:

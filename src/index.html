@@ -32,7 +32,7 @@
 
         <section id="weather-box">
              <div id="forecast">
-                <div class="day" data-bind="foreach: forecast">
+                <div id="forecast-box" data-bind="foreach: forecast">
                     <div class="weather-info">
                         <div class="day" data-bind="text: $data.shortday"></div>
                         <div class="temp" data-bind="text: $data.highTemp"></div>
