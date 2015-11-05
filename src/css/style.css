@@ -19,7 +19,7 @@ body {
 }
 
 #site-title {
-	font: bold 60px 'Ubuntu', sans-serif;
+	font: bold 72px 'Ubuntu', sans-serif;
 	margin: 20px 20px 0 20px;
 }
 
@@ -56,7 +56,7 @@ body {
 }
 
 .day {
-	font: bold 18px 'Architects Daughter', cursive;;
+	font: bold 18px 'Architects Daughter', cursive;
 }
 
 .temp {
@@ -106,14 +106,16 @@ body {
 	border-radius: 5px;
 	font-size: 24px;
 	font-weight: bold;
-	padding: 5px 10px;
 	margin: 0 10px 2px 0;
+	padding: 5px 10px;
+	text-align: left;
 }
 
 .location {
 	border-bottom: 1px solid black;
 	margin: 0 10px 0 0;
 	padding: 5px 10px;
+	text-align: left;
 }
 
 .search {
@@ -276,8 +278,72 @@ input:focus {
 	margin-right: auto;
 }
 
+/* Phablet, small tablet and large smartphone landscape */
+@media screen and (min-width: 650px)  and (max-width: 799px) {
+
+	/* Give sidebar more space */
+	#sidebar {
+		flex-basis: 33%;
+	}
+
+	#map {
+		flex-basis: 67%;
+	}
+
+	/*Adjust font size, padding and margins */
+
+	#site-title {
+		font-size: 36px;
+		margin: 5px 5px 0 5px;
+	}
+
+	#subtitle {
+		font-size: 18px;
+		margin: 0 5px 5px 5px;
+	}
+
+	#weather-box {
+		padding: 10px 0 0 0;
+	}
+
+	.day, #current-title {
+		font-size: 12px;
+	}
+
+	.temp {
+		font-size: 12px;
+	}
+
+	.weather-icon {
+		width: 30px;
+	}
+
+	#current-conditions {
+		font-size: 12px;
+		padding: 5px 0;
+	}
+
+	#attribution {
+		margin: 5px 0 0 0;
+	}
+
+	#wunderground-logo {
+		margin: 0;
+	}
+
+	#search-box,
+	.title {
+		font-size: 18px;
+	}
+
+	.location{
+		font-size: 14px;
+	}
+
+}
+
 /* Smartphone portrait */
-@media screen and (min-width: 320px)  and (max-width: 379px) {
+@media screen and (min-width: 320px)  and (max-width: 649px) {
 
 	/* Make full width */
 	#title-box,
@@ -317,12 +383,13 @@ input:focus {
 	.location,
 	.title {
 		margin-right: 0;
+		text-align: center;
 	}
 
 	#weather-box {
 		flex-direction: column;
 		order: 4;
-		padding: 10px 0 0:
+		padding: 10px 0 0 0:
 	}
 
 	/* Adjust InfoWindow and content size */
