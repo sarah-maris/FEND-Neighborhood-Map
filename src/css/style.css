@@ -268,7 +268,6 @@ input:focus {
 	display: none;
 }
 
-
 /* On the flex container */
 .flexcontainer {
 	display: flex;
@@ -278,8 +277,32 @@ input:focus {
 	margin-right: auto;
 }
 
+/* Large tablet and small tablet landscape */
+@media screen and (min-width: 850px)  and (max-width: 1024px){
+
+	#site-title {
+		font-size: 48px;
+		margin-left: 0;
+	}
+
+	#subtitle {
+		font-size: 24px;
+		margin-left: 0;
+	}
+
+	#search-box,
+	.title {
+		font-size: 18px;
+	}
+
+	.location{
+		font-size: 14px;
+	}
+
+}
+
 /* Phablet, small tablet and large smartphone landscape */
-@media screen and (min-width: 650px)  and (max-width: 799px) {
+@media screen and (min-width: 650px)  and (max-width: 849px) {
 
 	/* Give sidebar more space */
 	#sidebar {
