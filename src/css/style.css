@@ -12,9 +12,13 @@ body {
 
 /***** Site Header *****/
 #title-box {
-	display: inline-block;
-	float: left;
-	width: calc( 40% - 40px);
+	flex-basis: 30%;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: column; /* Safari */
+	flex-direction: column;
+	-webkit-order: 0; /* Safari */
+	order: 0;
 }
 
 #site-title {
@@ -31,22 +35,26 @@ body {
 
 
 #weather-box {
-	display: inline-block;
-	float: right;
-	margin: 30px 20px 0 20px;
-	width: 60%;
+	display: -webkit-flex; /* Safari */
+	display: flex;
+	flex-basis: 70%;
+	-webkit-flex-direction: row; /* Safari */
+	flex-direction: row;
+	-webkit-justify-content: flex-end; /* Safari */
+	justify-content:  flex-end;
+	padding: 30px 0 0 0;
+	-webkit-order: 1; /* Safari */
+	order: 1;
 }
 
 #current,
 #forecast {
-	display: inline-block;
 	float: right;
 	text-align: center;
 	padding: 0 10px;
 }
 
 .weather-info{
-	display: inline-block;
 	float: left;
 	padding: 0 10px;
 	text-align: center;
@@ -61,26 +69,23 @@ body {
 }
 
 #current-title {
-	display:block;
 	font: bold 18px 'Architects Daughter', cursive;
 	margin: 0;
 	text-align:left;
 }
 
 #current-conditions {
-	display:block;
 	margin: 0;
 	padding: 10px 0;
 	text-align:left;
 }
 
 #attribution {
-	display: inline-block;
 	float: left;
 	font: 10px Ubuntu, Arial, sans-serif;
 	margin: 15px 0;
 	text-align: left;
-	width: 50px;
+	flex-basis: 50px;
 }
 
 #wunderground-logo{
@@ -91,11 +96,10 @@ body {
 
 /***** Sidebar  *****/
 #sidebar {
-	clear: both;
-	display: block;
-	float: left;
 	padding: 0;
-	width: 250px;
+	flex-basis: 25%;
+	-webkit-order: 1; /* Safari */
+	order: 1;
 }
 
 .title {
@@ -103,19 +107,22 @@ body {
 	font-size: 24px;
 	font-weight: bold;
 	padding: 5px 10px;
-	margin: 0;
+	margin: 0 10px 2px 0;
 }
 
 .location {
 	border-bottom: 1px solid black;
-	margin: 0;
+	margin: 0 10px 0 0;
 	padding: 5px 10px;
 }
 
 .search {
 	background-color: #a8a8a8;
 }
+#search-box {
+	 margin: 0 10px 0 0;
 
+}
 .favorites{
 	background-color: #c0900e;
 	border-bottom: 1px solid black;
@@ -160,7 +167,7 @@ body {
 }
 
 input {
-    width: 100%;
+	width: 100%;
 	margin: 10px 0;
 	font-size: 18px;
 	padding: 5px;
@@ -174,12 +181,13 @@ input:focus {
 
 /***** Map *****/
 #map {
-	width: calc( 100% - 260px );
+	flex-basis: 75%;
 	height: 800px;
 	background-color: #CCC;
-	margin: 10px 0 10px 10px;
-	display: block;
-	float: left;
+	margin: 10px 0;
+	border-radius: 5px;
+	-webkit-order: 3; /* Safari */
+	order: 3;
 }
 
 /***** InfoWindows *****/
@@ -226,7 +234,7 @@ input:focus {
 }
 
 .yelp img {
-    display:block;
+	display:block;
 	max-width: 90px;
 }
 
@@ -259,3 +267,61 @@ input:focus {
 .hide {
 	display: none;
 }
+
+
+/* On the flex container */
+.flexcontainer {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-wrap: wrap; /* Safari */
+	flex-wrap: wrap;
+	max-width: 1600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Smartphone portrait */
+@media screen and (min-width: 320px)  and (max-width: 379px) {
+
+	#title-box,
+	#map,
+	#sidebar,
+	#weather-box{
+		flex-basis: 100%;
+	}
+
+	#site-title {
+		font-size: 40px;
+		margin: 5px 5px 0 5px;
+	}
+
+	#subtitle {
+		font-size: 24px;
+		margin: 0 5px 5px 5px;
+	}
+
+	#map {
+		-webkit-order: 1; /* Safari */
+		order: 1;
+	}
+
+	#weather-box {
+		-webkit-flex-direction: column; /* Safari */
+		flex-direction: column;
+		-webkit-order: 4; /* Safari */
+		order: 4;
+		padding: 10px 0 0:
+	}
+
+	#current, #forecast {
+		padding: 10px 0;
+		margin: auto;
+	}
+
+
+}
+
+ /* TODO:
+ * adjust % sidebar
+ * adjust font sizes for title and sidebar cats
+ * change order when responsive
