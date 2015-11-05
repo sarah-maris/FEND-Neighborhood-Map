@@ -119,8 +119,9 @@ body {
 .search {
 	background-color: #a8a8a8;
 }
+
 #search-box {
-	 margin: 0 10px 0 0;
+	margin: 0 10px 10px 0;
 
 }
 .favorites{
@@ -305,6 +306,10 @@ input:focus {
 		order: 1;
 	}
 
+	#sidebar {
+		-webkit-order: 2; /* Safari */
+		order: 2;
+	}
 	#weather-box {
 		-webkit-flex-direction: column; /* Safari */
 		flex-direction: column;
@@ -313,11 +318,16 @@ input:focus {
 		padding: 10px 0 0:
 	}
 
-	#current, #forecast {
+	#current, #forecast{
 		padding: 10px 0;
 		margin: auto;
 	}
 
+	#search-box,
+	.location,
+	.title {
+		margin-right: 0;
+	}
 
 }
 
@@ -325,3 +335,4 @@ input:focus {
  * adjust % sidebar
  * adjust font sizes for title and sidebar cats
  * change order when responsive
+ * adjust infoWindow oontent
