@@ -10,6 +10,14 @@ body {
 	margin: 20px;
 }
 
+.flexcontainer {
+	display: flex;
+	flex-wrap: wrap;
+	max-width: 1600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 /***** Site Header *****/
 #title-box {
 	flex-basis: 30%;
@@ -29,7 +37,6 @@ body {
 }
 
 /***** Weather *****/
-
 
 #weather-box {
 	display: flex;
@@ -268,13 +275,12 @@ input:focus {
 	display: none;
 }
 
-/* On the flex container */
-.flexcontainer {
-	display: flex;
-	flex-wrap: wrap;
-	max-width: 1600px;
-	margin-left: auto;
-	margin-right: auto;
+/* Large screens */
+@media screen and (min-width: 1275px){
+	#sidebar {
+		flex-basis: 275px;
+		margin: 0 0 0 10px;
+	}
 }
 
 /* Small laptop and desktop screens */
@@ -282,7 +288,7 @@ input:focus {
 
 	#site-title {
 		font-size: 60px;
-		margin-left: 0;
+		margin: 30px 0 0 0;
 	}
 
 	#subtitle {
@@ -297,7 +303,7 @@ input:focus {
 
 	#site-title {
 		font-size: 48px;
-		margin-left: 0;
+		margin: 40px 0 0 0;
 	}
 
 	#subtitle {
@@ -332,7 +338,7 @@ input:focus {
 
 	#site-title {
 		font-size: 36px;
-		margin: 5px 5px 0 5px;
+		margin: 15px 5px 0 5px;
 	}
 
 	#subtitle {
@@ -460,9 +466,3 @@ input:focus {
 		display: none;
 	}
 }
-
- /* TODO:
- * adjust % sidebar
- * adjust font sizes for title and sidebar cats
- * change order when responsive
- * adjust infoWindow oontent
