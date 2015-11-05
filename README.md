@@ -20,7 +20,9 @@ Locations can be filtered by name or keyword (cuisine, type of establishment etc
 
 Weather data for the next four days is listed in the site header.
 
-#####Resources
+The app is fully responsive and works well on all screen sizes.
+
+#####Resources and features
 * Google Maps used to display data
 * Knockoutjs library used to update data as it changes
 * Firebase used to store data on locations and favorites
@@ -29,9 +31,10 @@ Weather data for the next four days is listed in the site header.
 * Sidebar accordion using Knockoutjs custom bindings
 * Simple jQuery accordion for non-observable tab
 * Category icons using Fontello custom icon collection
-* Bower used as package handleran
+* Bower used as package handler
 * Gulp used as task runner for build process
 * GitHub.io used to host site
+* Flexbox used for responsive design elements
 
 #####Future features
 * **Develop more complete list of locations.**  Yelp api is limited to 20 locations per query and there more than 20 stores and restaurants in Red Bank.  Could do multiple queries but would clutter the map.
