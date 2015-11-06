@@ -20,10 +20,10 @@ Locations can be filtered by name or keyword (cuisine, type of establishment etc
 
 Weather data for the next four days is listed in the site header.
 
-The app is fully responsive and works well on all screen sizes.
+The app is fully responsive and works well on all screen sizes. Errors are handled gracefully.
 
 #####Resources and features
-* Google Maps used to display data
+* Google Maps used to display data (custom color scheme and markers)
 * Knockoutjs library used to update data as it changes
 * Firebase used to store data on locations and favorites
 * Location data from Yelp
