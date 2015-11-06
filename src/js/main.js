@@ -5,12 +5,12 @@
 ko.bindingHandlers.accordion = {
 
 	//Update tab state when clicked
-	update: function (element, valueAccessor, allBindings, clickedCategory, bindingContext) {
+	update: function ( element, valueAccessor, allBindings, clickedCategory, bindingContext ) {
 
 		//Get state of tab from observable
-		var tabOpen = ko.unwrap(valueAccessor());
+		var tabOpen = ko.unwrap( valueAccessor() );
 
-		viewModel.toggleTabs(element, tabOpen, clickedCategory);
+		viewModel.toggleTabs( element, tabOpen, clickedCategory );
 
 		viewModel.showAll();
 	}
@@ -47,12 +47,12 @@ function Model() {
 		self.numCats = self.categories.length;
 
 		//Start with the first category -- next is called after successful data retrieval
-		self.getYelpData(self.categories[0]);
+		self.getYelpData( self.categories[0] );
 
 	};
 
 	//Send API Query to Yelp
-	self.getYelpData = function(category, cb) {
+	self.getYelpData = function( category, cb ) {
 
 		var auth = {
 			consumerKey: 'fCSqFxVC56k7RxD-CXhtFg',
@@ -72,25 +72,25 @@ function Model() {
 			tokenSecret: auth.accessTokenSecret
 		};
 		parameters = [];
-		parameters.push(['location', near]);
-		parameters.push(['category_filter', category.yelpName]);
-		parameters.push(['radius_filter', radius]);
-		parameters.push(['sort', sort]);
-		parameters.push(['callback', 'cb']);
-		parameters.push(['oauth_consumer_key', auth.consumerKey]);
-		parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
-		parameters.push(['oauth_token', auth.accessToken]);
-		parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
+		parameters.push([ 'location', near ]);
+		parameters.push([ 'category_filter', category.yelpName ]);
+		parameters.push([ 'radius_filter', radius ]);
+		parameters.push([ 'sort', sort ]);
+		parameters.push([ 'callback', 'cb' ]);
+		parameters.push([ 'oauth_consumer_key', auth.consumerKey ]);
+		parameters.push([ 'oauth_consumer_secret', auth.consumerSecret ]);
+		parameters.push([ 'oauth_token', auth.accessToken ]);
+		parameters.push([ 'oauth_signature_method', 'HMAC-SHA1' ]);
 
 		var message = {
 			'action': 'http://api.yelp.com/v2/search',
 			'method': 'GET',
 			'parameters': parameters
 		};
-		OAuth.setTimestampAndNonce(message);
-		OAuth.SignatureMethod.sign(message, accessor);
-		var parameterMap = OAuth.getParameterMap(message.parameters);
-		parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature);
+		OAuth.setTimestampAndNonce( message );
+		OAuth.SignatureMethod.sign( message, accessor );
+		var parameterMap = OAuth.getParameterMap( message.parameters );
+		parameterMap.oauth_signature = OAuth.percentEncode( parameterMap.oauth_signature );
 
 		$.ajax({
 			url: message.action,
@@ -104,19 +104,19 @@ function Model() {
 		.done( function( data ) {
 
 			//Push get data from each location
-			model.getLocations(data.businesses, category);
+			model.getLocations( data.businesses, category );
 
 			//Increment category counter
 			self.counter ++;
 
 			//Get data for next category
-			if (self.counter < self.numCats ) {
-				self.getYelpData( self.categories[self.counter] );
+			if ( self.counter < self.numCats ) {
+				self.getYelpData( self.categories[ self.counter ] );
 
 			//When data has been received for all categories
 			} else {
 				//Push JSON content to firebase
-				storedLocations.set(self.locations());
+				storedLocations.set( self.locations() );
 
 				//Set markers on map
 				viewModel.setMarkers();
@@ -135,7 +135,7 @@ function Model() {
 		.fail ( function( data ){
 
 			//Add error message to page and give details in console
-			$('#favorites-instructions').replaceWith('<p id="locations-error">No location data available. <br> Try again later</p>')
+			$( '#favorites-instructions' ).replaceWith( '<p id="locations-error">No location data available. <br> Try again later</p>' );
 			console.log( 'Unable to load Yelp Data', data );
 
 			//Get weather data
@@ -146,7 +146,7 @@ function Model() {
 	};
 
 	//Push locations from Yelp query into array
-	self.getLocations = function(businesses, category) {
+	self.getLocations = function( businesses, category ) {
 		for (var i=0; i < businesses.length; i++ ){
 			self.locations.push( new viewModel.bizInfo( businesses[i], category ));
 		}
@@ -169,21 +169,21 @@ function Model() {
 				var errorCode = data.response.error.description;
 
 				//Add error message to page and give details in console
-				$('#forecast-box').append('<p id="weather-error">No weather data available. <br> Try again later</p>')
-				$('#current-conditions').append('<p id="current-error">N/A</p>')
+				$( '#forecast-box' ).append( '<p id="weather-error">No weather data available. <br> Try again later</p>' );
+				$( '#current-conditions' ).append( '<p id="current-error">N/A</p>' );
 				console.log( 'Unable to load Wunderground data. Error code:"', errorCode, '"' );
 
 			//Else send weather data to viewModel for processing
 			} else {
-				console.log('Receiving weather data from Wunderground');
+				console.log( 'Receiving weather data from Wunderground' );
 				viewModel.getWeather(data);
 			}
 		})
 
 		//If fail show error message
 		.fail ( function( data ){
-			alert( 'fail');
-			console.log('Could not get Wunderground data: ', data);
+			alert( 'fail' );
+			console.log( 'Could not get Wunderground data: ', data );
 		});
 
 	};
@@ -212,16 +212,16 @@ function ViewModel() {
 	self.initializeLocations = function(){
 
 		//Read data from Firebase
-		storedLocations.once('value', function(snapshot) {
+		storedLocations.once( 'value', function(snapshot) {
 
 			//Use stored data if it exists
-			if (snapshot.val()){
+			if ( snapshot.val() ){
 
 				//Send message to console
-				console.log('Receiving location and favorites data from Firebase');
+				console.log( 'Receiving location and favorites data from Firebase' );
 
 				//Set locations array to storedData array
-				model.locations(snapshot.val());
+				model.locations( snapshot.val() );
 
 				//Set markers
 				self.setMarkers();
@@ -239,7 +239,7 @@ function ViewModel() {
 			} else {
 
 				//Send message to console
-				console.log('No stored data -- getting new location data from Yelp');
+				console.log( 'No stored data -- getting new location data from Yelp' );
 
 				//Get new Yelp Data
 				model.getNewData();
@@ -255,7 +255,7 @@ function ViewModel() {
     });
 
 	//Get information about each business from Yelp query data
-	self.bizInfo = function(bizObj, category) {
+	self.bizInfo = function( bizObj, category ) {
 
 		//Get coordinates for map placement
 		this.lat =  bizObj.location.coordinate.latitude;
@@ -281,19 +281,19 @@ function ViewModel() {
 
 		//Create a single array of items for search function: categories and business name
 		var keywords = [];
-		bizObj.categories.forEach(function(catType){
-			catType.forEach(function(cat){
-				keywords.push(cat);
+		bizObj.categories.forEach( function( catType ){
+			catType.forEach( function( cat ){
+				keywords.push( cat );
 			});
 		});
-		keywords.push(this.name);
+		keywords.push( this.name );
 		this.keywords = keywords;
 
 		//Get category and icon images for map
 		this.cat = category.cat;
 		this.icon = 'img/' + this.cat + '.png';
 		this.favIcon = 'img/fav-' + this.cat + '.png';
-		this.showIcon = 'img/' + this.cat + '.png'; //this.icon;
+		this.showIcon = 'img/' + this.cat + '.png';
 
 		//Set favorite attribute to false
 		this.fav = false;
@@ -310,39 +310,39 @@ function ViewModel() {
 	};
 
 	//Set content and event listener in infoWindow
-	self.setInfoWindow = function(location, index) {
+	self.setInfoWindow = function( location, index ) {
 
 		//Set up div to hold infoWindow content
-		var windowContent = document.createElement('div');
+		var windowContent = document.createElement( 'div' );
 
 		//Set HTML content for infoWindow
 		windowContent.innerHTML = location.windowHTML;
 
 		//Give window content 'info-window' class
-		windowContent.setAttribute('class', 'info-window');
+		windowContent.setAttribute( 'class', 'info-window' );
 
 		//Create button for Yelp link
-		var yelpButton = windowContent.appendChild(document.createElement('div'));
+		var yelpButton = windowContent.appendChild(document.createElement( 'div' ));
 		yelpButton.innerHTML = '<a href="' + location.url + '" target="_blank">Read Full Review</a>';
-		yelpButton.setAttribute('class', 'button');
+		yelpButton.setAttribute( 'class', 'button' );
 
 		//Create button for Add to Favorites
-		location.favButton = windowContent.appendChild(document.createElement('div'));
+		location.favButton = windowContent.appendChild(document.createElement( 'div' ));
 		location.favButton.innerHTML = 'Add to Favorites';
-		location.favButton.setAttribute('class', 'button');
+		location.favButton.setAttribute( 'class', 'button' );
 
 		//Create button for Remove from Favorites
-		location.unFavButton = windowContent.appendChild(document.createElement('div'));
+		location.unFavButton = windowContent.appendChild(document.createElement( 'div' ));
 		location.unFavButton.innerHTML = 'Remove from Favorites';
-		location.unFavButton.setAttribute('class', 'button hide');
+		location.unFavButton.setAttribute( 'class', 'button hide' );
 
 		//Set attributes for button based on favorite status
 		if (location.fav === true) {
-			location.favButton.setAttribute('class', 'button hide');
-			location.unFavButton.setAttribute('class', 'button');
+			location.favButton.setAttribute( 'class', 'button hide' );
+			location.unFavButton.setAttribute( 'class', 'button' );
 		} else {
-			location.favButton.setAttribute('class', 'button');
-			location.unFavButton.setAttribute('class', 'button hide');
+			location.favButton.setAttribute( 'class', 'button' );
+			location.unFavButton.setAttribute( 'class', 'button hide' );
 		}
 
 		//Add click event for Add to Favorites button
@@ -481,7 +481,7 @@ function ViewModel() {
 			var isVisible = false;
 
 			//Check if "favorites" is in visible list
-			if (visible.indexOf('favs')>= 0) {
+			if (visible.indexOf( 'favs' )>= 0) {
 
 				//Check if location is favorite
 				if (location.fav){
@@ -520,7 +520,7 @@ function ViewModel() {
 		if (tabOpen) {
 
 			//Empty search filter
-			self.searchText('');
+			self.searchText( '' );
 
 			//Clean out filteredLocations array
 			self.filteredLocations.removeAll();
@@ -529,10 +529,10 @@ function ViewModel() {
 			self.visibleCategories.push(clickedCategory.cat);
 
 			//Open tab
-			$(element).next().slideDown('400');
+			$(element).next().slideDown( '400' );
 
 			//Toggle icon
-			$(element).removeClass('icon-down').addClass('icon-up');
+			$(element).removeClass( 'icon-down' ).addClass( 'icon-up' );
 
 		//If a tab is closed
 		} else {
@@ -552,10 +552,10 @@ function ViewModel() {
 		self.visibleCategories.remove(category.cat);
 
 		//Close tab
-		$(element).next().slideUp('400');
+		$(element).next().slideUp( '400' );
 
 		//Toggle icon
-		$(element).removeClass('icon-up').addClass('icon-down');
+		$(element).removeClass( 'icon-up' ).addClass( 'icon-down' );
 
 		//Set tabOpen to false
 		category.tabOpen(false);
@@ -566,7 +566,7 @@ function ViewModel() {
 //======================
 
 	//Set filter as an observable
-	self.searchText = ko.observable('');
+	self.searchText = ko.observable( '' );
 
 	//Set filteredLocations as an observable array
 	self.filteredLocations = ko.observableArray();
@@ -597,16 +597,16 @@ function ViewModel() {
 		if (!favsClosed){
 
 			//Remove "favs" from visible category list
-			self.visibleCategories.remove('favs');
+			self.visibleCategories.remove( 'favs' );
 
 			//Set open state to current open state (true)
 			self.favsClosed(true);
 
 			//Toggle the 'open' class
-			$('#favoritesTab').toggleClass('icon-down icon-up');
+			$( '#favoritesTab' ).toggleClass( 'icon-down icon-up' );
 
 			//Close tab
-			$('#favoritesTab').next().slideToggle('400');
+			$( '#favoritesTab' ).next().slideToggle( '400' );
 		}
 
 		//Clean out filteredLocations array
@@ -706,8 +706,8 @@ function ViewModel() {
 		location.marker.icon = location.showIcon;
 
 		//Update infoWindow buttons
-		location.favButton.setAttribute('class', 'button hide');
-		location.unFavButton.setAttribute('class', 'button');
+		location.favButton.setAttribute( 'class', 'button hide' );
+		location.unFavButton.setAttribute( 'class', 'button' );
 
 		//Update 'fav' and 'showIcon' data in Firebase storage
 		storedLocations.child(index).update({
@@ -736,8 +736,8 @@ function ViewModel() {
 		location.marker.icon = location.showIcon;
 
 		//Update infoWindow buttons
-		location.favButton.setAttribute('class', 'button hide');
-		location.unFavButton.setAttribute('class', 'button');
+		location.favButton.setAttribute( 'class', 'button hide' );
+		location.unFavButton.setAttribute( 'class', 'button' );
 
 		//Update 'fav' and 'showIcon' data in Firebase storage
 		storedLocations.child(index).update({
@@ -767,7 +767,7 @@ function ViewModel() {
 		var locations = self.locations();
 
 		//Check search and tab open states
-		var searchActive = self.searchText() != '';
+		var searchActive = self.searchText() !== '';
 		var tabsOpen = self.visibleCategories().length >=1;
 
 		//Create temporary array to hold locations
@@ -786,13 +786,13 @@ function ViewModel() {
 				self.bounceMarker(locations[i].marker);
 
 				//Add location to temporary array
-				tempArray.push(locations[i])
+				tempArray.push(locations[i]);
 			}
 		}
 
 		//Set allMarkers equal to temporary array
 		self.allMarkers(tempArray);
-	}
+	};
 
 //  Get weather data
 //======================
@@ -817,7 +817,7 @@ function ViewModel() {
 			day.lowTemp = weather[i].low.fahrenheit + '°';
 
 			//Change default icon to preferred
-			day.iconURL = weather[i].icon_url.replace('k','i');
+			day.iconURL = weather[i].icon_url.replace( 'k','i' );
 			day.iconAlt = weather[i].icon;
 
 			//Add day object to array
@@ -883,7 +883,7 @@ function View() {
 			}
 		];
 
-		var mapCanvas = document.getElementById('map');
+		var mapCanvas = document.getElementById( 'map' );
 		var mapOptions = {
 			center: new google.maps.LatLng(40.351724, -74.067342),
 			zoom: 16,
@@ -902,26 +902,26 @@ function View() {
 	//Add jquery accordion for favorites tab
 	$(document).ready(function($) {
 
-		$('#favoritesTab').click(function(){
+		$( '#favoritesTab' ).click(function(){
 
 			//Get previous open state
 			favsClosed = viewModel.favsClosed();
 
 			//Toggle the 'open' class (triggers change in arrow icon)
-			$('#favoritesTab').toggleClass('icon-down icon-up');
+			$( '#favoritesTab' ).toggleClass( 'icon-down icon-up' );
 
 			//Open or close tab
-			$('#favoritesTab').next().slideToggle('400');
+			$( '#favoritesTab' ).next().slideToggle( '400' );
 
 			//If closed, toggle to open state
 			if (favsClosed){
 
 				//Empty search filter amd filteredLocations array
-				viewModel.searchText('');
+				viewModel.searchText( '' );
 				viewModel.filteredLocations.removeAll();
 
 				//Add "favs" from visible category list
-				viewModel.visibleCategories.push('favs');
+				viewModel.visibleCategories.push( 'favs' );
 
 				//Set open state to current open state (false)
 				viewModel.favsClosed(false);
@@ -930,7 +930,7 @@ function View() {
 			} else {
 
 				//Remove "favs" from visible category list
-				viewModel.visibleCategories.remove('favs');
+				viewModel.visibleCategories.remove( 'favs' );
 
 				//Set open state to current open state (true)
 				viewModel.favsClosed(true);
@@ -952,12 +952,12 @@ var storeLocations, model, viewModel, view;
 
 //Initialize app function -- runs after Google Maps has successfully loaded
 var initializeApp = function() {
-	storedLocations = new Firebase('https://blistering-heat-6713.firebaseio.com/');
+	storedLocations = new Firebase( 'https://blistering-heat-6713.firebaseio.com/' );
 	model = new Model();
 	viewModel =  new ViewModel();
 	view = new View();
 	ko.applyBindings(viewModel);
-}
+};
 
 //Get data from Google Maps API and launch app
 $.getScript( 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Hf4D47wT3dI_iA6kyul2YFsvzjDMHFE' )
@@ -970,8 +970,6 @@ $.getScript( 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Hf4D47wT3dI_iA
 	.fail(function( jqxhr, settings, exception ) {
 
 		//Add error message to page and give details in console
-		$('#map').append('<p id="locations-error">Google Map not available. <br> Try again later</p>')
-		console.log ('Unable to load Google Maps', exception);;
+		$( '#map' ).append( '<p id="locations-error">Google Map not available. <br> Try again later</p>' );
+		console.log ( 'Unable to load Google Maps', exception);
 });
-
-//TODO: Customize map colors
