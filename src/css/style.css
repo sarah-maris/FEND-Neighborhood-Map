@@ -311,6 +311,28 @@ input:focus {
 	display: none;
 }
 
+/* Error handling */
+#weather-error {
+	color: #97282c;
+	font: bold 18px 'Architects Daughter', cursive;
+	margin: 20px 20px 0 0;
+	text-align: center;
+}
+
+#current-error {
+	color: #97282c;
+	font: bold 18px 'Architects Daughter', cursive;
+	margin: 0;
+	text-align: left;
+}
+
+#locations-error {
+	color: #97282c;
+	font: bold 18px 'Architects Daughter', cursive;
+	margin: 20px 20px 0 0;
+	text-align: center;
+}
+
 /* Large screens */
 @media screen and (min-width: 1275px){
 	#sidebar {

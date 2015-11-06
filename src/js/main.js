@@ -132,10 +132,15 @@ function Model() {
 		})
 
 		//When fail show error message
-		//TOD0: Make response more robust
 		.fail ( function( data ){
-			alert( 'fail');
-			console.log('Could not get data', data);
+
+			//Add error message to page and give details in console
+			$('#favorites-instructions').replaceWith('<p id="locations-error">No location data available. <br> Try again later</p>')
+			console.log( 'Unable to load Yelp Data', data );
+
+			//Get weather data
+			self.getWundergroundData();
+
 		});
 
 	};
@@ -150,20 +155,35 @@ function Model() {
 	//Get Weather data
 	self.getWundergroundData = function(){
 		$.ajax({
-			url : "http://api.wunderground.com/api/4d00d2a5eb37d968/forecast/q/NJ/Red_Bank.json",
-			dataType : "jsonp",
+			url : 'http://api.wunderground.com/api/4d00d2a5eb37d968/forecast/q/NJ/Red_Bank.json',
+			dataType : 'jsonp',
 			async: true
 		})
 
 		.done ( function( data ) {
-			console.log("Receiving weather data from Wunderground");
-			viewModel.getWeather(data);
+
+			//Error response needed within "done" because error is returned as a successful request
+			if (data.response.error) {
+
+			//Get error code
+				var errorCode = data.response.error.description;
+
+				//Add error message to page and give details in console
+				$('#forecast-box').append('<p id="weather-error">No weather data available. <br> Try again later</p>')
+				$('#current-conditions').append('<p id="current-error">N/A</p>')
+				console.log( 'Unable to load Wunderground data. Error code:"', errorCode, '"' );
+
+			//Else send weather data to viewModel for processing
+			} else {
+				console.log('Receiving weather data from Wunderground');
+				viewModel.getWeather(data);
+			}
 		})
-		//When fail show error message
-		//TOD0: Make response more robust
+
+		//If fail show error message
 		.fail ( function( data ){
 			alert( 'fail');
-			console.log('Could not get data', data);
+			console.log('Could not get Wunderground data: ', data);
 		});
 
 	};
@@ -461,7 +481,7 @@ function ViewModel() {
 			var isVisible = false;
 
 			//Check if "favorites" is in visible list
-			if (visible.indexOf("favs")>= 0) {
+			if (visible.indexOf('favs')>= 0) {
 
 				//Check if location is favorite
 				if (location.fav){
@@ -512,7 +532,7 @@ function ViewModel() {
 			$(element).next().slideDown('400');
 
 			//Toggle icon
-			$(element).removeClass("icon-down").addClass("icon-up");
+			$(element).removeClass('icon-down').addClass('icon-up');
 
 		//If a tab is closed
 		} else {
@@ -535,7 +555,7 @@ function ViewModel() {
 		$(element).next().slideUp('400');
 
 		//Toggle icon
-		$(element).removeClass("icon-up").addClass("icon-down");
+		$(element).removeClass('icon-up').addClass('icon-down');
 
 		//Set tabOpen to false
 		category.tabOpen(false);
@@ -563,7 +583,7 @@ function ViewModel() {
 		categories.forEach( function(category){
 
 			//Set variable for dom element
-			var element = ".title." + category.cat;
+			var element = '.title.' + category.cat;
 
 			//Close tab
 			self.closeTab(category, element);
@@ -577,13 +597,13 @@ function ViewModel() {
 		if (!favsClosed){
 
 			//Remove "favs" from visible category list
-			self.visibleCategories.remove("favs");
+			self.visibleCategories.remove('favs');
 
 			//Set open state to current open state (true)
 			self.favsClosed(true);
 
 			//Toggle the 'open' class
-			$('#favoritesTab').toggleClass("icon-down icon-up");
+			$('#favoritesTab').toggleClass('icon-down icon-up');
 
 			//Close tab
 			$('#favoritesTab').next().slideToggle('400');
@@ -747,7 +767,7 @@ function ViewModel() {
 		var locations = self.locations();
 
 		//Check search and tab open states
-		var searchActive = self.searchText() != "";
+		var searchActive = self.searchText() != '';
 		var tabsOpen = self.visibleCategories().length >=1;
 
 		//Create temporary array to hold locations
@@ -797,7 +817,7 @@ function ViewModel() {
 			day.lowTemp = weather[i].low.fahrenheit + '°';
 
 			//Change default icon to preferred
-			day.iconURL = weather[i].icon_url.replace("k","i");
+			day.iconURL = weather[i].icon_url.replace('k','i');
 			day.iconAlt = weather[i].icon;
 
 			//Add day object to array
@@ -848,7 +868,7 @@ function View() {
 			favsClosed = viewModel.favsClosed();
 
 			//Toggle the 'open' class (triggers change in arrow icon)
-			$('#favoritesTab').toggleClass("icon-down icon-up");
+			$('#favoritesTab').toggleClass('icon-down icon-up');
 
 			//Open or close tab
 			$('#favoritesTab').next().slideToggle('400');
@@ -861,7 +881,7 @@ function View() {
 				viewModel.filteredLocations.removeAll();
 
 				//Add "favs" from visible category list
-				viewModel.visibleCategories.push("favs");
+				viewModel.visibleCategories.push('favs');
 
 				//Set open state to current open state (false)
 				viewModel.favsClosed(false);
@@ -870,7 +890,7 @@ function View() {
 			} else {
 
 				//Remove "favs" from visible category list
-				viewModel.visibleCategories.remove("favs");
+				viewModel.visibleCategories.remove('favs');
 
 				//Set open state to current open state (true)
 				viewModel.favsClosed(true);
@@ -887,14 +907,31 @@ function View() {
 //  * Apply Knockout Bindings
 //**************************************************//
 
-var storedLocations = new Firebase('https://blistering-heat-6713.firebaseio.com/');
-var model = new Model();
-var viewModel =  new ViewModel();
-var view = new View();
-ko.applyBindings(viewModel);
+//Set up global variable
+var storeLocations, model, viewModel, view;
+
+//Initialize app function -- runs after Google Maps has successfully loaded
+var initializeApp = function() {
+	storedLocations = new Firebase('https://blistering-heat-6713.firebaseio.com/');
+	model = new Model();
+	viewModel =  new ViewModel();
+	view = new View();
+	ko.applyBindings(viewModel);
+}
+
+//Get data from Google Maps API and launch app
+$.getScript( 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Hf4D47wT3dI_iA6kyul2YFsvzjDMHFE' )
+
+	//When done initialize app and send message to console.
+	.done(function() {
+		initializeApp();
+		console.log( 'Receiving data from Google Maps' );
+	})
+	.fail(function( jqxhr, settings, exception ) {
+
+		//Add error message to page and give details in console
+		$('#map').append('<p id="locations-error">Google Map not available. <br> Try again later</p>')
+		console.log ('Unable to load Google Maps', exception);;
+});
 
 //TODO: Customize map colors
-//TODO: Make error handling more robust
-//TODO: Check out sync, hide secret codes
-//TODO: Add flexbox for mobile response
-//TODO: Replace Roboto with Ubuntu

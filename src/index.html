@@ -12,7 +12,6 @@
     <!-- endbuild -->
     <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
 	<script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Hf4D47wT3dI_iA6kyul2YFsvzjDMHFE" type="text/javascript"></script>
 	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 	<link href='https://fonts.googleapis.com/css?family=Architects+Daughter|Ubuntu:400,700' rel='stylesheet' type='text/css'>
     <!-- build:css css/style.min.css -->
@@ -74,7 +73,7 @@
             </div>
 
             <!-- Favorites instructions -->
-            <div>
+            <div id="favorites-instructions">
                 <h4 class="instruction-title">Add a favorite location</h4>
                 <p class="instructions">Click on the map marker<br>Choose "Add to Favorites"</p>
             </div>
@@ -100,7 +99,7 @@
 	</footer>
     </div><!-- end flexcontainer -->
     <!-- build:inlinejs -->
-	<script src="js/main.js"></script>
+	<script src="js/main.js" async></script>
     <!-- endbuild -->
   </body>
 </html>
