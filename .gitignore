@@ -54,6 +54,8 @@ components
 .publish/
 build/
 
+#Files needed for project but not for repository
+Misc/
 
 #WordPress
 *.log
