@@ -5,7 +5,7 @@
 See live here: http://sarah-maris.github.io/FEND-Neighborhood-Map/
 
 #####About Red Bank
-Red Bank New, Jersey is known locally for its unique restaurants, hotels, shopping and entertainment venues.  Located near the Jersey Shore, Red Bank is about an hour from New York City and accessible by train (NJ Transit), car (exit 109 on the New Jersey Parkway) or car.
+Red Bank New, Jersey is known locally for its unique restaurants, hotels, shopping and entertainment venues.  Located near the Jersey Shore, Red Bank is about an hour from New York City and accessible by train (NJ Transit), or car (exit 109 on the New Jersey Parkway).
 
 #####How to use this app to make your visit to Red Bank more enjoyable
 The page automatically loads information from the Yelp API and loads it on a Google Map.  Locations are stored in the Firebase database -- new locations are called only when database has been cleared or there is an error communicating with Firebase.
