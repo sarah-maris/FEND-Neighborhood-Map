@@ -3,7 +3,7 @@
 ### Red Bank Trip Planner
 *This project uses the Knockoutjs framework to present data from Google Maps, the Yelp API and the Wunderground API.*
 
-See live here: http://sarah-maris.github.io/FEND-Neighborhood-Map/
+See live here: http://sarah-maris.github.io/red-bank-trip-planner/
 
 ##### About Red Bank
 Red Bank New, Jersey is known locally for its unique restaurants, hotels, shopping and entertainment venues.  Located near the Jersey Shore, Red Bank is about an hour from New York City and accessible by train (NJ Transit), or car (exit 109 on the New Jersey Parkway).
