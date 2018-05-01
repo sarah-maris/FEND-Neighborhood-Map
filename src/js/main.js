@@ -155,7 +155,7 @@ function Model() {
 	//Get Weather data
 	self.getWundergroundData = function(){
 		$.ajax({
-			url : 'http://api.wunderground.com/api/4d00d2a5eb37d968/forecast/q/NJ/Red_Bank.json',
+			url : 'https://api.wunderground.com/api/4d00d2a5eb37d968/forecast/q/NJ/Red_Bank.json',
 			dataType : 'jsonp',
 			async: true
 		})
