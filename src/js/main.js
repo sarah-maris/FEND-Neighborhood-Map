@@ -773,7 +773,7 @@ var initializeApp = function() {
 };
 
 //Get data from Google Maps API and launch app
-$.getScript( 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Hf4D47wT3dI_iA6kyul2YFsvzjDMHFE' )
+$.getScript(`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_KEY}`)
 
   //When done initialize app and send message to console.
   .done(function() {
