@@ -46,3 +46,34 @@ const MAP_STYLES = [
     stylers: [{ color: '#1b317d' }, { lightness: 60 }, { gamma: 1.87 }]
   }
 ];
+
+// Parameters for Yelp search
+const YELP_PARAMS = {
+  location: 'Red+Bank+NJ',
+  radius: 3000,
+  categories: 'restaurant'
+};
+
+// App categories
+const CATEGORIES = [
+  {
+    name: 'Entertainment',
+    yelpCat: 'movietheaters,musicvenues',
+    cat: 'entertainment'
+  },
+  {
+    name: 'Restaurants',
+    yelpCat: 'restaurants',
+    cat: 'restaurant'
+  },
+  {
+    name: 'Hotels',
+    yelpCat: 'hotels',
+    cat: 'hotel'
+  },
+  {
+    name: 'Shopping',
+    yelpCat: 'shopping',
+    cat: 'shopping'
+  }
+];

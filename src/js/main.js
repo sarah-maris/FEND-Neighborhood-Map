@@ -34,119 +34,6 @@ function Model() {
   //Set up observable array to hold locations
   self.locations = ko.observableArray();
 
-  //Add categories that we want to include
-  self.categories = [
-    {
-      name: 'Entertainment',
-      yelpName: 'movietheaters,musicvenues',
-      cat: 'entertainment'
-    },
-    { name: 'Restaurants', yelpName: 'restaurants', cat: 'restaurant' },
-    { name: 'Hotels', yelpName: 'hotels', cat: 'hotel' },
-    { name: 'Shopping', yelpName: 'shopping', cat: 'shopping' }
-  ];
-
-  //Iterate through categories to get data from Yelp
-  self.getNewData = function() {
-    //Set variables for counter and number of categories
-    self.counter = 0;
-    self.numCats = self.categories.length;
-
-    //Start with the first category -- next is called after successful data retrieval
-    self.getYelpData(self.categories[0]);
-  };
-
-  //Send API Query to Yelp
-  self.getYelpData = function(category, cb) {
-    var auth = {
-      consumerKey: 'fCSqFxVC56k7RxD-CXhtFg',
-      consumerSecret: '_phQk4XXGzIsVRJ8ZfarixIURVw',
-      accessToken: 'Ar-g_-LjgtRcBcXgKbTZ9zahrH2kdNNH',
-      accessTokenSecret: 'NX2X5wtTxbjKn4Q04N0FWQoH-88',
-      serviceProvider: {
-        signatureMethod: 'HMAC-SHA1'
-      }
-    };
-
-    var near = 'Red+Bank+NJ';
-    var radius = 3000;
-    var sort = 1;
-    var accessor = {
-      consumerSecret: auth.consumerSecret,
-      tokenSecret: auth.accessTokenSecret
-    };
-    parameters = [];
-    parameters.push(['location', near]);
-    parameters.push(['category_filter', category.yelpName]);
-    parameters.push(['radius_filter', radius]);
-    parameters.push(['sort', sort]);
-    parameters.push(['callback', 'cb']);
-    parameters.push(['oauth_consumer_key', auth.consumerKey]);
-    parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
-    parameters.push(['oauth_token', auth.accessToken]);
-    parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
-
-    var message = {
-      action: 'http://api.yelp.com/v2/search',
-      method: 'GET',
-      parameters: parameters
-    };
-    OAuth.setTimestampAndNonce(message);
-    OAuth.SignatureMethod.sign(message, accessor);
-    var parameterMap = OAuth.getParameterMap(message.parameters);
-    parameterMap.oauth_signature = OAuth.percentEncode(
-      parameterMap.oauth_signature
-    );
-
-    $.ajax({
-      url: message.action,
-      async: true,
-      data: parameterMap,
-      cache: true,
-      dataType: 'jsonp',
-      jsonpCallback: 'cb'
-    })
-      //When sucessful send to getLocations
-      .done(function(data) {
-        //Push get data from each location
-        model.getLocations(data.businesses, category);
-
-        //Increment category counter
-        self.counter++;
-
-        //Get data for next category
-        if (self.counter < self.numCats) {
-          self.getYelpData(self.categories[self.counter]);
-
-          //When data has been received for all categories
-        } else {
-          //Push JSON content to firebase
-          storedLocations.set(self.locations());
-
-          //Set markers on map
-          viewModel.setMarkers();
-
-          //Add categories and locations to sidebar
-          viewModel.showCats();
-
-          //Get weather data
-          self.getWundergroundData();
-        }
-      })
-
-      //When fail show error message
-      .fail(function(data) {
-        //Add error message to page and give details in console
-        $('#favorites-instructions').replaceWith(
-          '<p id="locations-error">No location data available. <br> Try again later</p>'
-        );
-        console.log('Unable to load Yelp Data', data);
-
-        //Get weather data
-        self.getWundergroundData();
-      });
-  };
-
   //Push locations from Yelp query into array
   self.getLocations = function(businesses, category) {
     for (var i = 0; i < businesses.length; i++) {
@@ -213,38 +100,9 @@ function ViewModel() {
   //====================================
 
   //Check for data stored in Firebase
-  self.initializeLocations = function() {
-    //Read data from Firebase
-    storedLocations.once('value', function(snapshot) {
-      //Use stored data if it exists
-      if (snapshot.val()) {
-        //Send message to console
-        console.log('Receiving location and favorites data from Firebase');
-
-        //Set locations array to storedData array
-        model.locations(snapshot.val());
-
-        //Set markers
-        self.setMarkers();
-
-        //Add favorites to sidebar
-        self.showFavs();
-
-        //Add categories and locations to sidebar
-        self.showCats();
-
-        //Get weather data
-        model.getWundergroundData();
-
-        //If no stored data exists get new data from Yelp
-      } else {
-        //Send message to console
-        console.log('No stored data -- getting new location data from Yelp');
-
-        //Get new Yelp Data
-        model.getNewData();
-      }
-    });
+  self.getData = function() {
+    getYelpData();
+    model.getWundergroundData();
   };
 
   //Get data from model
@@ -833,7 +691,7 @@ function ViewModel() {
   //  Run data request
   //======================
 
-  self.initializeLocations();
+  self.getData();
 }
 
 //****************** VIEW **************************//
@@ -908,9 +766,6 @@ var storeLocations, model, viewModel, view;
 
 //Initialize app function -- runs after Google Maps has successfully loaded
 var initializeApp = function() {
-  storedLocations = new Firebase(
-    'https://blistering-heat-6713.firebaseio.com/'
-  );
   model = new Model();
   viewModel = new ViewModel();
   view = new View();
