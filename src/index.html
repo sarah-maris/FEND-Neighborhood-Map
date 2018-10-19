@@ -1,104 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Visit Red Bank</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width">
-		<meta name="description" content="An interactive map to help you enjoy your visit to Red Bank, New Jersey">
-		<meta name="author" content="Sarah Maris">
-		<!-- build:js js/lib.min.js -->
-		<script src="components/jquery/dist/jquery.min.js"></script>
-		<script src="components/knockout/dist/knockout.js"></script>
-		<!-- endbuild -->
-		<script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
-		<script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
-		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
-		<link href='https://fonts.googleapis.com/css?family=Architects+Daughter|Ubuntu:400,700' rel='stylesheet' type='text/css'>
-		<!-- build:css css/style.min.css -->
-		<link href="css/style.css" rel="stylesheet">
-		<link href="fonts/css/fontello-custom.css" rel="stylesheet">
-		<!-- endbuild -->
+  <head>
+    <title>Visit Red Bank</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="An interactive map to help you enjoy your visit to Red Bank, New Jersey">
+    <meta name="author" content="Sarah Maris">
+    <!-- build:js js/lib.min.js -->
+    <script src="components/jquery/dist/jquery.min.js"></script>
+    <script src="components/knockout/dist/knockout.js"></script>
+    <!-- endbuild -->
+    <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+    <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter|Ubuntu:400,700' rel='stylesheet' type='text/css'>
+    <!-- build:css css/style.min.css -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="fonts/css/fontello-custom.css" rel="stylesheet">
+    <!-- endbuild -->
 
-	</head>
-	<body>
+  </head>
+  <body>
 
-		<div class="flexcontainer">
+    <div class="flexcontainer">
 
-			<section id="title-box">
-				<h1 id="site-title">Red Bank</h1>
-				<h3 id="subtitle">Trip Planner</h3>
-			</section>
+      <section id="title-box">
+        <h1 id="site-title">Red Bank</h1>
+        <h3 id="subtitle">Trip Planner</h3>
+      </section>
 
-			<section id="weather-box">
-				 <div id="forecast">
-					<div id="forecast-box" data-bind="foreach: forecast">
-						<div class="weather-info">
-							<div class="day" data-bind="text: $data.shortday"></div>
-							<div class="temp" data-bind="text: $data.highTemp"></div>
-							<div class="temp" data-bind="text: $data.lowTemp"></div>
-							<img class="weather-icon" data-bind="attr: { src: $data.iconURL, alt: $data.icon }">
-						</div>
-					</div>
-				</div>
-				<div id="current">
-					<h3 id="current-title">Current Weather Conditions</h3>
-					<p id="current-conditions" data-bind="text: currentConditions"></p>
-					<p id="attribution">Weather data from</p>
-					<img id="wunderground-logo" src="img/wundergroundLogo_4c_rev_horz.png" alt="weather data from Wunderground">
-				</div>
-			</section>
+      <section id="weather-box">
+         <div id="forecast">
+          <div id="forecast-box" data-bind="foreach: forecast">
+            <div class="weather-info">
+              <div class="day" data-bind="text: $data.shortday"></div>
+              <div class="temp" data-bind="text: $data.highTemp"></div>
+              <div class="temp" data-bind="text: $data.lowTemp"></div>
+              <img class="weather-icon" data-bind="attr: { src: $data.iconURL, alt: $data.icon }">
+            </div>
+          </div>
+        </div>
+        <div id="current">
+          <h3 id="current-title">Current Weather Conditions</h3>
+          <p id="current-conditions" data-bind="text: currentConditions"></p>
+          <p id="attribution">Weather data from</p>
+          <img id="wunderground-logo" src="img/wundergroundLogo_4c_rev_horz.png" alt="weather data from Wunderground">
+        </div>
+      </section>
 
-			<section id="sidebar">
+      <section id="sidebar">
 
-				<!-- Search input box -->
-				<div id="search-box">
-					<span class="icon">
-						<i class="icon-search">
-							<input placeholder= "Name or Keyword" class="icon-search" data-bind="value: searchText, css: 'icon-favorites', valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
-						</i>
-					</span>
+        <!-- Search input box -->
+        <div id="search-box">
+          <span class="icon">
+            <i class="icon-search">
+              <input placeholder= "Name or Keyword" class="icon-search" data-bind="value: searchText, css: 'icon-favorites', valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
+            </i>
+          </span>
 
-					<!-- Search results (sorted by name) -->
-					<div data-bind="foreach: filteredLocations().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)})">
-						<div class="search location" data-bind="text: $data.name,  click: viewModel.showDetails"></div>
-					</div>
-				</div>
+          <!-- Search results (sorted by name) -->
+          <div data-bind="foreach: filteredLocations().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)})">
+            <div class="search location" data-bind="text: $data.name,  click: viewModel.showDetails"></div>
+          </div>
+        </div>
 
-				<!-- Favorites tab -->
-				<h2 id="favoritesTab" class="favorites title icon-favorites icon-down">Favorites</h2>
+        <!-- Favorites tab -->
+        <h2 id="favoritesTab" class="favorites title icon-favorites icon-down">Favorites</h2>
 
-				<!-- Favorites (sorted by name) -->
-				<div id="favoritesList" data-bind="foreach: favsSidebar().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
-					<div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
-				</div>
+        <!-- Favorites (sorted by name) -->
+        <div id="favoritesList" data-bind="foreach: favsSidebar().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
+          <div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
+        </div>
 
-				<!-- Favorites instructions -->
-				<div id="favorites-instructions">
-					<h4 class="instruction-title">Add a favorite location</h4>
-					<p class="instructions">Click on the map marker<br>Choose "Add to Favorites"</p>
-				</div>
+        <!-- Favorites instructions -->
+        <div id="favorites-instructions">
+          <h4 class="instruction-title">Add a favorite location</h4>
+          <p class="instructions">Click on the map marker<br>Choose "Add to Favorites"</p>
+        </div>
 
-				<!-- Category tabs (sorted by name) -->
-				<div  data-bind="foreach: sidebarCats().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
+        <!-- Category tabs (sorted by name) -->
+        <div  data-bind="foreach: sidebarCats().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
 
-					<!-- Category name -->
-					<h2 data-bind="text: name, css: cat + ' title icon-up icon-' + cat, accordion: tabOpen, click: toggle"></h2>
+          <!-- Category name -->
+          <h2 data-bind="text: name, css: cat + ' title icon-up icon-' + cat, accordion: tabOpen, click: toggle"></h2>
 
-					<!-- Locations (sorted by name) -->
-					<div  data-bind="foreach: sidebarLocations().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
-						<div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
-					</div>
-				</div>
+          <!-- Locations (sorted by name) -->
+          <div  data-bind="foreach: sidebarLocations().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
+            <div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
+          </div>
+        </div>
 
-			</section>
+      </section>
 
-			<section id="map">
-			<!-- Google Map goes here -->
-			</section>
+      <section id="map">
+      <!-- Google Map goes here -->
+      </section>
 
-		</div><!-- end flexcontainer -->
-		<!-- build:inlinejs -->
-		<script src="js/main.js" async></script>
-		<!-- endbuild -->
-	</body>
+    </div><!-- end flexcontainer -->
+    <!-- build:inlinejs -->
+    <script src="js/main.js" async></script>
+    <!-- endbuild -->
+  </body>
 </html>
