@@ -33,10 +33,10 @@
          <div id="forecast">
           <div id="forecast-box" data-bind="foreach: forecast">
             <div class="weather-info">
-              <div class="day" data-bind="text: $data.shortday"></div>
-              <div class="temp" data-bind="text: $data.highTemp"></div>
-              <div class="temp" data-bind="text: $data.lowTemp"></div>
-              <img class="weather-icon" data-bind="attr: { src: $data.iconURL, alt: $data.icon }">
+              <div class="day" data-bind="text: shortday"></div>
+              <div class="temp" data-bind="text: highTemp"></div>
+              <div class="temp" data-bind="text: lowTemp"></div>
+              <img class="weather-icon" data-bind="attr: { src: iconURL, alt: iconAlt }">
             </div>
           </div>
         </div>
@@ -54,13 +54,15 @@
         <div id="search-box">
           <span class="icon">
             <i class="icon-search">
-              <input placeholder= "Name or Keyword" class="icon-search" data-bind="value: searchText, css: 'icon-favorites', valueUpdate: 'afterkeydown', event: {keyup: filterLocations}" />
+              <input placeholder= "Name or Keyword"
+                     class="icon-search"
+                     data-bind="textInput: searchText, css: 'icon-favorites', event: {keyup: filterLocations}" />
             </i>
           </span>
 
           <!-- Search results (sorted by name) -->
           <div data-bind="foreach: filteredLocations().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)})">
-            <div class="search location" data-bind="text: $data.name,  click: viewModel.showDetails"></div>
+            <div class="search location" data-bind="text: name,  click: $root.showDetails"></div>
           </div>
         </div>
 
@@ -69,7 +71,7 @@
 
         <!-- Favorites (sorted by name) -->
         <div id="favoritesList" data-bind="foreach: favsSidebar().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
-          <div class="favorites location" data-bind="text: $data.name,  click: viewModel.showDetails"></div >
+          <div class="favorites location" data-bind="text: name,  click: $root.showDetails"></div >
         </div>
 
         <!-- Favorites instructions -->
@@ -86,7 +88,7 @@
 
           <!-- Locations (sorted by name) -->
           <div  data-bind="foreach: sidebarLocations().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
-            <div data-bind="text: $data.name, css: $parent.cat + ' location', click: viewModel.showDetails"></div >
+            <div data-bind="text: name, css: $parent.cat + ' location', click: $root.showDetails"></div >
           </div>
         </div>
 
@@ -98,6 +100,8 @@
 
     </div><!-- end flexcontainer -->
     <!-- build:inlinejs -->
+		    <script src="js/data.js"></script>
+    <script src="js/credentials.js"></script>
     <script src="js/main.js" async></script>
     <!-- endbuild -->
   </body>
