@@ -37,7 +37,7 @@ function Model() {
   //Push locations from Yelp query into array
   self.getLocations = function(businesses, category) {
     for (var i = 0; i < businesses.length; i++) {
-      self.locations.push(new viewModel.bizInfo(businesses[i], category));
+      self.locations.push(new Place(businesses[i], category));
     }
   };
 
@@ -79,6 +79,7 @@ function Model() {
         alert('fail');
         console.log('Could not get Wunderground data: ', data);
       });
+    map.fitBounds(bounds);
   };
 }
 
@@ -109,87 +110,6 @@ function ViewModel() {
   self.locations = ko.computed(function() {
     return model.locations();
   });
-
-  //Get information about each business from Yelp query data
-  self.bizInfo = function(bizObj, category) {
-    //Get coordinates for map placement
-    this.lat = bizObj.location.coordinate.latitude;
-    this.lng = bizObj.location.coordinate.longitude;
-
-    //Get info for infoWindow
-    this.name = bizObj.name;
-
-    this.address = bizObj.location.address[0];
-    this.rating = bizObj.rating;
-    this.stars = bizObj.rating_img_url;
-    this.snippet = bizObj.snippet_text;
-    this.city = bizObj.location.city;
-    this.state = bizObj.location.state_code;
-    this.url = bizObj.url;
-
-    //If no image use placeholder
-    this.imgUrl = bizObj.image_url ? bizObj.image_url : 'img/no-image.png';
-
-    //Format phone number for display
-    this.phone = bizObj.phone;
-    this.dphone =
-      '(' +
-      bizObj.phone.slice(0, 3) +
-      ') ' +
-      bizObj.phone.slice(3, 6) +
-      '-' +
-      bizObj.phone.slice(6);
-
-    //Create a single array of items for search function: categories and business name
-    var keywords = [];
-    bizObj.categories.forEach(function(catType) {
-      catType.forEach(function(cat) {
-        keywords.push(cat);
-      });
-    });
-    keywords.push(this.name);
-    this.keywords = keywords;
-
-    //Get category and icon images for map
-    this.cat = category.cat;
-    this.icon = 'img/' + this.cat + '.png';
-    this.favIcon = 'img/fav-' + this.cat + '.png';
-    this.showIcon = 'img/' + this.cat + '.png';
-
-    //Set favorite attribute to false
-    this.fav = false;
-
-    //Set infoWindow content
-    this.windowHTML = '<div class="place-name">' + this.name + '</div>';
-    this.windowHTML +=
-      '<img class="place-image"src="' +
-      this.imgUrl +
-      '" alt="image of ' +
-      this.name +
-      '">';
-    this.windowHTML +=
-      '<div class="place-info">' +
-      this.address +
-      '<br>' +
-      this.city +
-      ',' +
-      this.state +
-      '<br>';
-    this.windowHTML +=
-      '<a href="tel:' + this.phone + '">' + this.dphone + '</a><br>';
-    this.windowHTML +=
-      '<img class="rating-image" src="' +
-      this.stars +
-      '" alt="Yelp star rating: ' +
-      this.rating +
-      '">';
-    this.windowHTML +=
-      '<img class="yelp" src="img/Powered_By_Yelp_Black.png" alt="Powered by Yelp"></div>';
-    this.windowHTML +=
-      '<div class="review"><strong>Review Snippet</strong><br><span class="place-snippet">' +
-      this.snippet +
-      '</span></div>';
-  };
 
   //Set content and event listener in infoWindow
   self.setInfoWindow = function(location, index) {
@@ -241,58 +161,6 @@ function ViewModel() {
       self.removeFav(location, index);
     });
     location.infoWindowContent = windowContent;
-  };
-
-  //Set locations for markers
-  self.setMarkers = function() {
-    //Get locations
-    var mapLocations = this.locations();
-
-    //Set up marker for each location
-    for (var i = 0; i < mapLocations.length; i++) {
-      var location = mapLocations[i];
-
-      //Set marker attributes
-      location.marker = new google.maps.Marker({
-        position: { lat: location.lat, lng: location.lng },
-        map: view.map,
-        title: location.title,
-        icon: location.showIcon,
-        animation: google.maps.Animation.DROP
-      });
-
-      //Get content for infoWindow
-      self.setInfoWindow(location, i);
-
-      //Add new infoWindow
-      location.infoWindow = new google.maps.InfoWindow();
-
-      //Add click function to marker to open infoWindow
-      var marker = location.marker;
-      var infoWindowContent = location.infoWindowContent;
-      var infoWindow = location.infoWindow;
-
-      google.maps.event.addListener(
-        marker,
-        'click',
-        (function(marker, infoWindowContent, infoWindow) {
-          //Show infoWindow content on click
-          return function() {
-            infoWindow.setContent(infoWindowContent);
-            infoWindow.open(view.map, marker);
-            self.bounceMarker(marker);
-          };
-        })(marker, infoWindowContent, infoWindow)
-      );
-    }
-  };
-
-  //Bounce marker one time
-  self.bounceMarker = function(marker) {
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-    setTimeout(function() {
-      marker.setAnimation(null);
-    }, 750);
   };
 
   //  Sidebar operations
@@ -711,8 +579,11 @@ function View() {
       styles: MAP_STYLES
     };
 
+    bounds = new google.maps.LatLngBounds();
+
     //Create map
     self.map = new google.maps.Map(mapCanvas, mapOptions);
+    map = self.map;
   };
 
   google.maps.event.addDomListener(window, 'load', this.initializeMap);
@@ -762,7 +633,7 @@ function View() {
 //**************************************************//
 
 //Set up global variable
-var storeLocations, model, viewModel, view;
+var storeLocations, model, viewModel, view, bounds;
 
 //Initialize app function -- runs after Google Maps has successfully loaded
 var initializeApp = function() {

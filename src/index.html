@@ -77,17 +77,17 @@
           <p class="instructions">Click on the map marker<br>Choose "Add to Favorites"</p>
         </div>
 
-        <!-- Category tabs (sorted by name) -->
+        <!-- Category tabs (sorted by name)
         <div  data-bind="foreach: sidebarCats().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
-
-          <!-- Category name -->
+-->
+          <!-- Category name
           <h2 data-bind="text: name, css: cat + ' title icon-up icon-' + cat, accordion: tabOpen, click: toggle"></h2>
-
+-->
           <!-- Locations (sorted by name) -->
-          <div  data-bind="foreach: sidebarLocations().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
+          <div  data-bind="foreach: locations().sort(function(left, right) {return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) })">
             <div data-bind="text: name, css: $parent.cat + ' location', click: $root.showDetails"></div >
           </div>
-        </div>
+    <!--    </div> -->
 
       </section>
 
@@ -99,6 +99,7 @@
     <!-- build:inlinejs -->
     <script src="js/data.js"></script>
     <script src="js/credentials.js"></script>
+    <script src="js/place.js"></script>
     <script src="js/yelpRequest.js"></script>
     <script src="js/main.js" async></script>
     <!-- endbuild -->
