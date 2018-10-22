@@ -50,8 +50,7 @@ const MAP_STYLES = [
 // Parameters for Yelp search
 const YELP_PARAMS = {
   location: 'Red+Bank+NJ',
-  radius: 3000,
-  categories: 'restaurant'
+  radius: 3000
 };
 
 // App categories
