@@ -545,6 +545,7 @@ function View() {
     //Create map
     self.map = new google.maps.Map(mapCanvas, mapOptions);
     map = self.map;
+    infowindow = new google.maps.InfoWindow();
   };
 
   google.maps.event.addDomListener(window, 'load', this.initializeMap);
@@ -594,7 +595,7 @@ function View() {
 //**************************************************//
 
 //Set up global variable
-var storeLocations, model, viewModel, view, bounds;
+var storeLocations, model, viewModel, view, bounds, infowindow;
 
 //Initialize app function -- runs after Google Maps has successfully loaded
 var initializeApp = function() {

@@ -1,5 +1,7 @@
 // Place constructor
 const Place = function(yelpLocation, category) {
+  const place = this;
+
   //Get coordinates for map placement
   this.lat = yelpLocation.coordinates.latitude;
   this.lng = yelpLocation.coordinates.longitude;
@@ -54,4 +56,21 @@ const Place = function(yelpLocation, category) {
   });
 
   bounds.extend(this.marker.position);
+  place.marker.addListener('click', function() {
+    place.showYelpDetails();
+  });
+
+  place.showYelpDetails = function() {
+    if (!place.snippet) {
+      getYelpDetails(place.id).then(review => {
+        place.snippet = review;
+        infowindow.setContent(place.snippet);
+        infowindow.open(map, place.marker);
+      });
+    } else {
+      infowindow.setContent(place.snippet);
+      infowindow.open(map, place.marker);
+    }
+  };
+
 };
