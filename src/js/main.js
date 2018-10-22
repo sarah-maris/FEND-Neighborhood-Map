@@ -198,7 +198,7 @@ function ViewModel() {
       }
 
       //Check if location's category is in visible list
-      if (visible.indexOf(location.cat) >= 0) {
+      if (visible.indexOf(location.type) >= 0) {
         isVisible = true;
       }
 

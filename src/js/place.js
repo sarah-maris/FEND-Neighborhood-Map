@@ -23,34 +23,29 @@ const Place = function(yelpLocation, category) {
     : 'img/no-image.png';
 
   //Format phone number for display
-  this.dphone = yelpLocation.display_phone;
   place.phone = yelpLocation.display_phone || '';
 
   //Create a single array of items for search function: categories and business name
-  var keywords = [];
-  yelpLocation.categories.forEach(function(catType) {
-    //  catType.forEach(function(cat) {
-    keywords.push(catType.alias);
-    //    });
-  });
-  keywords.push(this.name);
-  this.keywords = keywords;
+  place.keywords = yelpLocation.categories
+    .map(category => category.alias)
+    .concat(place.name);
 
   //Get category and icon images for map
-  this.cat = category;
-  this.icon = 'img/' + this.cat + '.png';
-  this.favIcon = 'img/fav-' + this.cat + '.png';
-  this.showIcon = 'img/' + this.cat + '.png';
+  place.type = category;
+  place.icon = `img/${category}.png`;
+  place.favIcon = `img/fav-${category}.png`;
+  place.showIcon = `img/${category}.png`;
 
   //Set favorite attribute to false
-  this.fav = false;
+  // TODO: Check storage for favs and set to true as needed
+  place.fav = place.name.includes('B') ? true : false;
 
   //Set marker attributes
   place.marker = new google.maps.Marker({
     position: { lat: place.lat, lng: place.lng },
     map: view.map,
-    icon: this.showIcon,
     title: place.title,
+    icon: place.fav ? place.favIcon : place.icon,
     id: place.id,
     animation: google.maps.Animation.DROP
   });
