@@ -20,28 +20,19 @@ ko.bindingHandlers.accordion = {
   }
 };
 
-//****************** MODEL ********************************//
-//	* Set categories for Yelp data
-//	* Get data for each category from Yelp API
-//	* Send data to ViewModel to build array of locations
-//	* Get weather data from Wunderground
-//	* Handle errors in data retrieval
-//********************************************************//
-
+// MODEL (locations from Yelp)
 function Model() {
-  var self = this;
+  this.locations = [];
 
-  //Set up observable array to hold locations
-  self.locations = ko.observableArray();
-
-  //Push locations from Yelp query into array
-  self.getLocations = function(businesses, category) {
-    for (var i = 0; i < businesses.length; i++) {
-      self.locations.push(new Place(businesses[i], category));
-    }
-
-    map.fitBounds(bounds);
+  // push locations from Yelp query into array
+  this.getLocations = (businesses, category) => {
+    businesses.map(business =>
+      this.locations.push(new Place(business, category))
+    );
   };
+
+  // adjust map zoom and centering
+  map.fitBounds(bounds);
 }
 
 //************************** VIEW MODEL *****************************************************//
@@ -58,10 +49,7 @@ function Model() {
 function ViewModel() {
   var self = this;
 
-  //  Initialize and get location data
-  //====================================
-
-  //Check for data stored in Firebase
+  // API requests to get data
   self.getData = function() {
     getYelpData();
     getWundergroundData();
