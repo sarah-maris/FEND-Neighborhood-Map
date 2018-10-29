@@ -22,17 +22,17 @@ ko.bindingHandlers.accordion = {
 
 // MODEL (locations from Yelp)
 function Model() {
-  this.locations = [];
+  this.locations = ko.observableArray();
 
   // push locations from Yelp query into array
   this.getLocations = (businesses, category) => {
     businesses.map(business =>
       this.locations.push(new Place(business, category))
     );
-  };
 
-  // adjust map zoom and centering
-  map.fitBounds(bounds);
+    // adjust map zoom and centering
+    map.fitBounds(bounds);
+  };
 }
 
 //************************** VIEW MODEL *****************************************************//
