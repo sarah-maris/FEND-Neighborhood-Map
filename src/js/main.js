@@ -1,3 +1,8 @@
+//Set up global variables
+let storeLocations, model, listViewModel, weatherViewModel, view, bounds, infowindow;
+
+
+
 //****************** HANDLER ******************************************//
 //	* Create custom binding to trigger accodion for ko observed items
 //********************************************************************//
@@ -14,9 +19,9 @@ ko.bindingHandlers.accordion = {
     //Get state of tab from observable
     var tabOpen = ko.unwrap(valueAccessor());
 
-    viewModel.toggleTabs(element, tabOpen, clickedCategory);
+    listViewModel.toggleTabs(element, tabOpen, clickedCategory);
 
-    viewModel.showAll();
+    listViewModel.showAll();
   }
 };
 
@@ -46,14 +51,8 @@ function Model() {
 //  * When item is favorited, add star and update Firebase data
 //******************************************************************************************//
 
-function ViewModel() {
+function ListViewModel() {
   var self = this;
-
-  // API requests to get data
-  self.getData = function() {
-    getYelpData();
-    getWundergroundData();
-  };
 
   //Get data from model
   self.locations = ko.computed(function() {
@@ -473,6 +472,12 @@ function ViewModel() {
     self.allMarkers(tempArray);
   };
 
+  // Popluate list view with data from Yelp
+  getYelpData();
+}
+
+function WeatherViewModel() {
+  var self = this;
   //  Get weather data
   //======================
 
@@ -505,10 +510,8 @@ function ViewModel() {
     self.currentConditions(rightNow);
   };
 
-  //  Run data request
-  //======================
-
-  self.getData();
+  //  Get Weather data from Wunderground
+  getWundergroundData();
 }
 
 //****************** VIEW **************************//
@@ -542,7 +545,7 @@ function View() {
   $(document).ready(function($) {
     $('#favoritesTab').click(function() {
       //Get previous open state
-      favsClosed = viewModel.favsClosed();
+      favsClosed = listViewModel.favsClosed();
 
       //Toggle the 'open' class (triggers change in arrow icon)
       $('#favoritesTab').toggleClass('icon-down icon-up');
@@ -555,22 +558,22 @@ function View() {
       //If closed, toggle to open state
       if (favsClosed) {
         //Empty search filter amd filteredLocations array
-        viewModel.searchText('');
-        viewModel.filteredLocations.removeAll();
+        listViewModel.searchText('');
+        listViewModel.filteredLocations.removeAll();
 
         //Add "favs" from visible category list
-        viewModel.visibleCategories.push('favs');
+        listViewModel.visibleCategories.push('favs');
 
         //Set open state to current open state (false)
-        viewModel.favsClosed(false);
+        listViewModel.favsClosed(false);
 
         //Else toggle to closed state
       } else {
         //Remove "favs" from visible category list
-        viewModel.visibleCategories.remove('favs');
+        listViewModel.visibleCategories.remove('favs');
 
         //Set open state to current open state (true)
-        viewModel.favsClosed(true);
+        listViewModel.favsClosed(true);
       }
     });
   });
@@ -578,19 +581,19 @@ function View() {
 
 //****************** INITIALIZE **************************//
 //	* Link to Firebase
-//  * Declare new Model, ViewModel and View
+//  * Declare new Model, ListViewModel and View
 //  * Apply Knockout Bindings
 //**************************************************//
 
-//Set up global variable
-var storeLocations, model, viewModel, view, bounds, infowindow;
 
 //Initialize app function -- runs after Google Maps has successfully loaded
 var initializeApp = function() {
   model = new Model();
-  viewModel = new ViewModel();
+  listViewModel = new ListViewModel();
+  weatherViewModel = new WeatherViewModel();
   view = new View();
-  ko.applyBindings(viewModel);
+    ko.applyBindings(listViewModel, document.getElementById('sidebar'));
+    ko.applyBindings(weatherViewModel, document.getElementById('weather-box'));
 };
 
 //Get data from Google Maps API and launch app

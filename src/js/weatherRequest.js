@@ -23,10 +23,10 @@ const getWundergroundData = function() {
           '"'
         );
 
-        //Else send weather data to viewModel for processing
+        //Else send weather data to listViewModel for processing
       } else {
         console.log('Receiving weather data from Wunderground');
-        viewModel.getWeather(data);
+        weatherViewModel.getWeather(data);
       }
     })
 
