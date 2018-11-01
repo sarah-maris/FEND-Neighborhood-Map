@@ -72,6 +72,8 @@ function ViewModel() {
     return model.locations();
   });
 
+  // TODO: create WindowViewModel to update Yelp data
+
   //Set content and event listener in infoWindow
   self.setInfoWindow = function(location, index) {
     //Set up div to hold infoWindow content
@@ -130,6 +132,8 @@ function ViewModel() {
   //Set location categories as an observable array
   self.sidebarCats = ko.observableArray();
 
+  // TODO: Convert sidebar operations to filter list using ko.utils.filter or .filter()
+
   //Add locations to sidebar by category
   self.showCats = function(category) {
     //Get categories from Model
@@ -175,6 +179,8 @@ function ViewModel() {
 
   //Set up array to hold the categories of locations that are visible
   self.visibleCategories = ko.observableArray();
+
+  // TODO: Use a computed observable here
 
   //Show markers of visible locations
   self.showMarkers = function() {
@@ -230,6 +236,8 @@ function ViewModel() {
 
       //Add category to list of visible markers
       self.visibleCategories.push(clickedCategory.cat);
+
+      // TODO: re-do using Knockout
 
       //Open tab
       $(element)
@@ -305,6 +313,9 @@ function ViewModel() {
       //Set open state to current open state (true)
       self.favsClosed(true);
 
+      // TODO: re-do using Knockout and class
+      //https://stackoverflow.com/questions/8860631/how-to-get-same-effect-as-jquerys-slidetoggle-using-css-3-transitions
+
       //Toggle the 'open' class
       $('#favoritesTab').toggleClass('icon-down icon-up');
 
@@ -337,10 +348,13 @@ function ViewModel() {
           //Set marker visible
           location.marker.setVisible(true);
 
+          // TODO: remove bounce - UGH!
           //Bounce one time
           self.bounceMarker(location.marker);
         }
       });
+
+      // TODO: re-do using better filter methods
 
       //If there is a keyword match, add to filteredLocations
       if (keyMatch) {
@@ -354,6 +368,8 @@ function ViewModel() {
 
   //When filtered item is clicked, map marker bounces and infoWindow opens
   self.showDetails = function(location) {
+    // TODO: re-do using trigger method
+
     //Close infoWindow
     location.infoWindow.close();
 
@@ -371,6 +387,8 @@ function ViewModel() {
 
   //  Favorite functions
   //======================
+
+  // TODO: FIX ALL OF THIS!!!!
 
   //Set favorites sidebar list as an observable array
   self.favsSidebar = ko.observableArray();
@@ -550,6 +568,8 @@ function View() {
 
   google.maps.event.addDomListener(window, 'load', this.initializeMap);
 
+  // TODO: re-do using Knockout
+
   //Add jquery accordion for favorites tab
   $(document).ready(function($) {
     $('#favoritesTab').click(function() {
@@ -615,6 +635,8 @@ $.getScript(`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_KEY}`)
   })
   .fail(function(jqxhr, settings, exception) {
     //Add error message to page and give details in console
+
+    // TODO:  Re-do using Knockout
     $('#map').append(
       '<p id="locations-error">Google Map not available. <br> Try again later</p>'
     );

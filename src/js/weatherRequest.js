@@ -1,9 +1,10 @@
+// TODO: Convert to OpenWeather
+
 const getWundergroundData = function() {
   $.ajax({
     url:
       'https://api.wunderground.com/api/4d00d2a5eb37d968/forecast/q/NJ/Red_Bank.json',
-    dataType: 'jsonp',
-    async: true
+    dataType: 'jsonp'
   })
 
     .done(function(data) {
@@ -32,7 +33,7 @@ const getWundergroundData = function() {
 
     //If fail show error message
     .fail(function(data) {
-      alert('fail');
-      console.log('Could not get Wunderground data: ', data);
+      alert('Could not get Wunderground data');
+      console.log('Wunderground Error details:', data);
     });
 };

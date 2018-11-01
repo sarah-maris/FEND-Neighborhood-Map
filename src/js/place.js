@@ -56,6 +56,7 @@ const Place = function(yelpLocation, category) {
 
   place.showYelpDetails = function() {
     if (!place.snippet) {
+      // TODO: add function to open infowindows
       getYelpDetails(place.id).then(review => {
         place.snippet = review;
         infowindow.setContent(place.snippet);
