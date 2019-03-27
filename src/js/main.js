@@ -613,7 +613,7 @@ var initializeApp = function() {
   weatherViewModel = new WeatherViewModel();
   view = new View();
     ko.applyBindings(listViewModel, document.getElementById('sidebar'));
-    ko.applyBindings(weatherViewModel, document.getElementById('weather-box'));
+    ko.applyBindings(weatherViewModel, document.getElementById('weather'));
 };
 
 //Get data from Google Maps API and launch app
