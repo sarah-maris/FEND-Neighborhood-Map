@@ -23,7 +23,7 @@ body {
 }
 
 /***** Site Header *****/
-#title-box {
+.title-box {
   -webkit-flex-basis: 30%;
   -ms-flex-preferred-size: 30%;
   flex-basis: 30%;
@@ -38,19 +38,19 @@ body {
   order: 0;
 }
 
-#site-title {
+.site-title {
   font: bold 72px 'Ubuntu', sans-serif;
   margin: 20px 20px 0 20px;
 }
 
-#subtitle {
+.sub-title {
   font: bold 36px 'Architects Daughter', cursive;
   margin: 0 20px 20px 20px;
 }
 
 /***** Weather *****/
 
-#weather-box {
+.weather-box {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -221,7 +221,7 @@ input:focus {
 }
 
 /***** Map *****/
-#map {
+.map-canvas {
   -webkit-flex-basis: 75%;
   -ms-flex-preferred-size: 75%;
   flex-basis: 75%;
@@ -349,12 +349,12 @@ input:focus {
 
 /* Small laptop and desktop screens */
 @media screen and (min-width: 1025px) and (max-width: 1274px) {
-  #site-title {
+  .site-title {
     font-size: 60px;
     margin: 30px 0 0 0;
   }
 
-  #subtitle {
+  .sub-title {
     font-size: 30px;
     margin-left: 0;
   }
@@ -362,12 +362,12 @@ input:focus {
 
 /* Large tablet and small tablet landscape */
 @media screen and (min-width: 850px) and (max-width: 1024px) {
-  #site-title {
+  .site-title {
     font-size: 48px;
     margin: 40px 0 0 0;
   }
 
-  #subtitle {
+  .sub-title {
     font-size: 24px;
     margin-left: 0;
   }
@@ -391,7 +391,7 @@ input:focus {
     flex-basis: 33%;
   }
 
-  #map {
+  .map-canvas {
     -webkit-flex-basis: 67%;
     -ms-flex-preferred-size: 67%;
     flex-basis: 67%;
@@ -399,17 +399,17 @@ input:focus {
 
   /* Adjust font size, padding and margins */
 
-  #site-title {
+  .site-title {
     font-size: 36px;
     margin: 15px 5px 0 5px;
   }
 
-  #subtitle {
+  .sub-title {
     font-size: 18px;
     margin: 0 5px 5px 5px;
   }
 
-  #weather-box {
+  .weather-box {
     padding: 10px 0 0 0;
   }
 
@@ -452,17 +452,17 @@ input:focus {
 /* Smartphone portrait */
 @media screen and (min-width: 320px) and (max-width: 649px) {
   /* Make full width */
-  #title-box,
-  #map,
+  .title-box,
+  .map-canvas,
   #sidebar,
-  #weather-box {
+  .weather-box {
     -webkit-flex-basis: 100%;
     -ms-flex-preferred-size: 100%;
     flex-basis: 100%;
   }
 
   /* Move sidebar and weather below map */
-  #map {
+  .map-canvas {
     -webkit-order: 1;
     -ms-flex-order: 1;
     order: 1;
@@ -476,12 +476,12 @@ input:focus {
 
   /* Adjust font size, padding and margins */
 
-  #site-title {
+  .site-title {
     font-size: 40px;
     margin: 5px 5px 0 5px;
   }
 
-  #subtitle {
+  .sub-title {
     font-size: 24px;
     margin: 0 5px 5px 5px;
   }
@@ -499,7 +499,7 @@ input:focus {
     text-align: center;
   }
 
-  #weather-box {
+  .weather-box {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
