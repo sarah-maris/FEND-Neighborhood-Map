@@ -355,21 +355,7 @@ function ListViewModel() {
 
   //When filtered item is clicked, map marker bounces and infoWindow opens
   self.showDetails = function(location) {
-    // TODO: re-do using trigger method
-
-    //Close infoWindow
-    location.infoWindow.close();
-
-    //Set up variables
-    var marker = location.marker;
-    var infoWindow = location.infoWindow;
-
-    //Set marker animation to about one bounce
-    self.bounceMarker(location.marker);
-
-    //Show infoWindowContent when infoWindow is isOpen
-    infoWindow.setContent(location.infoWindowContent);
-    infoWindow.open(view.map, marker);
+    google.maps.event.trigger(location.marker, 'click');
   };
 
   //  Favorite functions
@@ -604,7 +590,6 @@ function View() {
 //  * Declare new Model, ListViewModel and View
 //  * Apply Knockout Bindings
 //**************************************************//
-
 
 //Initialize app function -- runs after Google Maps has successfully loaded
 var initializeApp = function() {

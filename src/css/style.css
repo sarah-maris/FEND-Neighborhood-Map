@@ -235,6 +235,11 @@ input:focus {
 }
 
 /***** InfoWindows *****/
+
+.gm-style-iw {
+  color: #97282c;
+}
+
 .info-window {
   height: 250px;
   color: #000;

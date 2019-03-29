@@ -2,11 +2,11 @@
 const Place = function(yelpLocation, category) {
   const place = this;
 
-  //Get coordinates for map placement
+  // Get coordinates for map placement
   place.lat = yelpLocation.coordinates.latitude;
   place.lng = yelpLocation.coordinates.longitude;
 
-  //Get info for infoWindow
+  // Get info for infoWindow
   place.name = yelpLocation.name;
   place.id = yelpLocation.id;
 
@@ -17,30 +17,30 @@ const Place = function(yelpLocation, category) {
   place.url = yelpLocation.url || '';
   place.snippet = '';
 
-  //If no image use placeholder
+  // If no image use placeholder
   place.imgUrl = yelpLocation.image_url
     ? yelpLocation.image_url
     : 'img/no-image.png';
 
-  //Format phone number for display
+  // Format phone number for display
   place.phone = yelpLocation.display_phone || '';
 
-  //Create a single array of items for search function: categories and business name
+  // Create a single array of items for search function: categories and business name
   place.keywords = yelpLocation.categories
     .map(category => category.alias)
     .concat(place.name);
 
-  //Get category and icon images for map
+  // Get category and icon images for map
   place.type = category;
   place.icon = `img/${category}.png`;
   place.favIcon = `img/fav-${category}.png`;
   place.showIcon = `img/${category}.png`;
 
-  //Set favorite attribute to false
+  // Set favorite attribute to false
   // TODO: Check storage for favs and set to true as needed
   place.fav = place.name.includes('B') ? true : false;
 
-  //Set marker attributes
+  // Set marker attributes
   place.marker = new google.maps.Marker({
     position: { lat: place.lat, lng: place.lng },
     map: view.map,
@@ -54,7 +54,7 @@ const Place = function(yelpLocation, category) {
     place.showYelpDetails();
   });
 
-  place.showYelpDetails = function() {
+  place.showYelpDetails = () => {
     if (!place.snippet) {
       // TODO: add function to open infowindows
       getYelpDetails(place.id).then(review => {
